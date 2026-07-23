@@ -65,20 +65,31 @@ async function loadNews(category) {
       stateEl.innerHTML = '<i class="fas fa-circle-info"></i> No posts in this category yet.';
       return;
     }
-    grid.innerHTML = posts.map(post => `
-      <div class="news-card ${post.is_pinned ? 'is-pinned' : ''}">
-        <div class="news-card-icon">
-          ${post.image_url ? `<img src="${escapeHtml(post.image_url)}" class="news-card-img" alt="${escapeHtml(post.title)}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><i class="${escapeHtml(post.cover_icon || CAT_ICONS[post.category] || 'fa-solid fa-newspaper')}" style="display:none;"></i>` : `<i class="${escapeHtml(post.cover_icon || CAT_ICONS[post.category] || 'fa-solid fa-newspaper')}"></i>`}
-          ${post.is_pinned ? '<span class="pin-flag"><i class="fas fa-thumbtack"></i> PINNED</span>' : ''}
+    grid.innerHTML = posts.map(post => {
+      const imageUrl = post.image_url ? String(post.image_url).trim() : '';
+      const iconClass = post.cover_icon || CAT_ICONS[post.category] || 'fa-solid fa-newspaper';
+      const safeTitle = escapeHtml(post.title || 'News update');
+      const safeExcerpt = escapeHtml(post.excerpt || post.body?.slice(0, 140) + (post.body?.length > 140 ? '…' : '') || '');
+      const imageMarkup = imageUrl
+        ? `<img src="${escapeHtml(imageUrl)}" class="news-card-img" alt="${safeTitle}" loading="lazy" onerror="this.style.display='none'; this.parentElement.querySelector('.news-card-fallback').style.display='flex';">`
+        : '';
+      const fallbackMarkup = `<div class="news-card-fallback" style="display:${imageUrl ? 'none' : 'flex'}"><i class="${escapeHtml(iconClass)}"></i></div>`;
+      return `
+        <div class="news-card ${post.is_pinned ? 'is-pinned' : ''}">
+          <div class="news-card-icon">
+            ${imageMarkup}
+            ${fallbackMarkup}
+            ${post.is_pinned ? '<span class="pin-flag"><i class="fas fa-thumbtack"></i> PINNED</span>' : ''}
+          </div>
+          <div class="news-card-body">
+            <div class="news-card-cat">${escapeHtml(post.category)}</div>
+            <h3>${safeTitle}</h3>
+            <p>${safeExcerpt}</p>
+            <div class="news-card-date"><i class="far fa-clock"></i> ${timeAgo(post.published_at)}</div>
+          </div>
         </div>
-        <div class="news-card-body">
-          <div class="news-card-cat">${escapeHtml(post.category)}</div>
-          <h3>${escapeHtml(post.title)}</h3>
-          <p>${escapeHtml(post.excerpt || post.body.slice(0, 140) + (post.body.length > 140 ? '…' : ''))}</p>
-          <div class="news-card-date"><i class="far fa-clock"></i> ${timeAgo(post.published_at)}</div>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
     stateEl.style.display = 'none';
     grid.style.display = 'grid';
   } catch (err) {
