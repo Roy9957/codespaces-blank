@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=Press+Start+2P&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <link rel="stylesheet" href="static/css/base.css">
 <link rel="stylesheet" href="static/css/extend.css">
 <script src="static/js/api.js"></script>
@@ -66,7 +68,7 @@ async function loadNews(category) {
     grid.innerHTML = posts.map(post => `
       <div class="news-card ${post.is_pinned ? 'is-pinned' : ''}">
         <div class="news-card-icon">
-          <i class="${escapeHtml(post.cover_icon || CAT_ICONS[post.category] || 'fa-solid fa-newspaper')}"></i>
+          ${post.image_url ? `<img src="${escapeHtml(post.image_url)}" class="news-card-img" alt="${escapeHtml(post.title)}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><i class="${escapeHtml(post.cover_icon || CAT_ICONS[post.category] || 'fa-solid fa-newspaper')}" style="display:none;"></i>` : `<i class="${escapeHtml(post.cover_icon || CAT_ICONS[post.category] || 'fa-solid fa-newspaper')}"></i>`}
           ${post.is_pinned ? '<span class="pin-flag"><i class="fas fa-thumbtack"></i> PINNED</span>' : ''}
         </div>
         <div class="news-card-body">

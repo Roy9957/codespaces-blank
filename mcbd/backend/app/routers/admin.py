@@ -113,7 +113,7 @@ async def delete_server(server_id: int):
 async def admin_list_news():
     pool = get_pool()
     rows = await pool.fetch(
-        """SELECT id, slug, title, excerpt, body, category, cover_icon, is_published, is_pinned, published_at
+        """SELECT id, slug, title, excerpt, body, category, cover_icon, image_url, is_published, is_pinned, published_at
            FROM news_posts ORDER BY published_at DESC"""
     )
     return [dict(r) for r in rows]
@@ -130,12 +130,12 @@ async def create_news(payload: NewsCreate, admin: dict = Depends(get_current_adm
         slug = f"{base_slug}-{suffix}"
 
     row = await pool.fetchrow(
-        """INSERT INTO news_posts (slug, title, excerpt, body, category, cover_icon,
+        """INSERT INTO news_posts (slug, title, excerpt, body, category, cover_icon, image_url,
                                     is_published, is_pinned, author_id)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-           RETURNING id, slug, title, excerpt, body, category, cover_icon, is_published, is_pinned, published_at""",
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+           RETURNING id, slug, title, excerpt, body, category, cover_icon, image_url, is_published, is_pinned, published_at""",
         slug, payload.title, payload.excerpt, payload.body, payload.category,
-        payload.cover_icon, payload.is_published, payload.is_pinned, int(admin["sub"]),
+        payload.cover_icon, payload.image_url, payload.is_published, payload.is_pinned, int(admin["sub"]),
     )
     return dict(row)
 
@@ -150,7 +150,7 @@ async def update_news(news_id: int, payload: NewsUpdate):
     values.append(news_id)
     row = await pool.fetchrow(
         f"""UPDATE news_posts SET {set_sql}, updated_at = now() WHERE id = ${len(values)}
-            RETURNING id, slug, title, excerpt, body, category, cover_icon, is_published, is_pinned, published_at""",
+            RETURNING id, slug, title, excerpt, body, category, cover_icon, image_url, is_published, is_pinned, published_at""",
         *values,
     )
     if not row:

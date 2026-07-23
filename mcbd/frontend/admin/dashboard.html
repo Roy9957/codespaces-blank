@@ -17,7 +17,7 @@
 <body>
 
 <div class="admin-topbar">
-  <div class="brand"><span class="block"></span> MC BANGLADESH — ADMIN</div>
+  <div class="brand"><img src="../logo.png" alt="MCBD Logo" onerror="this.src='../logo.jpeg';"> MINECRAFT <span>BANGLADESH</span> — ADMIN</div>
   <div class="admin-user">
     <span id="adminDisplayName">…</span>
     <span class="role-pill" id="adminRoleBadge">…</span>
@@ -125,6 +125,7 @@
           </select>
         </div>
         <div><label>Cover Icon (Font Awesome class)</label><input id="newsIcon" value="fa-solid fa-newspaper"></div>
+        <div><label>Image URL (Optional Cover Image)</label><input id="newsImageUrl" placeholder="https://... or cover.jpeg"></div>
         <div class="full"><label>Excerpt</label><input id="newsExcerpt" maxlength="400"></div>
         <div class="full"><label>Body</label><textarea id="newsBody" style="min-height:160px;"></textarea></div>
       </div>
@@ -138,7 +139,7 @@
 
     <div class="admin-table-wrap">
       <table class="admin-table">
-        <thead><tr><th>Title</th><th>Category</th><th>Pinned</th><th>Published</th><th>Actions</th></tr></thead>
+        <thead><tr><th>Image / Title</th><th>Category</th><th>Pinned</th><th>Published</th><th>Published At</th><th>Actions</th></tr></thead>
         <tbody id="newsTableBody"></tbody>
       </table>
     </div>

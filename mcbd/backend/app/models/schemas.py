@@ -92,6 +92,7 @@ class NewsOut(BaseModel):
     body: str
     category: str
     cover_icon: str
+    image_url: Optional[str] = None
     is_published: bool
     is_pinned: bool
     published_at: datetime
@@ -103,6 +104,7 @@ class NewsCreate(BaseModel):
     body: str
     category: str = "announcement"
     cover_icon: str = "fa-solid fa-newspaper"
+    image_url: Optional[str] = None
     is_published: bool = True
     is_pinned: bool = False
 
@@ -120,6 +122,7 @@ class NewsUpdate(BaseModel):
     body: Optional[str] = None
     category: Optional[str] = None
     cover_icon: Optional[str] = None
+    image_url: Optional[str] = None
     is_published: Optional[bool] = None
     is_pinned: Optional[bool] = None
 

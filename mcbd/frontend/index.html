@@ -21,16 +21,20 @@
 </head>
 <body>
 
-<!-- ═══ CURTAIN REVEAL INTRO (Scroll to enter world) ═══ -->
-<div class="curtain-spacer" id="curtainSpacer">
-  <div class="curtain" id="curtain" aria-hidden="true">
-    <div class="curtain-panel" id="curtainPanelLeft"><div style="position:absolute;top:50%;right:20px;width:16px;height:16px;background:var(--grass);border:2px solid var(--cream);"></div></div>
-    <div class="curtain-panel" id="curtainPanelRight"><div style="position:absolute;top:50%;left:20px;width:16px;height:16px;background:var(--red);border:2px solid var(--cream);"></div></div>
-    <div class="curtain-loader" id="curtainLoader">
-      LOADING WORLD
-      <div class="curtain-bar"><div class="curtain-bar-fill"></div></div>
-    </div>
-    <div class="curtain-cue" id="curtainCue" style="cursor:pointer;"><i class="fas fa-chevron-down"></i> SCROLL TO ENTER WORLD <i class="fas fa-chevron-down"></i></div>
+<!-- ═══ CURTAIN REVEAL INTRO OVERLAY ═══ -->
+<div class="curtain" id="curtain" aria-hidden="true">
+  <div class="curtain-panel" id="curtainPanelLeft">
+    <div style="position:absolute;top:50%;right:24px;width:18px;height:18px;background:var(--grass);border:2px solid var(--cream);"></div>
+  </div>
+  <div class="curtain-panel" id="curtainPanelRight">
+    <div style="position:absolute;top:50%;left:24px;width:18px;height:18px;background:var(--red);border:2px solid var(--cream);"></div>
+  </div>
+  <div class="curtain-loader" id="curtainLoader">
+    LOADING MCBD HUB
+    <div class="curtain-bar"><div class="curtain-bar-fill"></div></div>
+  </div>
+  <div class="curtain-cue" id="curtainCue">
+    <i class="fas fa-chevron-down"></i> SCROLL TO ENTER HUB <i class="fas fa-chevron-down"></i>
   </div>
 </div>
 
@@ -39,19 +43,19 @@
 
 <!-- ═══ HERO SECTION ═══ -->
 <section class="hero-section pat-grid" id="hero">
-  <div class="hero-banner-box">
-    <div class="sticker sticker-grass" style="top:-16px;right:-16px;">⛏ EST. 2019</div>
-    <div class="sticker sticker-red" style="bottom:-16px;left:-16px;">BANGLADESH #1 MC HUB</div>
+  <div class="hero-banner-box gsap-fade-up">
+    <div class="sticker sticker-grass float-item" style="top:-16px;right:-16px;">⛏ EST. 2019</div>
+    <div class="sticker sticker-red float-item" style="bottom:-16px;left:-16px;animation-delay:1.5s;">BANGLADESH #1 MC HUB</div>
 
     <div class="profile-card">
-      <div class="profile-wrap">
+      <div class="profile-wrap tilt-card">
         <div class="profile-img-box">
           <img src="logo.png" alt="MCBD Logo" onerror="this.src='logo.jpeg';">
         </div>
       </div>
       <div>
         <div class="status-badge" style="margin-bottom:8px;">
-          <span class="dot-pulse"></span> 52,000+ MEMBERS ONLINE
+          <span class="dot-pulse"></span> <span id="heroMemberCount">52,000+</span> MEMBERS ONLINE
         </div>
         <div style="font-size:12px;font-weight:900;font-family:var(--font-mono);color:var(--black);text-transform:uppercase;letter-spacing:0.1em;">
           VERIFIED COMMUNITY NETWORK
@@ -69,13 +73,13 @@
     </div>
 
     <p style="font-size:16px;line-height:1.6;font-family:var(--font-body);max-width:640px;color:#3a3224;margin-bottom:24px;">
-      The biggest hangout in Bangladesh for builders, survivalists, redstoners & PvP warriors. Join our official community servers, monthly contests, and weekly events.
+      The biggest community hangout in Bangladesh for builders, survivalists, redstoners &amp; PvP warriors. Join our official community groups, monthly contests, and weekly events.
     </p>
 
     <div class="hero-ctas">
       <a href="https://facebook.com" target="_blank" class="mc-btn mc-btn--fb"><i class="fab fa-facebook-f"></i> Join Facebook Group</a>
       <a href="#" class="mc-btn mc-btn--dc" onclick="event.preventDefault(); openDiscordWidget('Minecraft BD Discord', '52,000+ Members', '@minecraftbd');"><i class="fab fa-discord"></i> Join Discord Server</a>
-      <a href="servers.html" class="btn-outline"><i class="fas fa-server"></i> View Servers</a>
+      <a href="members.html" class="btn-outline"><i class="fas fa-users"></i> Community Crew</a>
     </div>
   </div>
 </section>
@@ -83,62 +87,196 @@
 <!-- ═══ TICKER MARQUEE ═══ -->
 <div class="marquee-wrap">
   <div class="marquee-track">
-    <div class="marquee-item"><i class="fas fa-cube"></i> 52K+ MEMBERS</div>
-    <div class="marquee-item"><i class="fas fa-bolt"></i> 24/7 ONLINE SERVERS</div>
-    <div class="marquee-item"><i class="fas fa-trophy"></i> MONTHLY BUILD CONTESTS</div>
+    <div class="marquee-item"><i class="fas fa-cube"></i> 52K+ COMMUNITY MEMBERS</div>
     <div class="marquee-item"><i class="fas fa-hammer"></i> WEEKLY TOURNAMENTS</div>
-    <div class="marquee-item"><i class="fas fa-users"></i> ACTIVE MODERATION</div>
-    <div class="marquee-item"><i class="fas fa-cube"></i> 52K+ MEMBERS</div>
-    <div class="marquee-item"><i class="fas fa-bolt"></i> 24/7 ONLINE SERVERS</div>
     <div class="marquee-item"><i class="fas fa-trophy"></i> MONTHLY BUILD CONTESTS</div>
+    <div class="marquee-item"><i class="fas fa-shield-alt"></i> SAFE MODERATION</div>
+    <div class="marquee-item"><i class="fas fa-palette"></i> CREATIVE BUILD SHOWCASES</div>
+    <div class="marquee-item"><i class="fas fa-star"></i> BANGLADESH #1 MC COMMUNITY</div>
+    <div class="marquee-item"><i class="fas fa-cube"></i> 52K+ COMMUNITY MEMBERS</div>
     <div class="marquee-item"><i class="fas fa-hammer"></i> WEEKLY TOURNAMENTS</div>
-    <div class="marquee-item"><i class="fas fa-users"></i> ACTIVE MODERATION</div>
+    <div class="marquee-item"><i class="fas fa-trophy"></i> MONTHLY BUILD CONTESTS</div>
+    <div class="marquee-item"><i class="fas fa-shield-alt"></i> SAFE MODERATION</div>
+    <div class="marquee-item"><i class="fas fa-palette"></i> CREATIVE BUILD SHOWCASES</div>
+    <div class="marquee-item"><i class="fas fa-star"></i> BANGLADESH #1 MC COMMUNITY</div>
   </div>
 </div>
 
-<!-- ═══ ABOUT SECTION (SPAWN POINT) ═══ -->
+<!-- ═══ ABOUT / WHO WE ARE (Backend Driven Stats) ═══ -->
 <section class="section" id="about">
   <div style="max-width:1200px;margin:0 auto;">
-    <span class="section-eyebrow">📖 THE SPAWN POINT</span>
-    <h2 class="section-title">Who We Are</h2>
-    <p class="section-desc">
+    <span class="section-eyebrow gsap-fade-up">📖 THE SPAWN POINT</span>
+    <h2 class="section-title gsap-fade-up">Who We Are</h2>
+    <p class="section-desc gsap-fade-up">
       Minecraft Bangladesh started as a small Facebook group in 2019 and grew into the country's biggest hangout for players who'd rather build a castle than argue about it.
     </p>
 
     <div class="live-stats-grid" id="homeStats">
-      <div class="live-stat-card">
+      <!-- Populated by backend fetch or fallback below -->
+      <div class="live-stat-card tilt-card gsap-scale-in">
         <i class="fas fa-users"></i>
-        <div class="num" data-final="52000" data-suffix="+">52,000+</div>
+        <div class="num" id="statMembers">52,000+</div>
         <div class="lbl">Community Members</div>
       </div>
-      <div class="live-stat-card">
-        <i class="fas fa-server"></i>
-        <div class="num" data-final="12" data-suffix="+">12+</div>
-        <div class="lbl">Active Servers</div>
+      <div class="live-stat-card tilt-card gsap-scale-in">
+        <i class="fas fa-network-wired"></i>
+        <div class="num" id="statHubs">12+</div>
+        <div class="lbl">Community Hubs</div>
       </div>
-      <div class="live-stat-card">
+      <div class="live-stat-card tilt-card gsap-scale-in">
         <i class="fas fa-trophy"></i>
-        <div class="num" data-final="150" data-suffix="+">150+</div>
+        <div class="num" id="statEvents">150+</div>
         <div class="lbl">Events Hosted</div>
       </div>
-      <div class="live-stat-card">
+      <div class="live-stat-card tilt-card gsap-scale-in">
         <i class="fab fa-discord"></i>
-        <div class="num" data-final="8500" data-suffix="+">8,500+</div>
+        <div class="num" id="statDiscord">8,500+</div>
         <div class="lbl">Discord Active</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ FEATURES SECTION (HOTBAR) ═══ -->
-<section class="section section--dark pat-grid" id="features">
-  <div style="max-width:1200px;margin:0 auto;">
-    <span class="section-eyebrow">🎒 YOUR HOTBAR</span>
-    <h2 class="section-title">What You Get</h2>
-    <p class="section-desc">Everything a builder needs, slotted and ready.</p>
+<!-- ═══ MEET THE TEAM SLIDESHOW ═══ -->
+<section class="section section--dark" id="community-members" style="padding:80px 0;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px;">
+    <span class="section-eyebrow" style="background:var(--gold);color:var(--black);">👑 THE COMMUNITY CREW</span>
+    <h2 class="section-title gsap-fade-up">Our Leaders &amp; Creators</h2>
+  </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:24px;">
-      <div style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:28px;box-shadow:6px 6px 0 var(--grass);">
+  <!-- Slideshow Container -->
+  <div class="team-slideshow-wrap" id="teamSlideshowWrap">
+    <div class="team-slideshow" id="teamSlideshow">
+
+      <!-- ── SLIDE 1 — Founder ── -->
+      <div class="team-slide active" data-index="0">
+        <div class="team-slide-inner">
+          <div class="team-slide-content">
+            <div class="team-slide-heading">
+              <span class="team-slide-tag">Meet The Team</span>
+              <p class="team-slide-sub">Meet the people who make Minecraft Bangladesh special!</p>
+            </div>
+            <div class="team-slide-bio">
+              <p>The Founder of Minecraft Bangladesh — the person who started it all back in 2019. Planning, building, and improving everything to keep the community fun, fresh, and growing every day.</p>
+              <p>When not working on community stuff, you'll usually find them hanging out on Discord. Come say hi!</p>
+            </div>
+            <div class="team-slide-profile">
+              <img class="team-slide-avatar" src="https://crafatar.com/avatars/Steve?size=40&overlay" alt="Founder Avatar" onerror="this.src='logo.png'">
+              <div>
+                <div class="team-slide-name">Founder</div>
+                <div class="team-slide-role">Chief / Founder</div>
+              </div>
+            </div>
+          </div>
+          <div class="team-slide-skin">
+            <img src="https://crafatar.com/renders/body/Steve?scale=8&overlay" alt="Founder Minecraft Skin" onerror="this.src='logo.png';this.style.opacity='1';this.style.borderRadius='8px';this.style.border='3px solid var(--teal)';">
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 2 — Co-Founder ── -->
+      <div class="team-slide" data-index="1">
+        <div class="team-slide-inner">
+          <div class="team-slide-content">
+            <div class="team-slide-heading">
+              <span class="team-slide-tag">Meet The Team</span>
+              <p class="team-slide-sub">Meet the people who make Minecraft Bangladesh special!</p>
+            </div>
+            <div class="team-slide-bio">
+              <p>The Co-Founder who helped shape the community from day one. Managing operations, events, and keeping everyone in line — in the best possible way.</p>
+              <p>Always around on Discord and Facebook, ready to help out and connect with players across Bangladesh.</p>
+            </div>
+            <div class="team-slide-profile">
+              <img class="team-slide-avatar" src="https://crafatar.com/avatars/Alex?size=40&overlay" alt="Co-Founder Avatar" onerror="this.src='logo.png'">
+              <div>
+                <div class="team-slide-name">Co-Founder</div>
+                <div class="team-slide-role">Co-Chief</div>
+              </div>
+            </div>
+          </div>
+          <div class="team-slide-skin">
+            <img src="https://crafatar.com/renders/body/Alex?scale=8&overlay" alt="Co-Founder Minecraft Skin" onerror="this.src='logo.png';this.style.opacity='1';this.style.borderRadius='8px';this.style.border='3px solid var(--teal)';">
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 3 — Head Admin ── -->
+      <div class="team-slide" data-index="2">
+        <div class="team-slide-inner">
+          <div class="team-slide-content">
+            <div class="team-slide-heading">
+              <span class="team-slide-tag">Meet The Team</span>
+              <p class="team-slide-sub">Meet the people who make Minecraft Bangladesh special!</p>
+            </div>
+            <div class="team-slide-bio">
+              <p>Our Head Admin keeps the community rules enforced and the vibes positive. Reports, bans, or just a question — they're your first point of contact.</p>
+              <p>Passionate about fair play and a friendly environment for every single member of the community.</p>
+            </div>
+            <div class="team-slide-profile">
+              <img class="team-slide-avatar" src="https://crafatar.com/avatars/Notch?size=40&overlay" alt="Admin Avatar" onerror="this.src='logo.png'">
+              <div>
+                <div class="team-slide-name">Head Admin</div>
+                <div class="team-slide-role">Community Admin</div>
+              </div>
+            </div>
+          </div>
+          <div class="team-slide-skin">
+            <img src="https://crafatar.com/renders/body/Notch?scale=8&overlay" alt="Admin Minecraft Skin" onerror="this.src='logo.png';this.style.opacity='1';this.style.borderRadius='8px';this.style.border='3px solid var(--teal)';">
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SLIDE 4 — Event Lead ── -->
+      <div class="team-slide" data-index="3">
+        <div class="team-slide-inner">
+          <div class="team-slide-content">
+            <div class="team-slide-heading">
+              <span class="team-slide-tag">Meet The Team</span>
+              <p class="team-slide-sub">Meet the people who make Minecraft Bangladesh special!</p>
+            </div>
+            <div class="team-slide-bio">
+              <p>The Event Lead organises every weekly tournament, monthly build contest, and community game night. If something fun is happening — they planned it.</p>
+              <p>Always cooking up new event ideas and making sure every player gets a chance to shine and compete.</p>
+            </div>
+            <div class="team-slide-profile">
+              <img class="team-slide-avatar" src="https://crafatar.com/avatars/Jeb_?size=40&overlay" alt="Event Lead Avatar" onerror="this.src='logo.png'">
+              <div>
+                <div class="team-slide-name">Event Lead</div>
+                <div class="team-slide-role">Tournament Director</div>
+              </div>
+            </div>
+          </div>
+          <div class="team-slide-skin">
+            <img src="https://crafatar.com/renders/body/Jeb_?scale=8&overlay" alt="Event Lead Minecraft Skin" onerror="this.src='logo.png';this.style.opacity='1';this.style.borderRadius='8px';this.style.border='3px solid var(--teal)';">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Dot Navigation -->
+    <div class="team-slide-dots" id="teamSlideDots">
+      <button class="team-dot active" data-slide="0" aria-label="Slide 1"></button>
+      <button class="team-dot" data-slide="1" aria-label="Slide 2"></button>
+      <button class="team-dot" data-slide="2" aria-label="Slide 3"></button>
+      <button class="team-dot" data-slide="3" aria-label="Slide 4"></button>
+    </div>
+
+    <!-- Prev / Next Arrows -->
+    <button class="team-slide-arrow team-slide-prev" id="teamSlidePrev" aria-label="Previous">&#8249;</button>
+    <button class="team-slide-arrow team-slide-next" id="teamSlideNext" aria-label="Next">&#8250;</button>
+  </div>
+</section>
+
+<!-- ═══ FEATURES SECTION (HOTBAR) ═══ -->
+<section class="section" id="features">
+  <div style="max-width:1200px;margin:0 auto;">
+    <span class="section-eyebrow gsap-fade-up">🎒 YOUR HOTBAR</span>
+    <h2 class="section-title gsap-fade-up">What You Get</h2>
+    <p class="section-desc gsap-fade-up">Everything a builder needs, slotted and ready.</p>
+
+    <div class="motion-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:24px;">
+      <div class="tilt-card gsap-scale-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:28px;box-shadow:6px 6px 0 var(--grass);">
         <div style="width:48px;height:48px;background:var(--grass);color:var(--white);border:3px solid var(--black);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">
           <i class="fas fa-users"></i>
         </div>
@@ -148,7 +286,7 @@
         </p>
       </div>
 
-      <div style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:28px;box-shadow:6px 6px 0 var(--gold);">
+      <div class="tilt-card gsap-scale-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:28px;box-shadow:6px 6px 0 var(--gold);">
         <div style="width:48px;height:48px;background:var(--gold);color:var(--black);border:3px solid var(--black);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">
           <i class="fas fa-trophy"></i>
         </div>
@@ -158,18 +296,18 @@
         </p>
       </div>
 
-      <div style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:28px;box-shadow:6px 6px 0 var(--red);">
+      <div class="tilt-card gsap-scale-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:28px;box-shadow:6px 6px 0 var(--red);">
         <div style="width:48px;height:48px;background:var(--red);color:var(--white);border:3px solid var(--black);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">
-          <i class="fas fa-server"></i>
+          <i class="fas fa-calendar-alt"></i>
         </div>
-        <h3 style="font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">Community Servers</h3>
+        <h3 style="font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">Weekly Events</h3>
         <p style="font-size:14px;color:#3a3224;line-height:1.6;font-family:var(--font-body);">
-          Curated survival, skyblock and minigame servers run by the community, for the community.
+          Game nights, minigame tournaments, redstone workshops, and creative showcase streams.
         </p>
       </div>
 
-      <div style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:28px;box-shadow:6px 6px 0 var(--white);">
-        <div style="width:48px;height:48px;background:var(--white);color:var(--black);border:3px solid var(--black);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">
+      <div class="tilt-card gsap-scale-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:28px;box-shadow:6px 6px 0 var(--black);">
+        <div style="width:48px;height:48px;background:var(--black);color:var(--gold);border:3px solid var(--black);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;box-shadow:3px 3px 0 var(--grass);">
           <i class="fas fa-shield-alt"></i>
         </div>
         <h3 style="font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">Safe Moderation</h3>
@@ -182,57 +320,35 @@
 </section>
 
 <!-- ═══ CRAFTING TABLE TIMELINE ═══ -->
-<section class="section" id="journey">
+<section class="section section--dark" id="journey">
   <div style="max-width:1200px;margin:0 auto;">
     <span class="section-eyebrow">🗺 THE CRAFTING TABLE</span>
-    <h2 class="section-title">How to Get Involved</h2>
-    <p class="section-desc">Four steps between you and your first build with us.</p>
+    <h2 class="section-title gsap-fade-up">How to Get Involved</h2>
+    <p class="section-desc gsap-fade-up">Four steps between you and your first build with us.</p>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:24px;">
-      <div style="background:var(--white);border:4px solid var(--black);box-shadow:6px 6px 0 var(--black);padding:24px;position:relative;">
+    <div class="motion-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:24px;">
+      <div class="tilt-card gsap-slide-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);box-shadow:6px 6px 0 var(--grass);padding:24px;position:relative;">
         <div style="width:40px;height:40px;background:var(--grass);color:var(--white);border:3px solid var(--black);font-weight:900;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">1</div>
         <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">Join the Hub</h4>
         <p style="font-size:14px;color:#3a3224;line-height:1.5;font-family:var(--font-body);">Hop into our Facebook group or Discord server — takes 30 seconds, no application needed.</p>
       </div>
 
-      <div style="background:var(--white);border:4px solid var(--black);box-shadow:6px 6px 0 var(--black);padding:24px;position:relative;">
+      <div class="tilt-card gsap-slide-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);box-shadow:6px 6px 0 var(--gold);padding:24px;position:relative;">
         <div style="width:40px;height:40px;background:var(--gold);color:var(--black);border:3px solid var(--black);font-weight:900;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">2</div>
         <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">Say Hello</h4>
         <p style="font-size:14px;color:#3a3224;line-height:1.5;font-family:var(--font-body);">Introduce yourself in #new-arrivals. Tell us what you build — survival, redstone, or pure chaos.</p>
       </div>
 
-      <div style="background:var(--white);border:4px solid var(--black);box-shadow:6px 6px 0 var(--black);padding:24px;position:relative;">
+      <div class="tilt-card gsap-slide-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);box-shadow:6px 6px 0 var(--red);padding:24px;position:relative;">
         <div style="width:40px;height:40px;background:var(--red);color:var(--white);border:3px solid var(--black);font-weight:900;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">3</div>
-        <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">Pick Your Server</h4>
-        <p style="font-size:14px;color:#3a3224;line-height:1.5;font-family:var(--font-body);">Choose from our survival, creative or minigame servers and grab the IP from #server-info.</p>
+        <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">Join Channels</h4>
+        <p style="font-size:14px;color:#3a3224;line-height:1.5;font-family:var(--font-body);">Choose your interests — #build-showcase, #redstone-tech, or #minigame-lobby.</p>
       </div>
 
-      <div style="background:var(--white);border:4px solid var(--black);box-shadow:6px 6px 0 var(--black);padding:24px;position:relative;">
-        <div style="width:40px;height:40px;background:var(--white);color:var(--black);border:3px solid var(--black);font-weight:900;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">4</div>
+      <div class="tilt-card gsap-slide-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);box-shadow:6px 6px 0 var(--black);padding:24px;position:relative;">
+        <div style="width:40px;height:40px;background:var(--black);color:var(--white);border:3px solid var(--black);font-weight:900;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;box-shadow:3px 3px 0 var(--grass);">4</div>
         <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">Start Building</h4>
         <p style="font-size:14px;color:#3a3224;line-height:1.5;font-family:var(--font-body);">Join events, enter contests, and become part of Bangladesh's biggest Minecraft story.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SERVER AVAILABILITY PREVIEW ═══ -->
-<section class="section section--dark" id="featured-server">
-  <div style="max-width:1200px;margin:0 auto;">
-    <span class="section-eyebrow">⚡ INSTANT CONNECT</span>
-    <h2 class="section-title">Official Survival Server</h2>
-    <p class="section-desc">Join the main survival realm. 24/7 uptime, land protection, and community economy.</p>
-
-    <div style="background:var(--white);color:var(--black);border:5px solid var(--black);padding:32px;box-shadow:10px 10px 0 var(--grass);max-width:720px;margin:0 auto;">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:16px;">
-        <h3 style="font-size:24px;font-weight:900;text-transform:uppercase;"><i class="fas fa-shield-alt" style="color:var(--grass);margin-right:8px;"></i> MCBD Official Survival</h3>
-        <span class="server-status-pill online"><span class="dot-pulse"></span> ONLINE</span>
-      </div>
-      <div class="server-pop-bar"><div class="server-pop-fill" style="width:68%;"></div></div>
-      <div class="server-pop-label">142 / 200 PLAYERS ONLINE</div>
-      <div class="server-ip-row">
-        <span>play.mcbd.net</span>
-        <button onclick="navigator.clipboard.writeText('play.mcbd.net'); showToast('IP play.mcbd.net copied to clipboard!');">COPY IP</button>
       </div>
     </div>
   </div>
@@ -242,39 +358,339 @@
 <div id="footerMount"></div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  /* Typewriter effect */
+document.addEventListener('DOMContentLoaded', async () => {
+  /* ── Load real members from API and replace carousel ── */
+  if (typeof loadHomeMembersCarousel === 'function') {
+    loadHomeMembersCarousel();
+  }
+
+  /* ── Typewriter Effect ── */
   const target = document.getElementById('typewriterTarget');
   if (target && typeof Typewriter !== 'undefined') {
     new Typewriter(target, {
       strings: [
         'BUILD A CASTLE, NOT AN ARGUMENT.',
-        'SURVIVAL • CREATIVE • REDSTONE • PVP',
-        '52,000+ BUILDERS IN BANGLADESH'
+        '52,000+ BUILDERS • SURVIVAL • REDSTONE • CREATIVE',
+        'BANGLADESH #1 MINECRAFT COMMUNITY HUB',
+        'JOIN. BUILD. CONQUER. REPEAT.'
       ],
       autoStart: true,
       loop: true,
       delay: 50,
+      deleteSpeed: 30,
     });
   }
 
-  /* Count up animation */
-  const statNums = document.querySelectorAll('#homeStats .num');
-  statNums.forEach(el => {
-    const targetVal = parseInt(el.getAttribute('data-final'), 10) || 0;
-    const suffix = el.getAttribute('data-suffix') || '';
-    let start = null;
-    const duration = 1500;
-    function step(ts) {
-      if (!start) start = ts;
-      const progress = Math.min((ts - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.floor(eased * targetVal).toLocaleString() + suffix;
-      if (progress < 1) requestAnimationFrame(step);
+  /* ── Fetch backend stats and update "Who We Are" ── */
+  async function loadHomeStats() {
+    try {
+      const statsList = await apiGet('/stats');
+      if (Array.isArray(statsList) && statsList.length) {
+        statsList.forEach(s => {
+          const formattedVal = Number(s.value).toLocaleString() + (s.suffix || '');
+          if (s.key === 'total_members') {
+            const el = document.getElementById('statMembers');
+            if (el) el.textContent = formattedVal;
+            const heroBadge = document.getElementById('heroMemberCount');
+            if (heroBadge) heroBadge.textContent = formattedVal;
+          }
+          if (s.key === 'active_servers' || s.key === 'total_servers') {
+            const el = document.getElementById('statHubs');
+            if (el) el.textContent = formattedVal;
+          }
+          if (s.key === 'events_hosted' || s.key === 'total_events') {
+            const el = document.getElementById('statEvents');
+            if (el) el.textContent = formattedVal;
+          }
+          if (s.key === 'discord_online') {
+            const el = document.getElementById('statDiscord');
+            if (el) el.textContent = formattedVal;
+          }
+        });
+      }
+    } catch (e) {
+      console.info('Using static stats fallback');
     }
-    requestAnimationFrame(step);
-  });
+  }
+
+  loadHomeStats();
+
+  /* ── GSAP ScrollTrigger Animations ── */
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* Set initial states ONLY when GSAP is available */
+    gsap.set('.gsap-fade-up',  { opacity: 0, y: 48 });
+    gsap.set('.gsap-scale-in', { opacity: 0, scale: 0.85, y: 32 });
+    gsap.set('.gsap-slide-in', { opacity: 0 });
+
+    /* Fade-up elements */
+    gsap.utils.toArray('.gsap-fade-up').forEach((el, i) => {
+      gsap.to(el, {
+        opacity: 1, y: 0, duration: 0.8,
+        delay: i * 0.08,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+      });
+    });
+
+    /* Scale-in cards */
+    gsap.utils.toArray('.gsap-scale-in').forEach((el, i) => {
+      gsap.to(el, {
+        opacity: 1, scale: 1, y: 0, duration: 0.65,
+        delay: i * 0.1,
+        ease: 'back.out(1.4)',
+        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+      });
+    });
+
+    /* Slide-in staggered cards */
+    gsap.utils.toArray('.gsap-slide-in').forEach((el, i) => {
+      gsap.set(el, { x: i % 2 === 0 ? -40 : 40 });
+      gsap.to(el, {
+        opacity: 1, x: 0, y: 0, duration: 0.7,
+        delay: i * 0.12,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+      });
+    });
+
+    /* Parallax on hero section */
+    gsap.to('#hero', {
+      backgroundPositionY: '30%',
+      ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+    });
+
+    /* Motion grid stagger */
+    const mgItems = [...document.querySelectorAll('.motion-grid > *')].filter(
+      el => !el.classList.contains('gsap-scale-in') && !el.classList.contains('gsap-slide-in') && !el.classList.contains('gsap-fade-up')
+    );
+    if (mgItems.length) {
+      gsap.set(mgItems, { opacity: 0, y: 40 });
+      mgItems.forEach((el, i) => {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.6, delay: i * 0.08,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' }
+        });
+      });
+    }
+  }
 });
+
+/* ═══ MEET THE TEAM SLIDESHOW ENGINE ═══ */
+(function() {
+  // Static fallback data — replaced when API responds
+  const FALLBACK_MEMBERS = [
+    {
+      name: 'Founder',
+      role: 'Chief / Community Founder',
+      bio: [
+        'The Founder of Minecraft Bangladesh — the person who started it all back in 2019. Planning, building, and improving everything to keep the community fun, fresh, and growing every day.',
+        "When not working on community stuff, you'll usually find them hanging out on Discord. Come say hi!"
+      ],
+      mc_username: 'Steve'
+    },
+    {
+      name: 'Co-Founder',
+      role: 'Co-Chief',
+      bio: [
+        'The Co-Founder who helped shape the community from day one. Managing operations, events, and keeping everyone in line — in the best possible way.',
+        'Always around on Discord and Facebook, ready to help out and connect with players across Bangladesh.'
+      ],
+      mc_username: 'Alex'
+    },
+    {
+      name: 'Head Admin',
+      role: 'Community Admin',
+      bio: [
+        "Our Head Admin keeps the community rules enforced and the vibes positive. Reports, bans, or just a question — they're your first point of contact.",
+        'Passionate about fair play and a friendly environment for every single member of the community.'
+      ],
+      mc_username: 'Notch'
+    },
+    {
+      name: 'Event Lead',
+      role: 'Tournament Director',
+      bio: [
+        'The Event Lead organises every weekly tournament, monthly build contest, and community game night. If something fun is happening — they planned it.',
+        'Always cooking up new event ideas and making sure every player gets a chance to shine and compete.'
+      ],
+      mc_username: 'Jeb_'
+    }
+  ];
+
+  function buildSlide(m, index) {
+    const avatarSrc   = m.mc_username
+      ? `https://crafatar.com/avatars/${encodeURIComponent(m.mc_username)}?size=40&overlay`
+      : 'logo.png';
+    const skinSrc     = m.mc_username
+      ? `https://crafatar.com/renders/body/${encodeURIComponent(m.mc_username)}?scale=8&overlay`
+      : '';
+    const bioHtml     = (m.bio || []).map(p => `<p>${p}</p>`).join('');
+    const activeClass = index === 0 ? ' active' : '';
+
+    return `
+      <div class="team-slide${activeClass}" data-index="${index}">
+        <div class="team-slide-inner">
+          <div class="team-slide-content">
+            <div class="team-slide-heading">
+              <span class="team-slide-tag">Meet The Team</span>
+              <p class="team-slide-sub">Meet the people who make Minecraft Bangladesh special!</p>
+            </div>
+            <div class="team-slide-bio">${bioHtml}</div>
+            <div class="team-slide-profile">
+              <img class="team-slide-avatar"
+                   src="${avatarSrc}"
+                   alt="${m.name} Avatar"
+                   onerror="this.src='logo.png'">
+              <div>
+                <div class="team-slide-name">${m.name}</div>
+                <div class="team-slide-role">${m.role}</div>
+              </div>
+            </div>
+          </div>
+          <div class="team-slide-skin">
+            <img src="${skinSrc || 'logo.png'}" alt="${m.name} Minecraft Skin" loading="lazy" onerror="this.src='logo.png';this.style.opacity='1';this.style.borderRadius='8px';this.style.border='3px solid var(--teal)';">
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function buildDots(count) {
+    const dotsEl = document.getElementById('teamSlideDots');
+    if (!dotsEl) return;
+    dotsEl.innerHTML = Array.from({ length: count }, (_, i) =>
+      `<button class="team-dot${i === 0 ? ' active' : ''}" data-slide="${i}" aria-label="Slide ${i + 1}"></button>`
+    ).join('');
+    dotsEl.querySelectorAll('.team-dot').forEach(btn => {
+      btn.addEventListener('click', () => goTo(parseInt(btn.dataset.slide)));
+    });
+  }
+
+  async function populateFromAPI() {
+    try {
+      const members = await apiGet('/members');
+      if (!members || !members.length) return;
+
+      const slideshow = document.getElementById('teamSlideshow');
+      if (!slideshow) return;
+
+      const mapped = members.slice(0, 8).map(m => ({
+        name:        m.display_name || 'Team Member',
+        role:        m.role_title   || 'Community Member',
+        bio:         m.bio ? [m.bio] : [`${m.display_name} is a key part of the Minecraft Bangladesh community team.`],
+        mc_username: m.mc_username  || null
+      }));
+
+      slideshow.innerHTML = mapped.map((m, i) => buildSlide(m, i)).join('');
+      buildDots(mapped.length);
+      totalSlides = mapped.length;
+      currentSlide = 0;
+    } catch (e) {
+      /* Keep static fallback */
+    }
+  }
+
+  let currentSlide = 0;
+  let totalSlides  = 4;
+  let autoTimer    = null;
+  let isAnimating  = false;
+
+  function goTo(index) {
+    if (isAnimating) return;
+    const slides  = document.querySelectorAll('.team-slide');
+    const dots    = document.querySelectorAll('.team-dot');
+    if (!slides.length) return;
+
+    totalSlides = slides.length;
+    const next  = ((index % totalSlides) + totalSlides) % totalSlides;
+    if (next === currentSlide) return;
+
+    isAnimating = true;
+    const outSlide = slides[currentSlide];
+    const inSlide  = slides[next];
+
+    // Direction
+    const dir = next > currentSlide ? 1 : -1;
+
+    if (typeof gsap !== 'undefined') {
+      gsap.set(inSlide, { opacity: 0, x: dir * 60, display: 'flex' });
+      gsap.to(outSlide, {
+        opacity: 0, x: dir * -60, duration: 0.42,
+        ease: 'power2.in',
+        onComplete: () => { outSlide.classList.remove('active'); outSlide.style.display = ''; }
+      });
+      gsap.to(inSlide, {
+        opacity: 1, x: 0, duration: 0.48,
+        delay: 0.28,
+        ease: 'power3.out',
+        onComplete: () => {
+          inSlide.classList.add('active');
+          gsap.set(inSlide, { clearProps: 'x,opacity,display' });
+          isAnimating = false;
+        }
+      });
+    } else {
+      outSlide.classList.remove('active');
+      inSlide.classList.add('active');
+      isAnimating = false;
+    }
+
+    dots.forEach((d, i) => d.classList.toggle('active', i === next));
+    currentSlide = next;
+    resetAuto();
+  }
+
+  function next() { goTo(currentSlide + 1); }
+  function prev() { goTo(currentSlide - 1); }
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(next, 6000);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const wrap    = document.getElementById('teamSlideshowWrap');
+    const prevBtn = document.getElementById('teamSlidePrev');
+    const nextBtn = document.getElementById('teamSlideNext');
+
+    if (!wrap) return;
+
+    // Wire static dots
+    buildDots(document.querySelectorAll('.team-slide').length);
+
+    // Prev / Next
+    if (prevBtn) prevBtn.addEventListener('click', prev);
+    if (nextBtn) nextBtn.addEventListener('click', next);
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (!document.getElementById('community-members')) return;
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft')  prev();
+    });
+
+    // Pause on hover
+    wrap.addEventListener('mouseenter', () => clearInterval(autoTimer));
+    wrap.addEventListener('mouseleave', resetAuto);
+
+    // Touch swipe
+    let touchStartX = 0;
+    wrap.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    wrap.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+    }, { passive: true });
+
+    // Try to load from API
+    if (typeof apiGet === 'function') populateFromAPI();
+
+    // Start auto-advance
+    resetAuto();
+  });
+})();
 </script>
 </body>
 </html>

@@ -39,7 +39,7 @@ async def list_news(limit: int = 20, category: str | None = None):
     pool = get_pool()
     if category:
         rows = await pool.fetch(
-            """SELECT id, slug, title, excerpt, body, category, cover_icon, is_published, is_pinned, published_at
+            """SELECT id, slug, title, excerpt, body, category, cover_icon, image_url, is_published, is_pinned, published_at
                FROM news_posts
                WHERE is_published = true AND category = $1
                ORDER BY is_pinned DESC, published_at DESC LIMIT $2""",
@@ -48,7 +48,7 @@ async def list_news(limit: int = 20, category: str | None = None):
         )
     else:
         rows = await pool.fetch(
-            """SELECT id, slug, title, excerpt, body, category, cover_icon, is_published, is_pinned, published_at
+            """SELECT id, slug, title, excerpt, body, category, cover_icon, image_url, is_published, is_pinned, published_at
                FROM news_posts
                WHERE is_published = true
                ORDER BY is_pinned DESC, published_at DESC LIMIT $1""",
@@ -61,7 +61,7 @@ async def list_news(limit: int = 20, category: str | None = None):
 async def get_news_post(slug: str):
     pool = get_pool()
     row = await pool.fetchrow(
-        """SELECT id, slug, title, excerpt, body, category, cover_icon, is_pinned, published_at
+        """SELECT id, slug, title, excerpt, body, category, cover_icon, image_url, is_pinned, published_at
            FROM news_posts WHERE slug = $1 AND is_published = true""",
         slug,
     )

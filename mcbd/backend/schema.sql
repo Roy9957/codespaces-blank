@@ -57,6 +57,7 @@ CREATE TABLE news_posts (
     body        TEXT NOT NULL,               -- markdown or plain text
     category    VARCHAR(40) NOT NULL DEFAULT 'announcement', -- 'announcement'|'event'|'update'|'contest'
     cover_icon  VARCHAR(50) DEFAULT 'fa-solid fa-newspaper',
+    image_url   VARCHAR(500),                -- optional cover image URL
     is_published BOOLEAN NOT NULL DEFAULT true,
     is_pinned    BOOLEAN NOT NULL DEFAULT false,
     published_at TIMESTAMPTZ NOT NULL DEFAULT now(),

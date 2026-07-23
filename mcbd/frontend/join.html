@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=Press+Start+2P&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <link rel="stylesheet" href="static/css/base.css">
 <link rel="stylesheet" href="static/css/extend.css">
 <script src="static/js/api.js"></script>
@@ -40,11 +42,14 @@
       </div>
 
       <div style="background:var(--white);border:4px solid var(--black);box-shadow:7px 7px 0 var(--black);padding:28px;">
-        <span class="section-eyebrow" style="background:var(--teal);">⚡ INSTANT SERVER IP</span>
-        <h3 style="font-size:22px;font-weight:900;text-transform:uppercase;margin:12px 0 10px;">Join in-Game</h3>
-        <div class="server-ip-row" style="margin-top:14px;">
-          <span>play.mcbd.net</span>
-          <button onclick="navigator.clipboard.writeText('play.mcbd.net'); showToast('IP play.mcbd.net copied to clipboard!');">COPY IP</button>
+        <span class="section-eyebrow" style="background:var(--grass);">🌐 SOCIAL LINKS</span>
+        <h3 style="font-size:22px;font-weight:900;text-transform:uppercase;margin:12px 0 10px;">Follow &amp; Connect</h3>
+        <p style="font-size:14px;color:#3a3224;line-height:1.6;font-family:var(--font-body);margin-bottom:18px;">
+          Stay updated with our latest events, contests, and community news — follow us everywhere.
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="https://facebook.com" target="_blank" class="mc-btn mc-btn--fb" aria-label="Facebook" data-tooltip="Facebook Group"><i class="fab fa-facebook-f"></i> Facebook</a>
+          <button class="mc-btn mc-btn--dc" aria-label="Discord" data-tooltip="Discord Server" onclick="openDiscordWidget('Minecraft BD Discord', '52,000+ Members', '@minecraftbd')"><i class="fab fa-discord"></i> Discord</button>
         </div>
       </div>
     </div>

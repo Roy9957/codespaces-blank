@@ -172,13 +172,16 @@ let newsCache = [];
 
 async function loadNews() {
   const tbody = document.getElementById('newsTableBody');
-  tbody.innerHTML = `<tr><td colspan="5">Loading…</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="6">Loading…</td></tr>`;
   const posts = await adminApi('GET', '/admin/news');
   if (!posts) return;
   newsCache = posts;
   tbody.innerHTML = posts.map((p) => `
     <tr>
-      <td>${escapeHtml(p.title)}</td>
+      <td style="display:flex;align-items:center;gap:10px;">
+        ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" style="width:36px;height:36px;object-fit:cover;border:2px solid var(--black);" onerror="this.style.display='none';">` : `<i class="${escapeHtml(p.cover_icon || 'fa-solid fa-newspaper')}" style="font-size:18px;color:var(--grass);"></i>`}
+        <strong>${escapeHtml(p.title)}</strong>
+      </td>
       <td>${escapeHtml(p.category)}</td>
       <td>${p.is_pinned ? '<i class="fas fa-thumbtack" style="color:var(--gold);"></i>' : '—'}</td>
       <td>${p.is_published ? '<span class="badge status-online">Published</span>' : '<span class="badge status-offline">Draft</span>'}</td>
@@ -197,6 +200,7 @@ function openNewsForm() {
   document.getElementById('newsTitle').value = '';
   document.getElementById('newsCategory').value = 'announcement';
   document.getElementById('newsIcon').value = 'fa-solid fa-newspaper';
+  document.getElementById('newsImageUrl').value = '';
   document.getElementById('newsExcerpt').value = '';
   document.getElementById('newsBody').value = '';
   document.getElementById('newsPublished').checked = true;
@@ -216,6 +220,7 @@ function editNews(id) {
   document.getElementById('newsTitle').value = p.title;
   document.getElementById('newsCategory').value = p.category;
   document.getElementById('newsIcon').value = p.cover_icon || 'fa-solid fa-newspaper';
+  document.getElementById('newsImageUrl').value = p.image_url || '';
   document.getElementById('newsExcerpt').value = p.excerpt || '';
   document.getElementById('newsBody').value = p.body;
   document.getElementById('newsPinned').checked = p.is_pinned;
@@ -230,6 +235,7 @@ async function saveNews() {
     title: document.getElementById('newsTitle').value.trim(),
     category: document.getElementById('newsCategory').value,
     cover_icon: document.getElementById('newsIcon').value.trim() || 'fa-solid fa-newspaper',
+    image_url: document.getElementById('newsImageUrl').value.trim() || null,
     excerpt: document.getElementById('newsExcerpt').value.trim() || null,
     body: document.getElementById('newsBody').value.trim(),
     is_published: document.getElementById('newsPublished').checked,
