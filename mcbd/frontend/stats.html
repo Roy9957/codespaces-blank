@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="description" content="Live community stats for Minecraft Bangladesh — members, Discord activity, servers, and events.">
+<title>Live Stats — Minecraft Bangladesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="static/css/base.css">
+<link rel="stylesheet" href="static/css/extend.css">
+<script src="static/js/api.js"></script>
+<script src="static/js/shared.js"></script>
+</head>
+<body>
+
+<div id="navbarMount"></div>
+
+<header class="page-header">
+  <span class="section-eyebrow reveal">📊 THE SCOREBOARD</span>
+  <h1>Live Community Stats</h1>
+  <p>Real numbers, pulled straight from our database. Refreshed every time you load this page.</p>
+</header>
+
+<section class="section">
+  <div id="statsState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading live stats…</div>
+  <div class="live-stats-grid" id="statsGrid" style="display:none;"></div>
+</section>
+
+<div id="footerMount"></div>
+
+<script>
+async function loadStats() {
+  const stateEl = document.getElementById('statsState');
+  const grid = document.getElementById('statsGrid');
+  try {
+    const stats = await apiGet('/stats');
+    if (!stats.length) {
+      stateEl.innerHTML = '<i class="fas fa-circle-info"></i> No stats published yet.';
+      return;
+    }
+    grid.innerHTML = stats.map(stat => `
+      <div class="live-stat-card">
+        <i class="${escapeHtml(stat.icon)}"></i>
+        <div class="num" data-final="${stat.value}" data-suffix="${escapeHtml(stat.suffix)}">0</div>
+        <div class="lbl">${escapeHtml(stat.label)}</div>
+      </div>
+    `).join('');
+    stateEl.style.display = 'none';
+    grid.style.display = 'grid';
+
+    /* simple count-up animation, no GSAP dependency on this page */
+    grid.querySelectorAll('.num').forEach(el => {
+      const target = parseInt(el.getAttribute('data-final'), 10) || 0;
+      const suffix = el.getAttribute('data-suffix') || '';
+      let start = null;
+      const duration = 1200;
+      function step(ts) {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  } catch (err) {
+    console.error(err);
+    stateEl.classList.add('is-error');
+    stateEl.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Could not load live stats. Please try again shortly.';
+  }
+}
+document.addEventListener('DOMContentLoaded', loadStats);
+</script>
+</body>
+</html>

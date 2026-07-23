@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="description" content="Apply to join Minecraft Bangladesh, open a support ticket, or send us a report.">
+<title>Join Us — Minecraft Bangladesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="static/css/base.css">
+<link rel="stylesheet" href="static/css/extend.css">
+<script src="static/js/api.js"></script>
+<script src="static/js/shared.js"></script>
+</head>
+<body>
+
+<div id="navbarMount"></div>
+
+<header class="page-header">
+  <span class="section-eyebrow reveal">✉️ SEND A MESSAGE</span>
+  <h1>Join Us / Contact</h1>
+  <p>Apply to join, open a support ticket, or send a report — pick a category below. Our team reviews every submission.</p>
+</header>
+
+<section class="section">
+  <div class="form-shell">
+    <form id="joinForm" novalidate>
+      <!-- honeypot field: invisible to humans, bots often fill it -->
+      <div class="form-field form-hp">
+        <label for="website">Website</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="form-field">
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+          <option value="">Loading categories…</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="full_name">Full Name / In-Game Name</label>
+        <input type="text" id="full_name" name="full_name" required maxlength="150" placeholder="e.g. Rafiul H.">
+      </div>
+
+      <div class="form-field">
+        <label for="contact">Email or Discord Tag</label>
+        <input type="text" id="contact" name="contact" required maxlength="150" placeholder="you@example.com or username#0000">
+      </div>
+
+      <div class="form-field">
+        <label for="subject">Subject (optional)</label>
+        <input type="text" id="subject" name="subject" maxlength="200" placeholder="Short summary">
+      </div>
+
+      <div class="form-field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" required maxlength="5000" placeholder="Tell us more…"></textarea>
+      </div>
+
+      <button type="submit" class="form-submit-btn" id="submitBtn">SUBMIT</button>
+
+      <div class="form-message" id="formMessage"></div>
+    </form>
+  </div>
+</section>
+
+<div id="footerMount"></div>
+
+<script>
+async function loadCategories() {
+  const select = document.getElementById('category');
+  try {
+    const cats = await apiGet('/form-categories');
+    select.innerHTML = '<option value="">Select a category…</option>' +
+      cats.map(c => `<option value="${escapeHtml(c.key)}">${escapeHtml(c.label)}</option>`).join('');
+
+    /* preselect from ?category=xyz in the URL, e.g. join.html?category=support_ticket */
+    const params = new URLSearchParams(window.location.search);
+    const preselect = params.get('category');
+    if (preselect && cats.some(c => c.key === preselect)) {
+      select.value = preselect;
+    }
+  } catch (err) {
+    console.error(err);
+    select.innerHTML = '<option value="">Could not load categories</option>';
+  }
+}
+
+function showFormMessage(text, type) {
+  const el = document.getElementById('formMessage');
+  el.textContent = text;
+  el.className = `form-message show ${type}`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadCategories();
+
+  const form = document.getElementById('joinForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const category = document.getElementById('category').value;
+    const full_name = document.getElementById('full_name').value.trim();
+    const contact = document.getElementById('contact').value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const message = document.getElementById('message').value.trim();
+    const website = document.getElementById('website').value;
+
+    if (!category || !full_name || !contact || !message) {
+      showFormMessage('Please fill in all required fields.', 'error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'SENDING…';
+
+    try {
+      await apiPost('/submissions', {
+        category_key: category,
+        full_name,
+        contact,
+        subject: subject || null,
+        message,
+        website: website || null,
+      });
+      showFormMessage("Sent! Our team will get back to you soon.", 'success');
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      showFormMessage(err.message || 'Something went wrong. Please try again.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'SUBMIT';
+    }
+  });
+});
+</script>
+</body>
+</html>

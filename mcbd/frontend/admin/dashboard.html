@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Minecraft Bangladesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="../static/css/base.css">
+<link rel="stylesheet" href="../static/css/extend.css">
+<link rel="stylesheet" href="../static/css/admin.css">
+<script src="../static/js/api.js"></script>
+<script src="../static/js/shared.js"></script>
+<script src="admin-common.js"></script>
+</head>
+<body>
+
+<div class="admin-topbar">
+  <div class="brand"><span class="block"></span> MC BANGLADESH — ADMIN</div>
+  <div class="admin-user">
+    <span id="adminDisplayName">…</span>
+    <span class="role-pill" id="adminRoleBadge">…</span>
+    <button class="admin-logout-btn" onclick="adminLogout()">LOG OUT</button>
+  </div>
+</div>
+
+<div class="admin-shell">
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-panel="panelStats">Stats</button>
+    <button class="admin-tab" data-panel="panelServers">Servers</button>
+    <button class="admin-tab" data-panel="panelNews">News</button>
+    <button class="admin-tab" data-panel="panelMembers">Members</button>
+    <button class="admin-tab" data-panel="panelRules">Rules</button>
+    <button class="admin-tab" data-panel="panelSubmissions">Form Submissions</button>
+  </div>
+
+  <!-- ═══ STATS ═══ -->
+  <section class="admin-panel active" id="panelStats">
+    <div class="admin-panel-head"><h2>Live Stats</h2></div>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Key</th><th>Label</th><th>Value</th><th>Suffix</th><th>Icon</th><th>Order</th><th>Save</th></tr></thead>
+        <tbody id="statsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ SERVERS ═══ -->
+  <section class="admin-panel" id="panelServers">
+    <div class="admin-panel-head">
+      <h2>Servers</h2>
+      <button class="admin-btn" onclick="openServerForm()">+ Add Server</button>
+    </div>
+
+    <div class="edit-card" id="serverForm">
+      <h3 id="serverFormTitle">Add Server</h3>
+      <input type="hidden" id="serverId">
+      <div class="edit-grid">
+        <div><label>Name</label><input id="srvName"></div>
+        <div><label>Type</label>
+          <select id="srvType">
+            <option value="survival">Survival</option>
+            <option value="creative">Creative</option>
+            <option value="redstone">Redstone</option>
+            <option value="minigame">Minigame</option>
+            <option value="pvp">PvP</option>
+          </select>
+        </div>
+        <div><label>IP Address</label><input id="srvIp" placeholder="play.mcbd.gg"></div>
+        <div><label>Port</label><input id="srvPort" type="number" value="25565"></div>
+        <div><label>Edition</label>
+          <select id="srvEdition">
+            <option value="both">Both</option>
+            <option value="java">Java</option>
+            <option value="bedrock">Bedrock</option>
+          </select>
+        </div>
+        <div><label>Status</label>
+          <select id="srvStatus">
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+            <option value="maintenance">Maintenance</option>
+          </select>
+        </div>
+        <div><label>Players Online</label><input id="srvPlayersOnline" type="number" value="0"></div>
+        <div><label>Players Max</label><input id="srvPlayersMax" type="number" value="100"></div>
+        <div class="full"><label>Description</label><textarea id="srvDesc"></textarea></div>
+        <div><label>Sort Order</label><input id="srvSort" type="number" value="0"></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="srvWhitelisted"><label for="srvWhitelisted" style="margin:0;">Whitelisted</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="srvFeatured"><label for="srvFeatured" style="margin:0;">Featured</label></div>
+      <div class="edit-actions">
+        <button class="admin-btn" onclick="saveServer()">Save</button>
+        <button class="admin-btn neutral" onclick="closeServerForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Name</th><th>Type</th><th>IP</th><th>Status</th><th>Players</th><th>Featured</th><th>Actions</th></tr></thead>
+        <tbody id="serversTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ NEWS ═══ -->
+  <section class="admin-panel" id="panelNews">
+    <div class="admin-panel-head">
+      <h2>News Posts</h2>
+      <button class="admin-btn" onclick="openNewsForm()">+ New Post</button>
+    </div>
+
+    <div class="edit-card" id="newsForm">
+      <h3 id="newsFormTitle">New Post</h3>
+      <input type="hidden" id="newsId">
+      <div class="edit-grid">
+        <div class="full"><label>Title</label><input id="newsTitle"></div>
+        <div><label>Category</label>
+          <select id="newsCategory">
+            <option value="announcement">Announcement</option>
+            <option value="event">Event</option>
+            <option value="update">Update</option>
+            <option value="contest">Contest</option>
+          </select>
+        </div>
+        <div><label>Cover Icon (Font Awesome class)</label><input id="newsIcon" value="fa-solid fa-newspaper"></div>
+        <div class="full"><label>Excerpt</label><input id="newsExcerpt" maxlength="400"></div>
+        <div class="full"><label>Body</label><textarea id="newsBody" style="min-height:160px;"></textarea></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="newsPublished" checked><label for="newsPublished" style="margin:0;">Published</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="newsPinned"><label for="newsPinned" style="margin:0;">Pinned</label></div>
+      <div class="edit-actions">
+        <button class="admin-btn" onclick="saveNews()">Save</button>
+        <button class="admin-btn neutral" onclick="closeNewsForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Title</th><th>Category</th><th>Pinned</th><th>Published</th><th>Actions</th></tr></thead>
+        <tbody id="newsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ MEMBERS ═══ -->
+  <section class="admin-panel" id="panelMembers">
+    <div class="admin-panel-head">
+      <h2>Team Members</h2>
+      <button class="admin-btn" onclick="openMemberForm()">+ Add Member</button>
+    </div>
+
+    <div class="edit-card" id="memberForm">
+      <h3 id="memberFormTitle">Add Member</h3>
+      <input type="hidden" id="memberId">
+      <div class="edit-grid">
+        <div><label>Display Name</label><input id="memName"></div>
+        <div><label>Role Title</label><input id="memRoleTitle" placeholder="Community Manager"></div>
+        <div><label>Role Group</label>
+          <select id="memRoleGroup">
+            <option value="owner">Owner</option>
+            <option value="staff">Staff</option>
+            <option value="mod">Moderator</option>
+            <option value="builder">Builder</option>
+            <option value="creator">Creator</option>
+          </select>
+        </div>
+        <div><label>Icon (Font Awesome class)</label><input id="memIcon" value="fa-solid fa-user"></div>
+        <div><label>Discord Tag</label><input id="memDiscord"></div>
+        <div><label>Sort Order</label><input id="memSort" type="number" value="0"></div>
+        <div class="full"><label>Bio</label><textarea id="memBio" maxlength="300"></textarea></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="memActive" checked><label for="memActive" style="margin:0;">Active (visible on site)</label></div>
+      <div class="edit-actions">
+        <button class="admin-btn" onclick="saveMember()">Save</button>
+        <button class="admin-btn neutral" onclick="closeMemberForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Name</th><th>Role</th><th>Group</th><th>Active</th><th>Actions</th></tr></thead>
+        <tbody id="membersTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ RULES ═══ -->
+  <section class="admin-panel" id="panelRules">
+    <div class="admin-panel-head">
+      <h2>Community Rules</h2>
+      <button class="admin-btn" onclick="openRuleForm()">+ Add Rule</button>
+    </div>
+
+    <div class="edit-card" id="ruleForm">
+      <h3 id="ruleFormTitle">Add Rule</h3>
+      <input type="hidden" id="ruleId">
+      <div class="edit-grid">
+        <div class="full"><label>Title</label><input id="ruleTitle"></div>
+        <div class="full"><label>Body</label><textarea id="ruleBody"></textarea></div>
+        <div><label>Sort Order</label><input id="ruleSort" type="number" value="0"></div>
+      </div>
+      <div class="edit-actions">
+        <button class="admin-btn" onclick="saveRule()">Save</button>
+        <button class="admin-btn neutral" onclick="closeRuleForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>#</th><th>Title</th><th>Body</th><th>Actions</th></tr></thead>
+        <tbody id="rulesTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ SUBMISSIONS ═══ -->
+  <section class="admin-panel" id="panelSubmissions">
+    <div class="admin-panel-head"><h2>Form Submissions</h2></div>
+    <div class="filter-row">
+      <select id="subFilterStatus">
+        <option value="">All statuses</option>
+        <option value="new">New</option>
+        <option value="in_review">In Review</option>
+        <option value="resolved">Resolved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <select id="subFilterCategory">
+        <option value="">All categories</option>
+        <option value="join_application">Join Application</option>
+        <option value="support_ticket">Support Ticket</option>
+        <option value="report">Report</option>
+        <option value="general">General Inquiry</option>
+      </select>
+      <button class="admin-btn small" onclick="loadSubmissions()">Filter</button>
+    </div>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Category</th><th>From</th><th>Contact</th><th>Message</th><th>Status</th><th>Received</th><th>Actions</th></tr></thead>
+        <tbody id="submissionsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script src="admin-dashboard.js"></script>
+</body>
+</html>

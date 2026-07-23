@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — Minecraft Bangladesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="../static/css/base.css">
+<link rel="stylesheet" href="../static/css/extend.css">
+<script src="../static/js/api.js"></script>
+<style>
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--ink);
+  background-image:radial-gradient(rgba(243,236,216,0.05) 1.5px, transparent 1.5px);
+  background-size:22px 22px;
+}
+.login-shell{
+  width:100%;
+  max-width:400px;
+  background:var(--paper);
+  border:5px solid var(--paper);
+  outline:5px solid var(--ink);
+  box-shadow:10px 10px 0 rgba(0,0,0,0.4);
+  padding:2.4rem;
+  margin:1.5rem;
+}
+.login-shell h1{
+  font-family:var(--pixel);
+  font-size:1.1rem;
+  margin-bottom:0.5rem;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.login-shell .sub{font-size:0.85rem;color:#3a3a30;margin-bottom:1.8rem;}
+</style>
+</head>
+<body>
+
+<div class="login-shell">
+  <h1><span class="block" style="width:20px;height:20px;background:var(--grass);border:2px solid var(--ink);display:inline-block;"></span> ADMIN</h1>
+  <p class="sub">Minecraft Bangladesh — staff panel</p>
+
+  <form id="loginForm" novalidate>
+    <div class="form-field">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required autocomplete="username">
+    </div>
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required autocomplete="current-password">
+    </div>
+    <button type="submit" class="form-submit-btn" id="loginBtn" style="width:100%;">LOG IN</button>
+    <div class="form-message" id="loginMessage"></div>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  /* if already logged in, skip straight to dashboard */
+  if (localStorage.getItem('mcbd_admin_token')) {
+    window.location.href = 'dashboard.html';
+    return;
+  }
+
+  const form = document.getElementById('loginForm');
+  const btn = document.getElementById('loginBtn');
+  const msg = document.getElementById('loginMessage');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    if (!username || !password) return;
+
+    btn.disabled = true;
+    btn.textContent = 'LOGGING IN…';
+    msg.classList.remove('show', 'error', 'success');
+
+    try {
+      const data = await apiPost('/auth/login', { username, password });
+      localStorage.setItem('mcbd_admin_token', data.access_token);
+      localStorage.setItem('mcbd_admin_name', data.display_name);
+      localStorage.setItem('mcbd_admin_role', data.role);
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      msg.textContent = err.message || 'Login failed.';
+      msg.className = 'form-message show error';
+      btn.disabled = false;
+      btn.textContent = 'LOG IN';
+    }
+  });
+});
+</script>
+</body>
+</html>

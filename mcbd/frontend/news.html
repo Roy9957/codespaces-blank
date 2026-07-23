@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="description" content="Latest news, announcements, and events from Minecraft Bangladesh.">
+<title>News & Announcements — Minecraft Bangladesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="static/css/base.css">
+<link rel="stylesheet" href="static/css/extend.css">
+<script src="static/js/api.js"></script>
+<script src="static/js/shared.js"></script>
+</head>
+<body>
+
+<div id="navbarMount"></div>
+
+<header class="page-header">
+  <span class="section-eyebrow reveal">📰 THE NOTICE BOARD</span>
+  <h1>News & Announcements</h1>
+  <p>Everything happening across the community — contests, updates, and events, posted by our admin team.</p>
+</header>
+
+<section class="section">
+  <div style="display:flex;gap:0.7rem;flex-wrap:wrap;margin-bottom:2.5rem;" id="categoryFilters">
+    <button class="mc-btn mc-btn--gold" data-cat="" style="font-size:0.65rem;padding:0.7rem 1.2rem;">ALL</button>
+    <button class="mc-btn" data-cat="announcement" style="font-size:0.65rem;padding:0.7rem 1.2rem;background:var(--paper);">ANNOUNCEMENT</button>
+    <button class="mc-btn" data-cat="event" style="font-size:0.65rem;padding:0.7rem 1.2rem;background:var(--paper);">EVENT</button>
+    <button class="mc-btn" data-cat="update" style="font-size:0.65rem;padding:0.7rem 1.2rem;background:var(--paper);">UPDATE</button>
+    <button class="mc-btn" data-cat="contest" style="font-size:0.65rem;padding:0.7rem 1.2rem;background:var(--paper);">CONTEST</button>
+  </div>
+
+  <div id="newsState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading news…</div>
+  <div class="news-grid" id="newsGrid" style="display:none;"></div>
+</section>
+
+<div id="footerMount"></div>
+
+<script>
+const CAT_ICONS = {
+  announcement: 'fa-solid fa-bullhorn',
+  event: 'fa-solid fa-calendar-star',
+  update: 'fa-solid fa-arrows-rotate',
+  contest: 'fa-solid fa-trophy',
+};
+
+async function loadNews(category) {
+  const stateEl = document.getElementById('newsState');
+  const grid = document.getElementById('newsGrid');
+  stateEl.style.display = 'block';
+  stateEl.classList.remove('is-error');
+  stateEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading news…';
+  grid.style.display = 'none';
+
+  try {
+    const path = category ? `/news?category=${encodeURIComponent(category)}` : '/news';
+    const posts = await apiGet(path);
+    if (!posts.length) {
+      stateEl.innerHTML = '<i class="fas fa-circle-info"></i> No posts in this category yet.';
+      return;
+    }
+    grid.innerHTML = posts.map(post => `
+      <div class="news-card ${post.is_pinned ? 'is-pinned' : ''}">
+        <div class="news-card-icon">
+          <i class="${escapeHtml(post.cover_icon || CAT_ICONS[post.category] || 'fa-solid fa-newspaper')}"></i>
+          ${post.is_pinned ? '<span class="pin-flag"><i class="fas fa-thumbtack"></i> PINNED</span>' : ''}
+        </div>
+        <div class="news-card-body">
+          <div class="news-card-cat">${escapeHtml(post.category)}</div>
+          <h3>${escapeHtml(post.title)}</h3>
+          <p>${escapeHtml(post.excerpt || post.body.slice(0, 140) + (post.body.length > 140 ? '…' : ''))}</p>
+          <div class="news-card-date"><i class="far fa-clock"></i> ${timeAgo(post.published_at)}</div>
+        </div>
+      </div>
+    `).join('');
+    stateEl.style.display = 'none';
+    grid.style.display = 'grid';
+  } catch (err) {
+    console.error(err);
+    stateEl.classList.add('is-error');
+    stateEl.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Could not load news. Please try again shortly.';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadNews('');
+  document.querySelectorAll('#categoryFilters button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#categoryFilters button').forEach(b => {
+        b.style.background = 'var(--paper)';
+      });
+      btn.style.background = 'var(--gold)';
+      loadNews(btn.getAttribute('data-cat'));
+    });
+  });
+});
+</script>
+</body>
+</html>

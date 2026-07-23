@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="description" content="Minecraft Bangladesh is the country's largest Minecraft community — 52,000+ builders, survivalists and redstoners across Facebook and Discord. Join community servers, monthly build contests, and weekly events.">
+<meta property="og:title" content="Minecraft Bangladesh — The Largest MC Community in BD">
+<meta property="og:description" content="52,000+ builders, survivalists & redstoners — one community, infinite worlds.">
+<meta property="og:type" content="website">
+<title>Minecraft Bangladesh — The Largest MC Community in BD</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="static/css/base.css">
+<link rel="stylesheet" href="static/css/extend.css">
+<script src="static/js/api.js"></script>
+<script src="static/js/shared.js"></script>
+</head>
+<body>
+
+<!-- ═══ CURTAIN INTRO (scroll to reveal) ═══ -->
+<div class="curtain-spacer" id="curtainSpacer">
+  <div class="curtain" id="curtain" aria-hidden="true">
+    <div class="curtain-panel"><div class="curtain-mark"></div></div>
+    <div class="curtain-panel"><div class="curtain-mark"></div></div>
+    <div class="curtain-loader" id="curtainLoader">
+      LOADING WORLD
+      <div class="curtain-bar"><div class="curtain-bar-fill" id="curtainBar"></div></div>
+    </div>
+    <div class="curtain-cue" id="curtainCue"><i class="fas fa-chevron-down"></i> SCROLL TO ENTER <i class="fas fa-chevron-down"></i></div>
+  </div>
+</div>
+
+<!-- ═══ NAV ═══ -->
+<div id="navbarMount"></div>
+
+<!-- ═══ HERO (Discord-profile-inspired layout — this IS the hero) ═══ -->
+<section class="hero" id="hero">
+  <div class="hero-banner" id="heroBanner">
+    <img src="cover.webp" alt="" onerror="this.style.display='none';">
+    <div class="hero-banner-grid"></div>
+  </div>
+
+  <i class="fas fa-cube hero-float desktop-only" aria-hidden="true" style="top:16%;left:8%;font-size:2.2rem;color:var(--diamond);animation-delay:0s;"></i>
+  <i class="fas fa-hammer hero-float desktop-only" aria-hidden="true" style="top:60%;left:6%;font-size:1.8rem;color:var(--gold);animation-delay:1.4s;"></i>
+  <i class="fas fa-shield-halved hero-float desktop-only" aria-hidden="true" style="top:22%;right:9%;font-size:2rem;color:var(--grass);animation-delay:0.7s;"></i>
+  <i class="fas fa-bolt hero-float desktop-only" aria-hidden="true" style="top:64%;right:7%;font-size:1.6rem;color:var(--redstone);animation-delay:2.1s;"></i>
+
+  <div class="hero-content">
+    <div class="hero-avatar" id="heroAvatar">
+      <img src="logo.jpeg" alt="Minecraft Bangladesh logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="hero-avatar-fallback" style="display:none;">MB</div>
+      <div class="hero-avatar-status" title="Online"></div>
+    </div>
+
+    <div class="hero-badge-eyebrow" id="eyebrow">⛏ EST. 2019 · BANGLADESH'S #1 MC HUB</div>
+    <h1 class="hero-title" id="heroTitle">MINECRAFT<br><span class="accent" id="heroTitleTyped"></span></h1>
+
+    <div class="hero-tagline" id="heroTagline">
+      <span><i class="fas fa-cube"></i>52K+ Members</span>
+      <span class="dot">•</span>
+      <span><i class="fas fa-server"></i>Community Servers</span>
+      <span class="dot">•</span>
+      <span><i class="fas fa-circle" style="font-size:0.5rem;"></i>Online Now</span>
+    </div>
+
+    <div class="hero-badges" id="heroBadges">
+      <span class="hero-badge"><i class="fas fa-trophy"></i> Est. 2019</span>
+      <span class="hero-badge"><i class="fas fa-shield-halved"></i> Verified Community</span>
+      <span class="hero-badge"><i class="fas fa-hammer"></i> Weekly Events</span>
+    </div>
+
+    <p class="hero-sub" id="heroSub">52,000+ builders, survivalists & redstoners — one community, infinite worlds.</p>
+    <div class="hero-ctas" id="heroCtas">
+      <a href="#" class="mc-btn mc-btn--fb"><i class="fab fa-facebook-f"></i> Join Facebook</a>
+      <a href="#" class="mc-btn mc-btn--dc"><i class="fab fa-discord"></i> Join Discord</a>
+    </div>
+  </div>
+
+  <div class="scroll-cue"><i class="fas fa-chevron-down"></i> MINE DOWN</div>
+</section>
+
+<!-- ═══ TICKER ═══ -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<section class="section" id="about">
+  <span class="section-eyebrow reveal">📖 THE SPAWN POINT</span>
+  <h2 class="section-title reveal">Who We Are</h2>
+  <p class="section-desc reveal">Minecraft Bangladesh started as a small Facebook group in 2019 and grew into the country's biggest hangout for players who'd rather build a castle than argue about it. Survival, creative, redstone, PvP — if it's blocky, we're into it.</p>
+
+  <div class="about-wrap">
+    <div class="about-visual reveal" id="aboutVisual">
+      <p class="about-visual-quote">"Build a castle, not an argument."</p>
+      <div class="about-visual-tags">
+        <span><i class="fas fa-shovel"></i> Survival</span>
+        <span><i class="fas fa-palette"></i> Creative</span>
+        <span><i class="fas fa-bolt"></i> Redstone</span>
+        <span><i class="fas fa-crosshairs"></i> PvP</span>
+      </div>
+    </div>
+    <div class="about-stats" id="aboutStats">
+      <!-- populated live from /api/stats — see homePageInit() below -->
+      <div class="stat-card reveal"><div class="stat-num" data-count="0">0</div><div class="stat-label">Loading…</div></div>
+      <div class="stat-card reveal"><div class="stat-num" data-count="0">0</div><div class="stat-label">Loading…</div></div>
+      <div class="stat-card reveal"><div class="stat-num" data-count="0">0</div><div class="stat-label">Loading…</div></div>
+      <div class="stat-card reveal"><div class="stat-num" data-count="0">0</div><div class="stat-label">Loading…</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="section" id="features">
+  <span class="section-eyebrow reveal">🎒 YOUR HOTBAR</span>
+  <h2 class="section-title reveal">What You Get</h2>
+  <p class="section-desc reveal">Everything a builder needs, slotted and ready.</p>
+  <div class="feature-grid">
+    <div class="feature-card reveal">
+      <div class="icon-block"><i class="fas fa-users"></i></div>
+      <h3>52K+ Members</h3>
+      <p>A massive, active crew across Facebook and Discord — always someone online to build, trade, or troubleshoot with.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="icon-block"><i class="fas fa-trophy"></i></div>
+      <h3>Build Contests</h3>
+      <p>Monthly building competitions with real prizes — from survival bases to full-scale creative megaprojects.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="icon-block"><i class="fas fa-server"></i></div>
+      <h3>Community Servers</h3>
+      <p>Curated survival, skyblock and minigame servers run by the community, for the community.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="icon-block"><i class="fas fa-shield-alt"></i></div>
+      <h3>Safe Moderation</h3>
+      <p>Active mod team keeping things friendly, fair, and spam-free — 24/7 coverage across time zones.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TIMELINE (dark section) ═══ -->
+<section class="section section--dark" id="journey">
+  <span class="section-eyebrow reveal" style="background:var(--dirt);color:var(--paper);">🗺 THE CRAFTING TABLE</span>
+  <h2 class="section-title reveal">How to Get Involved</h2>
+  <p class="section-desc reveal">Four steps between you and your first build with us.</p>
+  <div class="timeline">
+    <div class="timeline-step reveal">
+      <div class="timeline-dot">1</div>
+      <h4>Join the hub</h4>
+      <p>Hop into our Facebook group or Discord server — takes 30 seconds, no application needed.</p>
+    </div>
+    <div class="timeline-step reveal">
+      <div class="timeline-dot">2</div>
+      <h4>Say hello</h4>
+      <p>Introduce yourself in #new-arrivals. Tell us what you build — survival, redstone, or pure chaos.</p>
+    </div>
+    <div class="timeline-step reveal">
+      <div class="timeline-dot">3</div>
+      <h4>Pick your server</h4>
+      <p>Choose from our survival, creative or minigame servers and grab the IP from #server-info.</p>
+    </div>
+    <div class="timeline-step reveal">
+      <div class="timeline-dot">4</div>
+      <h4>Start building</h4>
+      <p>Join events, enter contests, and become part of Bangladesh's biggest Minecraft story.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MEMBERS ═══ -->
+<section class="section" id="members">
+  <span class="section-eyebrow reveal">👑 THE CREW</span>
+  <h2 class="section-title reveal">Community Leaders</h2>
+  <p class="section-desc reveal">The people keeping the lights on and the servers running.</p>
+  <div class="members-grid">
+    <div class="member-card reveal"><i class="fas fa-user-cog"></i><h4>Admin</h4><p class="role">Founder</p></div>
+    <div class="member-card reveal"><i class="fas fa-user-shield"></i><h4>Moderator</h4><p class="role">Community Manager</p></div>
+    <div class="member-card reveal"><i class="fas fa-user-tie"></i><h4>Event Lead</h4><p class="role">Tournament Organizer</p></div>
+    <div class="member-card reveal"><i class="fas fa-user-graduate"></i><h4>Builder</h4><p class="role">Creative Lead</p></div>
+    <div class="member-card reveal"><i class="fas fa-user-ninja"></i><h4>Tech Support</h4><p class="role">Server Admin</p></div>
+    <div class="member-card reveal"><i class="fas fa-user-astronaut"></i><h4>Creator</h4><p class="role">Media & Design</p></div>
+  </div>
+</section>
+
+<!-- ═══ GALLERY ═══ -->
+<section class="section" id="gallery">
+  <span class="section-eyebrow reveal">🖼 THE INVENTORY</span>
+  <h2 class="section-title reveal">Community Builds</h2>
+  <p class="section-desc reveal">A peek at what our members have crafted.</p>
+  <div class="builds-grid">
+    <div class="build-card b1">
+      <div class="build-card-visual"><i class="fas fa-chess-rook"></i></div>
+      <div class="build-card-body">
+        <h4>Skyline Castle</h4>
+        <div class="build-meta"><i class="fas fa-shovel"></i> Survival Build</div>
+      </div>
+    </div>
+    <div class="build-card b2">
+      <div class="build-card-visual"><i class="fas fa-tree"></i></div>
+      <div class="build-card-body">
+        <h4>Terraced Village</h4>
+        <div class="build-meta"><i class="fas fa-palette"></i> Creative Build</div>
+      </div>
+    </div>
+    <div class="build-card b3">
+      <div class="build-card-visual"><i class="fas fa-bolt"></i></div>
+      <div class="build-card-body">
+        <h4>Redstone Elevator</h4>
+        <div class="build-meta"><i class="fas fa-microchip"></i> Redstone</div>
+      </div>
+    </div>
+    <div class="build-card b4">
+      <div class="build-card-visual"><i class="fas fa-sun"></i></div>
+      <div class="build-card-body">
+        <h4>Desert Temple Remake</h4>
+        <div class="build-meta"><i class="fas fa-shovel"></i> Survival Build</div>
+      </div>
+    </div>
+    <div class="build-card b5">
+      <div class="build-card-visual"><i class="fas fa-dragon"></i></div>
+      <div class="build-card-body">
+        <h4>End Arena Rework</h4>
+        <div class="build-meta"><i class="fas fa-crosshairs"></i> PvP Map</div>
+      </div>
+    </div>
+    <div class="build-card b6">
+      <div class="build-card-visual"><i class="fas fa-mountain"></i></div>
+      <div class="build-card-body">
+        <h4>Mountain Base</h4>
+        <div class="build-meta"><i class="fas fa-palette"></i> Creative Build</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ACTIONS ═══ -->
+<section class="section" id="actions">
+  <span class="section-eyebrow reveal">🛠 THE CRAFTING MENU</span>
+  <h2 class="section-title reveal">Community Hub</h2>
+  <p class="section-desc reveal">Raise a ticket, report an issue, or vote in our polls.</p>
+  <div class="action-grid">
+    <div class="action-card reveal">
+      <i class="fas fa-ticket-alt"></i>
+      <h3>Support Ticket</h3>
+      <p>Need help? Open a ticket and our team will assist you promptly.</p>
+      <a class="action-btn" href="join.html?category=support_ticket" style="text-decoration:none;display:inline-block;">Open Ticket</a>
+    </div>
+    <div class="action-card reveal">
+      <i class="fas fa-flag"></i>
+      <h3>Report</h3>
+      <p>Report inappropriate behavior or content. We take all reports seriously.</p>
+      <a class="action-btn" href="join.html?category=report" style="text-decoration:none;display:inline-block;">Submit Report</a>
+    </div>
+    <div class="action-card reveal">
+      <i class="fas fa-poll"></i>
+      <h3>Community Poll</h3>
+      <p>Share your opinion and help shape the future of our community.</p>
+      <button class="action-btn" onclick="alert('Poll system coming soon!')">Vote Now</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="section" id="testimonials">
+  <span class="section-eyebrow reveal">💬 PLAYER CHAT</span>
+  <h2 class="section-title reveal">What Members Say</h2>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <p>Found my current squad here. We've been running the same survival world for eight months straight.</p>
+      <div class="testi-name">Rafiul H.</div>
+      <div class="testi-role">Survival Player</div>
+    </div>
+    <div class="testi-card reveal">
+      <p>The build contests actually pushed me to get better. Placed top 3 in my first redstone event.</p>
+      <div class="testi-name">Anika T.</div>
+      <div class="testi-role">Redstone Builder</div>
+    </div>
+    <div class="testi-card reveal">
+      <p>Mod team is fast and fair. Never seen a Discord this size stay this drama-free.</p>
+      <div class="testi-name">Sabbir K.</div>
+      <div class="testi-role">Discord Member</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="section" id="faq">
+  <span class="section-eyebrow reveal">❓ THE ENCHANTMENT TABLE</span>
+  <h2 class="section-title reveal">Frequently Asked</h2>
+  <div class="faq-list" id="faqList">
+    <div class="faq-item reveal">
+      <div class="faq-q">Is it free to join? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a">Yes — joining the Facebook group and Discord server is completely free, always.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">Do I need a Java or Bedrock edition? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a">Both are welcome. Most of our community servers support cross-play between Java and Bedrock.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">How do I report a rule-breaker? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a">Use the Report card above or ping a moderator directly in Discord — we respond fast.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">Can I host my own event? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a">Absolutely — reach out to the Event Lead through a support ticket to get it scheduled.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section class="section" id="contact">
+  <span class="section-eyebrow reveal">📮 SEND A MESSAGE</span>
+  <h2 class="section-title reveal">Contact Us</h2>
+  <p class="section-desc reveal">Have questions or suggestions? Reach out anytime.</p>
+  <div class="contact-wrap">
+    <a href="#" class="contact-item"><span class="ic"><i class="fab fa-facebook-f"></i></span> facebook.com/MinecraftBangladesh</a>
+    <a href="#" class="contact-item"><span class="ic"><i class="fab fa-discord"></i></span> discord.gg/mcbd</a>
+    <a href="mailto:hello@mcbd.com" class="contact-item"><span class="ic"><i class="fas fa-envelope"></i></span> hello@mcbd.com</a>
+    <div class="contact-item"><span class="ic"><i class="fas fa-map-marker-alt"></i></span> Bangladesh · Online</div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<div id="footerMount"></div>
+
+<script>
+/* safety net: if GSAP CDN fails to load, don't leave the curtain stuck forever */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    if (typeof gsap === 'undefined') {
+      const s = document.getElementById('curtainSpacer');
+      if (s) s.style.display = 'none';
+      document.querySelectorAll('.reveal').forEach(el => el.style.opacity = '1');
+    }
+  }, 2000);
+});
+
+/* ── LIVE STATS: fetch from FastAPI/PostgreSQL and populate the About stat cards ── */
+async function loadHomeStats() {
+  const grid = document.getElementById('aboutStats');
+  if (!grid) return;
+  try {
+    const stats = await apiGet('/stats');
+    const cards = grid.querySelectorAll('.stat-card');
+    stats.slice(0, cards.length).forEach((stat, i) => {
+      const card = cards[i];
+      if (!card) return;
+      const numEl = card.querySelector('.stat-num');
+      const labelEl = card.querySelector('.stat-label');
+      numEl.setAttribute('data-count', stat.value);
+      numEl.setAttribute('data-suffix', stat.suffix || '');
+      numEl.textContent = '0';
+      labelEl.textContent = stat.label;
+    });
+    /* re-run counters now that real numbers are in place (GSAP handles the reveal separately) */
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      grid.querySelectorAll('.stat-num').forEach((el) => {
+        const target = parseInt(el.getAttribute('data-count'), 10) || 0;
+        const suffix = el.getAttribute('data-suffix') || '';
+        const counter = { val: 0 };
+        ScrollTrigger.create({
+          trigger: el, start: 'top 90%', once: true,
+          onEnter: () => gsap.to(counter, {
+            val: target, duration: 1.4, ease: 'power2.out',
+            onUpdate: () => { el.textContent = Math.floor(counter.val) + suffix; }
+          })
+        });
+      });
+    }
+  } catch (err) {
+    console.error('Could not load live stats:', err);
+    /* leave whatever placeholder text is already in the markup */
+  }
+}
+document.addEventListener('DOMContentLoaded', loadHomeStats);
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof gsap === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── ticker content (duplicated for seamless loop) ── */
+  const tickerItems = [
+    ['fa-solid fa-cube','52K MEMBERS'],
+    ['fa-solid fa-server','OWN SERVERS'],
+    ['fa-solid fa-hammer','WEEKLY EVENTS'],
+    ['fa-solid fa-shield-halved','SAFE MODERATION'],
+  ];
+  const track = document.getElementById('tickerTrack');
+  const html = tickerItems.map(([icon,txt]) => `<span class="ticker-item"><i class="${icon}"></i>${txt}</span>`).join('');
+  /* triple it so the loop still looks continuous on wide screens */
+  track.innerHTML = html + html + html;
+
+  /* ── slow marquee, GSAP-driven so hover can smoothly pause/slow it ── */
+  const tickerWrap = document.querySelector('.ticker-wrap');
+  let tickerTween = null;
+  requestAnimationFrame(() => {
+    const setWidth = track.scrollWidth / 3;
+    gsap.set(track, { x: 0 });
+    tickerTween = gsap.to(track, {
+      x: -setWidth,
+      duration: 34,
+      ease: 'none',
+      repeat: -1
+    });
+  });
+  if (tickerWrap) {
+    tickerWrap.addEventListener('mouseenter', () => {
+      if (tickerTween) gsap.to(tickerTween, { timeScale: 0.18, duration: 0.5, ease: 'power2.out' });
+    });
+    tickerWrap.addEventListener('mouseleave', () => {
+      if (tickerTween) gsap.to(tickerTween, { timeScale: 1, duration: 0.6, ease: 'power2.out' });
+    });
+  }
+
+  /* ── CURTAIN INTRO: manual scroll-driven reveal, slides left/right, opens once ── */
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const curtainSpacerEl = document.getElementById('curtainSpacer');
+  const curtainEl = document.getElementById('curtain');
+  const curtainLoaderEl = document.getElementById('curtainLoader');
+  const curtainCueEl = document.getElementById('curtainCue');
+  const curtainBar = document.getElementById('curtainBar');
+  const curtainPanels = document.querySelectorAll('.curtain-panel');
+  let curtainOpened = false;
+  let autoCollapseTimer = null;
+
+  /* ── typewriter effect: types text into el char-by-char, then leaves a blinking caret ── */
+  function typewriter(el, text, { speed = 68, startDelay = 0, onDone } = {}) {
+    if (!el) return;
+    el.textContent = '';
+    const caret = document.createElement('span');
+    caret.className = 'hero-typed-caret';
+    caret.textContent = '|';
+    el.after(caret);
+    let i = 0;
+    setTimeout(function tick() {
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i);
+        i++;
+        setTimeout(tick, speed);
+      } else {
+        gsap.to(caret, { opacity: 0, duration: 0.5, delay: 0.6, onComplete: () => caret.remove() });
+        if (onDone) onDone();
+      }
+    }, startDelay);
+  }
+
+  function openCurtain() {
+    if (curtainOpened) return;
+    curtainOpened = true;
+    if (autoCollapseTimer) autoCollapseTimer.kill();
+    /* panels fly apart left/right, independent of further scroll position */
+    gsap.to(curtainPanels[0], { xPercent: -100, duration: 0.75, ease: 'power3.inOut' });
+    gsap.to(curtainPanels[1], { xPercent: 100, duration: 0.75, ease: 'power3.inOut',
+      onComplete: () => {
+        curtainEl.style.display = 'none';
+      }
+    });
+    gsap.to(curtainLoaderEl, { opacity: 0, duration: 0.3 });
+    gsap.to(curtainCueEl, { opacity: 0, duration: 0.3 });
+
+    /* immediately kill the reserved scroll space (no transition, no reliance on
+       sticky recompute) and snap the page to the very top so the hero sits flush
+       under the nav with zero gap, regardless of how far the user had scrolled */
+    curtainSpacerEl.style.height = '0px';
+    curtainSpacerEl.style.margin = '0';
+    curtainSpacerEl.style.overflow = 'hidden';
+    const prevScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, 0);
+    document.documentElement.style.scrollBehavior = prevScrollBehavior;
+    ScrollTrigger.refresh();
+
+    /* hero content fades in once, not tied to scroll position afterwards */
+    gsap.timeline({ delay: 0.15 })
+      .from('#heroAvatar', { opacity: 0, y: 24, scale: 0.6, duration: 0.6, ease: 'back.out(1.8)' })
+      .to('#eyebrow', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.25')
+      .to('#heroTitle', { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out',
+        onStart: () => typewriter(document.getElementById('heroTitleTyped'), 'BANGLADESH', { speed: 65 })
+      }, '-=0.3')
+      .to('#heroTagline', { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '+=0.75')
+      .to('#heroBadges', { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '-=0.25')
+      .to('#heroSub', { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '-=0.25')
+      .to('#heroCtas', { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '-=0.25')
+      .from('.hero-float', { opacity: 0, scale: 0, duration: 0.6, stagger: 0.12, ease: 'back.out(2)' }, '-=0.6');
+  }
+
+  if (reduceMotion) {
+    /* skip straight to revealed state — no curtain, no stagger, no scroll requirement */
+    curtainSpacerEl.style.display = 'none';
+    const heroTitleTypedEl = document.getElementById('heroTitleTyped');
+    if (heroTitleTypedEl) heroTitleTypedEl.textContent = 'BANGLADESH';
+    gsap.set(['#heroAvatar','#eyebrow','#heroTitle','#heroTagline','#heroBadges','#heroSub','#heroCtas'], { opacity: 1, y: 0 });
+  } else {
+    gsap.set(['#heroAvatar','#eyebrow','#heroTitle','#heroTagline','#heroBadges','#heroSub','#heroCtas'], { opacity: 0, y: 24 });
+    gsap.set(curtainBar, { width: '6%' });
+
+    /* loading bar + cue track scroll progress toward the open threshold, but
+       once opened this trigger's onUpdate is ignored — the curtain never re-closes
+       on scroll-up, it only ever opens once. */
+    ScrollTrigger.create({
+      trigger: curtainSpacerEl,
+      start: 'top top',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        if (curtainOpened) return;
+        const p = self.progress; // 0 → 1 tied directly to user scroll, no easing lag
+        gsap.set(curtainBar, { width: (6 + p * 94) + '%' });
+        gsap.set(curtainLoaderEl, { opacity: 1 - Math.min(p / 0.35, 1) });
+        gsap.set(curtainCueEl, { opacity: p > 0.05 ? 0 : 0.85 });
+        if (p >= 1) openCurtain();
+      },
+      onLeave: openCurtain
+    });
+
+    /* auto-collapse: if the user never scrolls, the curtain opens on its own
+       after a short delay so no one gets stuck behind it. The loading bar
+       animates up to 100% over the same window so it still feels earned.
+       If the user scrolls it open first, openCurtain() kills this timer. */
+    const AUTO_COLLAPSE_DELAY = 2.6; // seconds
+    gsap.to(curtainBar, {
+      width: '100%',
+      duration: AUTO_COLLAPSE_DELAY,
+      ease: 'power1.inOut',
+      onUpdate: function () {
+        if (curtainOpened) this.kill();
+      }
+    });
+    autoCollapseTimer = gsap.delayedCall(AUTO_COLLAPSE_DELAY, openCurtain);
+  }
+
+  /* ── HERO PARALLAX + nav reveal on scroll (hero stays pinned-feel, no full-outro) ── */
+  gsap.to('#navbar', {
+    y: 0,
+    duration: 0.4,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '#hero',
+      start: 'top -80',
+      toggleActions: 'play none none reverse'
+    }
+  });
+
+  gsap.to('.hero-content', {
+    yPercent: -25,
+    opacity: 0.3,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+  /* ── GENERIC SCROLL REVEALS for all .reveal elements ── */
+  document.querySelectorAll('.reveal').forEach((el) => {
+    gsap.set(el, { opacity: 0, y: 40 });
+    gsap.to(el, {
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 88%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+  });
+
+  /* ── stagger children within grids for a "build in" feel ── */
+  function staggerReveal(selector, childSelector, opts = {}) {
+    document.querySelectorAll(selector).forEach((container) => {
+      const children = container.querySelectorAll(childSelector);
+      if (!children.length) return;
+      gsap.set(children, { opacity: 0, y: 30, scale: 0.94 });
+      gsap.to(children, {
+        opacity: 1, y: 0, scale: 1,
+        duration: 0.55,
+        stagger: 0.08,
+        ease: 'back.out(1.6)',
+        scrollTrigger: {
+          trigger: container,
+          start: 'top 82%',
+          toggleActions: 'play none none reverse'
+        },
+        ...opts
+      });
+    });
+  }
+  staggerReveal('.feature-grid', '.feature-card');
+  staggerReveal('.members-grid', '.member-card');
+  staggerReveal('.builds-grid', '.build-card');
+  staggerReveal('.action-grid', '.action-card');
+  staggerReveal('.testi-grid', '.testi-card');
+  staggerReveal('.about-stats', '.stat-card');
+  staggerReveal('.timeline', '.timeline-step');
+  staggerReveal('.faq-list', '.faq-item');
+  staggerReveal('.hero-badges', '.hero-badge');
+  staggerReveal('.about-visual-tags', 'span');
+  staggerReveal('.contact-wrap', '.contact-item');
+
+  /* ── counters ── */
+  document.querySelectorAll('.stat-num').forEach((el) => {
+    const target = parseInt(el.getAttribute('data-count'), 10);
+    const suffix = el.getAttribute('data-suffix') || '';
+    const counter = { val: 0 };
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 90%',
+      once: true,
+      onEnter: () => {
+        gsap.to(counter, {
+          val: target,
+          duration: 1.4,
+          ease: 'power2.out',
+          onUpdate: () => { el.textContent = Math.floor(counter.val) + suffix; }
+        });
+      }
+    });
+  });
+
+  /* ── section title text-shadow "chunk pop" on enter ── */
+  document.querySelectorAll('.section-title').forEach((el) => {
+    gsap.fromTo(el,
+      { x: -20 },
+      {
+        x: 0, duration: 0.6, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' }
+      }
+    );
+  });
+
+  /* ── FAQ accordion ── */
+  document.querySelectorAll('.faq-q').forEach((q) => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  /* ── mobile nav toggle (simple show/hide of a dropdown) ── */
+  const toggleBtn = document.querySelector('.nav-mobile-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = navLinks.style.display === 'flex';
+      navLinks.style.display = isOpen ? 'none' : 'flex';
+      navLinks.style.cssText += isOpen ? '' : `
+        position:fixed;top:56px;left:0;right:0;background:${getComputedStyle(document.documentElement).getPropertyValue('--ink')};
+        flex-direction:column;padding:1.2rem;border-bottom:4px solid var(--grass);gap:1rem;
+      `;
+    });
+  }
+
+  ScrollTrigger.refresh();
+});
+</script>
+</body>
+</html>

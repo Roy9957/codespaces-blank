@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="description" content="Meet the team behind Minecraft Bangladesh — admins, moderators, event leads, and builders.">
+<title>Community Leaders — Minecraft Bangladesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="static/css/base.css">
+<link rel="stylesheet" href="static/css/extend.css">
+<script src="static/js/api.js"></script>
+<script src="static/js/shared.js"></script>
+</head>
+<body>
+
+<div id="navbarMount"></div>
+
+<header class="page-header">
+  <span class="section-eyebrow reveal">👑 THE CREW</span>
+  <h1>Community Leaders</h1>
+  <p>The people keeping the lights on and the servers running — managed live by our admin team.</p>
+</header>
+
+<section class="section">
+  <div id="membersState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading team…</div>
+  <div class="members-grid" id="membersGrid" style="display:none;"></div>
+</section>
+
+<div id="footerMount"></div>
+
+<script>
+const GROUP_ICONS = {
+  owner: 'fa-solid fa-crown',
+  staff: 'fa-solid fa-user-tie',
+  mod: 'fa-solid fa-user-shield',
+  builder: 'fa-solid fa-user-graduate',
+  creator: 'fa-solid fa-user-astronaut',
+};
+
+async function loadMembers() {
+  const stateEl = document.getElementById('membersState');
+  const grid = document.getElementById('membersGrid');
+  try {
+    const members = await apiGet('/members');
+    if (!members.length) {
+      stateEl.innerHTML = '<i class="fas fa-circle-info"></i> No team members listed yet.';
+      return;
+    }
+    grid.innerHTML = members.map(m => `
+      <div class="member-card" title="${m.bio ? escapeHtml(m.bio) : ''}">
+        <i class="${escapeHtml(m.icon || GROUP_ICONS[m.role_group] || 'fa-solid fa-user')}"></i>
+        <h4>${escapeHtml(m.display_name)}</h4>
+        <p class="role">${escapeHtml(m.role_title)}</p>
+      </div>
+    `).join('');
+    stateEl.style.display = 'none';
+    grid.style.display = 'grid';
+  } catch (err) {
+    console.error(err);
+    stateEl.classList.add('is-error');
+    stateEl.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Could not load team list. Please try again shortly.';
+  }
+}
+document.addEventListener('DOMContentLoaded', loadMembers);
+</script>
+</body>
+</html>

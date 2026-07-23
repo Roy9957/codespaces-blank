@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="description" content="Check live availability, IPs and player counts for all Minecraft Bangladesh community servers.">
+<title>Server Availability — Minecraft Bangladesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="static/css/base.css">
+<link rel="stylesheet" href="static/css/extend.css">
+<script src="static/js/api.js"></script>
+<script src="static/js/shared.js"></script>
+</head>
+<body>
+
+<div id="navbarMount"></div>
+
+<header class="page-header">
+  <span class="section-eyebrow reveal">🗺 THE SERVER LIST</span>
+  <h1>Server Availability</h1>
+  <p>Live status, player counts, and connection info for every community server — updated by our admin team.</p>
+</header>
+
+<section class="section">
+  <div id="serversState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Checking server status…</div>
+  <div class="server-grid" id="serversGrid" style="display:none;"></div>
+</section>
+
+<div id="footerMount"></div>
+
+<script>
+const TYPE_ICONS = {
+  survival: 'fa-solid fa-shovel',
+  creative: 'fa-solid fa-palette',
+  redstone: 'fa-solid fa-bolt',
+  minigame: 'fa-solid fa-gamepad',
+  pvp: 'fa-solid fa-crosshairs',
+};
+
+function copyIp(ip, btn) {
+  navigator.clipboard.writeText(ip).then(() => {
+    const original = btn.textContent;
+    btn.textContent = 'COPIED!';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  });
+}
+
+async function loadServers() {
+  const stateEl = document.getElementById('serversState');
+  const grid = document.getElementById('serversGrid');
+  try {
+    const servers = await apiGet('/servers');
+    if (!servers.length) {
+      stateEl.innerHTML = '<i class="fas fa-circle-info"></i> No servers listed right now.';
+      return;
+    }
+
+    grid.innerHTML = servers.map(s => {
+      const pct = s.players_max > 0 ? Math.min(100, Math.round((s.players_online / s.players_max) * 100)) : 0;
+      const icon = TYPE_ICONS[s.server_type] || 'fa-solid fa-server';
+      const fullIp = s.ip_address ? (s.port && s.port !== 25565 ? `${s.ip_address}:${s.port}` : s.ip_address) : 'N/A';
+      return `
+        <div class="server-card ${s.is_featured ? 'is-featured' : ''}">
+          <div class="server-card-top">
+            <h3><i class="${icon}" style="margin-right:0.5rem;color:var(--grass-dark);"></i>${escapeHtml(s.name)}</h3>
+            <span class="server-status ${escapeHtml(s.status)}">${escapeHtml(s.status)}</span>
+          </div>
+          ${s.description ? `<p class="desc">${escapeHtml(s.description)}</p>` : ''}
+          <div class="server-meta-row">
+            <span class="server-tag"><i class="fas fa-desktop"></i> ${escapeHtml(s.edition.toUpperCase())}</span>
+            <span class="server-tag"><i class="fas fa-tag"></i> ${escapeHtml(s.server_type)}</span>
+            ${s.is_whitelisted ? '<span class="server-tag"><i class="fas fa-lock"></i> Whitelisted</span>' : ''}
+          </div>
+          <div class="server-pop-bar"><div class="server-pop-fill" style="width:${pct}%;"></div></div>
+          <div class="server-pop-label">${s.players_online} / ${s.players_max} players online</div>
+          <div class="server-ip-row">
+            <span>${escapeHtml(fullIp)}</span>
+            ${s.ip_address ? `<button onclick="copyIp('${escapeHtml(fullIp)}', this)">COPY</button>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    stateEl.style.display = 'none';
+    grid.style.display = 'grid';
+  } catch (err) {
+    console.error(err);
+    stateEl.classList.add('is-error');
+    stateEl.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Could not load server list. Please try again shortly.';
+  }
+}
+document.addEventListener('DOMContentLoaded', loadServers);
+</script>
+</body>
+</html>
