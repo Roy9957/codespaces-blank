@@ -6,8 +6,8 @@
 <meta name="description" content="Meet the team behind Minecraft Bangladesh — admins, moderators, event leads, and builders.">
 <title>Community Leaders — Minecraft Bangladesh</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=Press+Start+2P&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="static/css/base.css">
 <link rel="stylesheet" href="static/css/extend.css">
 <script src="static/js/api.js"></script>
@@ -18,19 +18,31 @@
 <div id="navbarMount"></div>
 
 <header class="page-header">
-  <span class="section-eyebrow reveal">👑 THE CREW</span>
+  <span class="section-eyebrow">👑 THE CREW</span>
   <h1>Community Leaders</h1>
-  <p>The people keeping the lights on and the servers running — managed live by our admin team.</p>
+  <p>The people keeping the lights on and the servers running — click any profile to view their live Discord card.</p>
 </header>
 
 <section class="section">
-  <div id="membersState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading team…</div>
-  <div class="members-grid" id="membersGrid" style="display:none;"></div>
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;justify-content:center;" id="roleFilters">
+      <button class="mc-btn mc-btn--gold" data-role="all" style="font-size:11px;padding:8px 16px;">ALL CREW</button>
+      <button class="btn-outline" data-role="owner" style="font-size:11px;padding:8px 16px;"><i class="fas fa-crown"></i> LEADERSHIP</button>
+      <button class="btn-outline" data-role="mod" style="font-size:11px;padding:8px 16px;"><i class="fas fa-user-shield"></i> MODS</button>
+      <button class="btn-outline" data-role="builder" style="font-size:11px;padding:8px 16px;"><i class="fas fa-user-graduate"></i> BUILDERS</button>
+      <button class="btn-outline" data-role="creator" style="font-size:11px;padding:8px 16px;"><i class="fas fa-user-astronaut"></i> CREATORS</button>
+    </div>
+
+    <div id="membersState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading team…</div>
+    <div class="members-grid" id="membersGrid" style="display:none;"></div>
+  </div>
 </section>
 
 <div id="footerMount"></div>
 
 <script>
+let allMembers = [];
+
 const GROUP_ICONS = {
   owner: 'fa-solid fa-crown',
   staff: 'fa-solid fa-user-tie',
@@ -39,31 +51,59 @@ const GROUP_ICONS = {
   creator: 'fa-solid fa-user-astronaut',
 };
 
+function renderMembers(members) {
+  const grid = document.getElementById('membersGrid');
+  if (!members.length) {
+    grid.innerHTML = '<div style="text-align:center;grid-column:1/-1;padding:40px;font-weight:800;font-size:16px;">No leaders found in this category.</div>';
+    return;
+  }
+
+  grid.innerHTML = members.map(m => `
+    <div class="member-card" onclick="openDiscordWidget('${escapeHtml(m.display_name)}', '${escapeHtml(m.role_title)}', '@${escapeHtml(m.display_name.toLowerCase().replace(/\\s+/g, ''))}')">
+      <i class="${escapeHtml(m.icon || GROUP_ICONS[m.role_group] || 'fa-solid fa-user')}"></i>
+      <h4>${escapeHtml(m.display_name)}</h4>
+      <span class="role">${escapeHtml(m.role_title)}</span>
+    </div>
+  `).join('');
+}
+
 async function loadMembers() {
   const stateEl = document.getElementById('membersState');
   const grid = document.getElementById('membersGrid');
   try {
-    const members = await apiGet('/members');
-    if (!members.length) {
+    allMembers = await apiGet('/members');
+    if (!allMembers.length) {
       stateEl.innerHTML = '<i class="fas fa-circle-info"></i> No team members listed yet.';
       return;
     }
-    grid.innerHTML = members.map(m => `
-      <div class="member-card" title="${m.bio ? escapeHtml(m.bio) : ''}">
-        <i class="${escapeHtml(m.icon || GROUP_ICONS[m.role_group] || 'fa-solid fa-user')}"></i>
-        <h4>${escapeHtml(m.display_name)}</h4>
-        <p class="role">${escapeHtml(m.role_title)}</p>
-      </div>
-    `).join('');
     stateEl.style.display = 'none';
     grid.style.display = 'grid';
+    renderMembers(allMembers);
   } catch (err) {
     console.error(err);
     stateEl.classList.add('is-error');
     stateEl.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Could not load team list. Please try again shortly.';
   }
 }
-document.addEventListener('DOMContentLoaded', loadMembers);
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadMembers();
+
+  document.querySelectorAll('#roleFilters button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#roleFilters button').forEach(b => {
+        b.className = 'btn-outline';
+      });
+      btn.className = 'mc-btn mc-btn--gold';
+      const role = btn.getAttribute('data-role');
+      if (role === 'all') {
+        renderMembers(allMembers);
+      } else {
+        renderMembers(allMembers.filter(m => m.role_group === role));
+      }
+    });
+  });
+});
 </script>
 </body>
 </html>

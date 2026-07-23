@@ -6,8 +6,8 @@
 <meta name="description" content="About Minecraft Bangladesh and our community rules.">
 <title>About & Rules — Minecraft Bangladesh</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=Press+Start+2P&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="static/css/base.css">
 <link rel="stylesheet" href="static/css/extend.css">
 <script src="static/js/api.js"></script>
@@ -18,47 +18,50 @@
 <div id="navbarMount"></div>
 
 <header class="page-header">
-  <span class="section-eyebrow reveal">📖 THE SPAWN POINT</span>
-  <h1>About Minecraft Bangladesh</h1>
-  <p>Who we are, and the ground rules that keep this community friendly, fair, and spam-free.</p>
+  <span class="section-eyebrow">📖 THE SPAWN POINT</span>
+  <h1>About & Community Rules</h1>
+  <p>Who we are, our history since 2019, and the ground rules that keep this community friendly, fair, and spam-free.</p>
 </header>
 
 <section class="section" id="about">
-  <span class="section-eyebrow">🧱 OUR STORY</span>
-  <h2 class="section-title">Who We Are</h2>
-  <p class="section-desc">Minecraft Bangladesh started as a small Facebook group in 2019 and grew into the country's biggest hangout for players who'd rather build a castle than argue about it. Survival, creative, redstone, PvP — if it's blocky, we're into it.</p>
+  <div style="max-width:1200px;margin:0 auto;">
+    <span class="section-eyebrow">🧱 OUR STORY</span>
+    <h2 class="section-title">Who We Are</h2>
+    <p class="section-desc">
+      Minecraft Bangladesh started as a small Facebook group in 2019 and grew into the country's biggest hangout for players who'd rather build a castle than argue about it. Survival, creative, redstone, PvP — if it's blocky, we're into it.
+    </p>
 
-  <div class="about-wrap">
-    <div class="about-visual">
-      <p class="about-visual-quote">"Build a castle, not an argument."</p>
-      <div class="about-visual-tags">
-        <span><i class="fas fa-shovel"></i> Survival</span>
-        <span><i class="fas fa-palette"></i> Creative</span>
-        <span><i class="fas fa-bolt"></i> Redstone</span>
-        <span><i class="fas fa-crosshairs"></i> PvP</span>
-      </div>
-    </div>
-    <div class="about-stats" id="aboutStats">
-      <div class="stat-card"><div class="stat-num" id="statMembers">–</div><div class="stat-label">Members</div></div>
-      <div class="stat-card"><div class="stat-num" id="statServers">–</div><div class="stat-label">Active Servers</div></div>
-      <div class="stat-card"><div class="stat-num" id="statEvents">–</div><div class="stat-label">Events Hosted</div></div>
-      <div class="stat-card"><div class="stat-num" id="statDiscord">–</div><div class="stat-label">Discord Online</div></div>
+    <div class="live-stats-grid" id="aboutStats">
+      <div class="live-stat-card"><i class="fas fa-users"></i><div class="num" id="statMembers">–</div><div class="lbl">Members</div></div>
+      <div class="live-stat-card"><i class="fas fa-server"></i><div class="num" id="statServers">–</div><div class="lbl">Active Servers</div></div>
+      <div class="live-stat-card"><i class="fas fa-trophy"></i><div class="num" id="statEvents">–</div><div class="lbl">Events Hosted</div></div>
+      <div class="live-stat-card"><i class="fab fa-discord"></i><div class="num" id="statDiscord">–</div><div class="lbl">Discord Online</div></div>
     </div>
   </div>
 </section>
 
 <section class="section section--dark" id="rules">
-  <span class="section-eyebrow" style="background:var(--dirt);color:var(--paper);">📜 THE RULEBOOK</span>
-  <h2 class="section-title">Community Rules</h2>
-  <p class="section-desc">Managed by our admin team — this list updates whenever the rules change.</p>
+  <div style="max-width:1200px;margin:0 auto;">
+    <span class="section-eyebrow">📜 THE RULEBOOK</span>
+    <h2 class="section-title">Community Rules</h2>
+    <p class="section-desc">Managed live by our admin team — search or filter through the guidelines below.</p>
 
-  <div id="rulesState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading rules…</div>
-  <div class="rules-list" id="rulesList" style="display:none;"></div>
+    <!-- Rule Search Bar -->
+    <div style="max-width:860px;margin:0 auto 28px;display:flex;gap:12px;">
+      <input type="text" id="ruleSearchInput" placeholder="Search rules (e.g. spam, cheating, griefing)..."
+             style="flex:1;padding:12px 18px;font-family:var(--font-heading);font-size:15px;font-weight:700;border:3px solid var(--black);background:var(--cream);color:var(--black);outline:none;">
+    </div>
+
+    <div id="rulesState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading rules…</div>
+    <div class="rules-list" id="rulesList" style="display:none;"></div>
+  </div>
 </section>
 
 <div id="footerMount"></div>
 
 <script>
+let allRules = [];
+
 async function loadAboutStats() {
   try {
     const stats = await apiGet('/stats');
@@ -78,26 +81,35 @@ async function loadAboutStats() {
   }
 }
 
+function renderRules(rules) {
+  const list = document.getElementById('rulesList');
+  if (!rules.length) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;font-weight:800;color:var(--cream);">No rules match your search.</div>';
+    return;
+  }
+  list.innerHTML = rules.map((rule, i) => `
+    <div class="rule-item">
+      <div class="rule-num">${String(i + 1).padStart(2, '0')}</div>
+      <div>
+        <h4>${escapeHtml(rule.title)}</h4>
+        <p>${escapeHtml(rule.body)}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
 async function loadRules() {
   const stateEl = document.getElementById('rulesState');
   const list = document.getElementById('rulesList');
   try {
-    const rules = await apiGet('/rules');
-    if (!rules.length) {
+    allRules = await apiGet('/rules');
+    if (!allRules.length) {
       stateEl.innerHTML = '<i class="fas fa-circle-info"></i> No rules published yet.';
       return;
     }
-    list.innerHTML = rules.map((rule, i) => `
-      <div class="rule-item">
-        <div class="rule-num">${String(i + 1).padStart(2, '0')}</div>
-        <div>
-          <h4>${escapeHtml(rule.title)}</h4>
-          <p>${escapeHtml(rule.body)}</p>
-        </div>
-      </div>
-    `).join('');
     stateEl.style.display = 'none';
     list.style.display = 'flex';
+    renderRules(allRules);
   } catch (err) {
     console.error(err);
     stateEl.classList.add('is-error');
@@ -108,6 +120,15 @@ async function loadRules() {
 document.addEventListener('DOMContentLoaded', () => {
   loadAboutStats();
   loadRules();
+
+  const searchInput = document.getElementById('ruleSearchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      const filtered = allRules.filter(r => r.title.toLowerCase().includes(q) || r.body.toLowerCase().includes(q));
+      renderRules(filtered);
+    });
+  }
 });
 </script>
 </body>

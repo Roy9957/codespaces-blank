@@ -6,8 +6,8 @@
 <meta name="description" content="Live community stats for Minecraft Bangladesh — members, Discord activity, servers, and events.">
 <title>Live Stats — Minecraft Bangladesh</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=Press+Start+2P&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="static/css/base.css">
 <link rel="stylesheet" href="static/css/extend.css">
 <script src="static/js/api.js"></script>
@@ -18,14 +18,42 @@
 <div id="navbarMount"></div>
 
 <header class="page-header">
-  <span class="section-eyebrow reveal">📊 THE SCOREBOARD</span>
+  <span class="section-eyebrow">📊 THE SCOREBOARD</span>
   <h1>Live Community Stats</h1>
-  <p>Real numbers, pulled straight from our database. Refreshed every time you load this page.</p>
+  <p>Real-time metrics, pulled straight from our database. Refreshed live on page load.</p>
 </header>
 
 <section class="section">
-  <div id="statsState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading live stats…</div>
-  <div class="live-stats-grid" id="statsGrid" style="display:none;"></div>
+  <div style="max-width:1200px;margin:0 auto;">
+    <div id="statsState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading live stats…</div>
+    <div class="live-stats-grid" id="statsGrid" style="display:none;"></div>
+  </div>
+</section>
+
+<!-- Additional Stats Insights Box -->
+<section class="section section--dark">
+  <div style="max-width:1200px;margin:0 auto;text-align:center;">
+    <span class="section-eyebrow">🏆 MILESTONES</span>
+    <h2 class="section-title">Community Growth</h2>
+    <p class="section-desc" style="margin:0 auto 36px;">From a tiny Facebook group in 2019 to Bangladesh's largest Minecraft hub.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:24px;text-align:left;">
+      <div style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 var(--red);">
+        <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">2019: The Foundation</h4>
+        <p style="font-size:14px;color:#3a3224;line-height:1.6;font-family:var(--font-body);">Started with 50 passionate Minecraft players on Facebook, hosting our first survival realm.</p>
+      </div>
+
+      <div style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 var(--yellow);">
+        <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">2021: Discord Surge</h4>
+        <p style="font-size:14px;color:#3a3224;line-height:1.6;font-family:var(--font-body);">Crossed 10,000 members and introduced automated bot integrations, voice hubs, and role badges.</p>
+      </div>
+
+      <div style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 var(--teal);">
+        <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">Present: 52K+ Strong</h4>
+        <p style="font-size:14px;color:#3a3224;line-height:1.6;font-family:var(--font-body);">A multi-server network with monthly cash-prize build tournaments and 24/7 dedicated support.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <div id="footerMount"></div>
@@ -42,25 +70,25 @@ async function loadStats() {
     }
     grid.innerHTML = stats.map(stat => `
       <div class="live-stat-card">
-        <i class="${escapeHtml(stat.icon)}"></i>
-        <div class="num" data-final="${stat.value}" data-suffix="${escapeHtml(stat.suffix)}">0</div>
+        <i class="${escapeHtml(stat.icon || 'fas fa-chart-line')}"></i>
+        <div class="num" data-final="${stat.value}" data-suffix="${escapeHtml(stat.suffix || '')}">0</div>
         <div class="lbl">${escapeHtml(stat.label)}</div>
       </div>
     `).join('');
     stateEl.style.display = 'none';
     grid.style.display = 'grid';
 
-    /* simple count-up animation, no GSAP dependency on this page */
+    /* Count up animation */
     grid.querySelectorAll('.num').forEach(el => {
       const target = parseInt(el.getAttribute('data-final'), 10) || 0;
       const suffix = el.getAttribute('data-suffix') || '';
       let start = null;
-      const duration = 1200;
+      const duration = 1400;
       function step(ts) {
         if (!start) start = ts;
         const progress = Math.min((ts - start) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.floor(eased * target) + suffix;
+        el.textContent = Math.floor(eased * target).toLocaleString() + suffix;
         if (progress < 1) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
@@ -71,6 +99,7 @@ async function loadStats() {
     stateEl.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Could not load live stats. Please try again shortly.';
   }
 }
+
 document.addEventListener('DOMContentLoaded', loadStats);
 </script>
 </body>
