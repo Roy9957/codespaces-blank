@@ -1,7 +1,9 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.database import connect_db, disconnect_db
@@ -40,3 +42,6 @@ app.include_router(admin.router, prefix="/api")
 @app.get("/api/health")
 async def health():
     return {"status": "ok"}
+
+frontend_dir = Path(__file__).resolve().parents[2] / "frontend"
+app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")

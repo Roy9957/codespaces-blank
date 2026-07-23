@@ -7,15 +7,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const token = requireAdminAuth();
   if (!token) return;
 
+  const role = (localStorage.getItem('mcbd_admin_role') || '').toLowerCase();
   document.getElementById('adminDisplayName').textContent = localStorage.getItem('mcbd_admin_name') || 'Admin';
-  document.getElementById('adminRoleBadge').textContent = (localStorage.getItem('mcbd_admin_role') || '').toUpperCase();
+  document.getElementById('adminRoleBadge').textContent = role.toUpperCase();
+
+  if (role === 'super_admin' || role === 'owner') {
+    const userTab = document.getElementById('tabUsers');
+    if (userTab) userTab.style.display = 'inline-block';
+    loadUsers();
+  }
 
   initTabs();
   loadStats();
+  loadPartnerships();
   loadServers();
   loadNews();
   loadMembers();
   loadRules();
+  loadFormCategories();
   loadSubmissions();
 });
 
@@ -481,3 +490,297 @@ async function deleteSubmission(id) {
   toast('Submission deleted.');
   loadSubmissions();
 }
+
+/* ═══════════════ PARTNERSHIPS ═══════════════ */
+let partnershipsCache = [];
+
+async function loadPartnerships() {
+  const tbody = document.getElementById('partnershipsTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = `<tr><td colspan="5">Loading…</td></tr>`;
+  const items = await adminApi('GET', '/admin/partnerships');
+  if (!items) return;
+  partnershipsCache = items;
+
+  if (!items.length) {
+    tbody.innerHTML = `<tr><td colspan="5">No partnerships listed yet.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = items.map((p) => `
+    <tr>
+      <td style="display:flex;align-items:center;gap:10px;">
+        ${p.logo_url ? `<img src="${escapeHtml(p.logo_url)}" style="width:32px;height:32px;object-fit:cover;border:2px solid var(--black);" onerror="this.src='../logo.png';">` : '<i class="fas fa-handshake" style="font-size:18px;color:var(--gold);"></i>'}
+        <strong>${escapeHtml(p.title)}</strong>
+      </td>
+      <td><span class="badge" style="background:var(--teal);color:var(--black);">${escapeHtml(p.partner_type)}</span></td>
+      <td>${p.is_featured ? '<i class="fas fa-star" style="color:var(--gold);"></i> Featured' : '—'}</td>
+      <td>${p.is_active ? '<span class="badge status-online">Active</span>' : '<span class="badge status-offline">Hidden</span>'}</td>
+      <td class="row-actions">
+        <button class="admin-btn small neutral" onclick="editPartnership(${p.id})">Edit</button>
+        <button class="admin-btn small danger" onclick="deletePartnership(${p.id})">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openPartnershipForm() {
+  document.getElementById('partnershipFormTitle').textContent = 'Add Partner';
+  document.getElementById('partId').value = '';
+  document.getElementById('partTitle').value = '';
+  document.getElementById('partType').value = 'community';
+  document.getElementById('partLogo').value = '';
+  document.getElementById('partWeb').value = '';
+  document.getElementById('partDiscord').value = '';
+  document.getElementById('partSort').value = 0;
+  document.getElementById('partDesc').value = '';
+  document.getElementById('partFeatured').checked = false;
+  document.getElementById('partActive').checked = true;
+  document.getElementById('partnershipForm').classList.add('show');
+}
+
+function closePartnershipForm() {
+  document.getElementById('partnershipForm').classList.remove('show');
+}
+
+function editPartnership(id) {
+  const p = partnershipsCache.find((x) => x.id === id);
+  if (!p) return;
+  document.getElementById('partnershipFormTitle').textContent = `Edit: ${p.title}`;
+  document.getElementById('partId').value = p.id;
+  document.getElementById('partTitle').value = p.title;
+  document.getElementById('partType').value = p.partner_type || 'community';
+  document.getElementById('partLogo').value = p.logo_url || '';
+  document.getElementById('partWeb').value = p.website_url || '';
+  document.getElementById('partDiscord').value = p.discord_url || '';
+  document.getElementById('partSort').value = p.sort_order || 0;
+  document.getElementById('partDesc').value = p.description || '';
+  document.getElementById('partFeatured').checked = p.is_featured;
+  document.getElementById('partActive').checked = p.is_active;
+  document.getElementById('partnershipForm').classList.add('show');
+  document.getElementById('partnershipForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function savePartnership() {
+  const id = document.getElementById('partId').value;
+  const payload = {
+    title: document.getElementById('partTitle').value.trim(),
+    partner_type: document.getElementById('partType').value,
+    logo_url: document.getElementById('partLogo').value.trim() || null,
+    website_url: document.getElementById('partWeb').value.trim() || null,
+    discord_url: document.getElementById('partDiscord').value.trim() || null,
+    sort_order: parseInt(document.getElementById('partSort').value, 10) || 0,
+    description: document.getElementById('partDesc').value.trim() || null,
+    is_featured: document.getElementById('partFeatured').checked,
+    is_active: document.getElementById('partActive').checked,
+  };
+  if (!payload.title) { toast('Partner name is required.', 'error'); return; }
+
+  const result = id
+    ? await adminApi('PATCH', `/admin/partnerships/${id}`, payload)
+    : await adminApi('POST', '/admin/partnerships', payload);
+  if (result) {
+    toast(`Partner "${payload.title}" saved.`);
+    closePartnershipForm();
+    loadPartnerships();
+  }
+}
+
+async function deletePartnership(id) {
+  const p = partnershipsCache.find((x) => x.id === id);
+  if (!confirm(`Delete partner "${p ? p.title : id}"? This cannot be undone.`)) return;
+  await adminApi('DELETE', `/admin/partnerships/${id}`);
+  toast('Partnership deleted.');
+  loadPartnerships();
+}
+
+/* ═══════════════ FORM CATEGORIES ═══════════════ */
+let categoriesCache = [];
+
+async function loadFormCategories() {
+  const tbody = document.getElementById('formCategoriesTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = `<tr><td colspan="4">Loading…</td></tr>`;
+  const items = await adminApi('GET', '/admin/form-categories');
+  if (!items) return;
+  categoriesCache = items;
+
+  tbody.innerHTML = items.map((c) => `
+    <tr>
+      <td><code>${escapeHtml(c.key)}</code></td>
+      <td><strong>${escapeHtml(c.label)}</strong></td>
+      <td>${escapeHtml(c.description || '—')}</td>
+      <td class="row-actions">
+        <button class="admin-btn small neutral" onclick="editCat(${c.id})">Edit</button>
+        <button class="admin-btn small danger" onclick="deleteCat(${c.id})">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openCatForm() {
+  document.getElementById('catFormTitle').textContent = 'Add Form Category';
+  document.getElementById('catId').value = '';
+  document.getElementById('catKey').value = '';
+  document.getElementById('catLabel').value = '';
+  document.getElementById('catSort').value = 0;
+  document.getElementById('catDesc').value = '';
+  document.getElementById('catActive').checked = true;
+  document.getElementById('catForm').classList.add('show');
+}
+
+function closeCatForm() {
+  document.getElementById('catForm').classList.remove('show');
+}
+
+function editCat(id) {
+  const c = categoriesCache.find((x) => x.id === id);
+  if (!c) return;
+  document.getElementById('catFormTitle').textContent = `Edit: ${c.label}`;
+  document.getElementById('catId').value = c.id;
+  document.getElementById('catKey').value = c.key;
+  document.getElementById('catLabel').value = c.label;
+  document.getElementById('catSort').value = c.sort_order || 0;
+  document.getElementById('catDesc').value = c.description || '';
+  document.getElementById('catActive').checked = c.is_active ?? true;
+  document.getElementById('catForm').classList.add('show');
+}
+
+async function saveCat() {
+  const id = document.getElementById('catId').value;
+  const payload = {
+    key: document.getElementById('catKey').value.trim().toLowerCase().replace(/\s+/g, '_'),
+    label: document.getElementById('catLabel').value.trim(),
+    sort_order: parseInt(document.getElementById('catSort').value, 10) || 0,
+    description: document.getElementById('catDesc').value.trim() || null,
+    is_active: document.getElementById('catActive').checked,
+  };
+  if (!payload.key || !payload.label) { toast('Key and label are required.', 'error'); return; }
+
+  const result = id
+    ? await adminApi('PATCH', `/admin/form-categories/${id}`, payload)
+    : await adminApi('POST', '/admin/form-categories', payload);
+  if (result) {
+    toast(`Form Category "${payload.label}" saved.`);
+    closeCatForm();
+    loadFormCategories();
+  }
+}
+
+async function deleteCat(id) {
+  const c = categoriesCache.find((x) => x.id === id);
+  if (!confirm(`Delete category "${c ? c.label : id}"? This cannot be undone.`)) return;
+  await adminApi('DELETE', `/admin/form-categories/${id}`);
+  toast('Category deleted.');
+  loadFormCategories();
+}
+
+/* ═══════════════ SUPER ADMIN USER MANAGEMENT ═══════════════ */
+let usersCache = [];
+
+async function loadUsers() {
+  const tbody = document.getElementById('usersTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = `<tr><td colspan="7">Loading…</td></tr>`;
+  const users = await adminApi('GET', '/admin/users');
+  if (!users) return;
+  usersCache = users;
+
+  tbody.innerHTML = users.map((u) => `
+    <tr>
+      <td><code>#${u.id}</code></td>
+      <td><strong>@${escapeHtml(u.username)}</strong></td>
+      <td>${escapeHtml(u.display_name)}</td>
+      <td><span class="badge" style="background:${u.role === 'super_admin' || u.role === 'owner' ? 'var(--gold)' : 'var(--cream)'};color:var(--black);">${escapeHtml(u.role).toUpperCase()}</span></td>
+      <td>${u.is_active ? '<span class="badge status-online">Active</span>' : '<span class="badge status-offline">Suspended</span>'}</td>
+      <td>${timeAgo(u.last_login_at)}</td>
+      <td class="row-actions">
+        <button class="admin-btn small neutral" onclick="editUser(${u.id})">Edit Role/User</button>
+        <button class="admin-btn small ${u.is_active ? 'danger' : 'teal'}" onclick="toggleUserActive(${u.id}, ${!u.is_active})">${u.is_active ? 'Suspend' : 'Unsuspend'}</button>
+        <button class="admin-btn small danger" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openUserForm() {
+  document.getElementById('userFormTitle').textContent = 'Add Staff User';
+  document.getElementById('userId').value = '';
+  document.getElementById('usrName').value = '';
+  document.getElementById('usrName').disabled = false;
+  document.getElementById('usrDisplayName').value = '';
+  document.getElementById('usrRole').value = 'moderator';
+  document.getElementById('usrPassword').value = '';
+  document.getElementById('usrActive').checked = true;
+  document.getElementById('userForm').classList.add('show');
+}
+
+function closeUserForm() {
+  document.getElementById('userForm').classList.remove('show');
+}
+
+function editUser(id) {
+  const u = usersCache.find((x) => x.id === id);
+  if (!u) return;
+  document.getElementById('userFormTitle').textContent = `Edit User: @${u.username}`;
+  document.getElementById('userId').value = u.id;
+  document.getElementById('usrName').value = u.username;
+  document.getElementById('usrName').disabled = true;
+  document.getElementById('usrDisplayName').value = u.display_name;
+  document.getElementById('usrRole').value = u.role || 'moderator';
+  document.getElementById('usrPassword').value = '';
+  document.getElementById('usrActive').checked = u.is_active;
+  document.getElementById('userForm').classList.add('show');
+  document.getElementById('userForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function toggleUserActive(id, newStatus) {
+  const u = usersCache.find((x) => x.id === id);
+  const action = newStatus ? 'activate' : 'suspend';
+  if (!confirm(`Are you sure you want to ${action} account "@${u ? u.username : id}"?`)) return;
+  const result = await adminApi('PATCH', `/admin/users/${id}`, { is_active: newStatus });
+  if (result) {
+    toast(`User "@${u ? u.username : id}" ${action}d.`);
+    loadUsers();
+  }
+}
+
+async function saveUser() {
+  const id = document.getElementById('userId').value;
+  const payload = {
+    display_name: document.getElementById('usrDisplayName').value.trim(),
+    role: document.getElementById('usrRole').value,
+    is_active: document.getElementById('usrActive').checked,
+  };
+
+  const password = document.getElementById('usrPassword').value.trim();
+  if (password) payload.password = password;
+
+  if (!id) {
+    payload.username = document.getElementById('usrName').value.trim();
+    if (!payload.username || !password) {
+      toast('Username and password are required for new accounts.', 'error');
+      return;
+    }
+  }
+
+  if (!payload.display_name) { toast('Display name is required.', 'error'); return; }
+
+  const result = id
+    ? await adminApi('PATCH', `/admin/users/${id}`, payload)
+    : await adminApi('POST', '/admin/users', payload);
+  if (result) {
+    toast(`User account saved.`);
+    closeUserForm();
+    loadUsers();
+  }
+}
+
+async function deleteUser(id) {
+  const u = usersCache.find((x) => x.id === id);
+  if (!confirm(`Delete staff account "@${u ? u.username : id}"? This cannot be undone.`)) return;
+  await adminApi('DELETE', `/admin/users/${id}`);
+  toast('User account deleted.');
+  loadUsers();
+}
+

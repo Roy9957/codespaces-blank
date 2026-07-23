@@ -126,7 +126,7 @@ function initDiscordModal() {
       <div class="content-body">
         <div class="avatar-row">
           <div class="avatar-wrap">
-            <img src="logo.png" alt="Avatar" class="avatar" id="dcModalAvatar" onerror="this.src='logo.jpeg'">
+            <img src="/logo.png" alt="Avatar" class="avatar" id="dcModalAvatar" onerror="this.src='/logo.jpeg'">
             <div class="avatar-status"></div>
           </div>
           <span class="dc-tag" id="dcModalTag">MINECRAFT BANGLADESH</span>

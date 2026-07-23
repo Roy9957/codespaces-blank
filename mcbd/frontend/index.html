@@ -354,6 +354,54 @@
   </div>
 </section>
 
+<!-- ═══ PARTNERSHIPS & COLLABORATIONS SECTION ═══ -->
+<section class="section section--dark pat-dots" id="partnerships">
+  <div style="max-width:1200px;margin:0 auto;">
+    <span class="section-eyebrow" style="background:var(--gold);color:var(--black);">🤝 COMMUNITY SYNERGY</span>
+    <h2 class="section-title gsap-fade-up">Our Partnerships &amp; Collaborations</h2>
+    <p class="section-desc gsap-fade-up">Proudly partnered with Bangladesh's top gaming creators, Minecraft networks, and tech communities.</p>
+
+    <div class="motion-grid" id="partnershipsGrid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:24px;">
+      <!-- Fallback static cards -->
+      <div class="tilt-card" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 var(--teal);">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <img src="logo.png" style="width:44px;height:44px;object-fit:cover;border:3px solid var(--black);box-shadow:2px 2px 0 var(--black);" alt="Partner Logo">
+          <div>
+            <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:2px;">Bangladesh MC Network</h4>
+            <span class="badge" style="background:var(--teal);color:var(--black);font-size:10px;">COMMUNITY PARTNER</span>
+          </div>
+        </div>
+        <p style="font-size:14px;color:#3a3224;line-height:1.5;margin-bottom:16px;">Collaborating on national build contests and cross-community tournaments.</p>
+        <a href="join.html" class="btn-outline" style="font-size:11px;padding:6px 12px;display:inline-block;"><i class="fab fa-discord"></i> VISIT PARTNER</a>
+      </div>
+
+      <div class="tilt-card" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 var(--gold);">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <img src="logo.png" style="width:44px;height:44px;object-fit:cover;border:3px solid var(--black);box-shadow:2px 2px 0 var(--black);" alt="Partner Logo">
+          <div>
+            <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:2px;">BD Redstone Guild</h4>
+            <span class="badge" style="background:var(--gold);color:var(--black);font-size:10px;">TECH PARTNER</span>
+          </div>
+        </div>
+        <p style="font-size:14px;color:#3a3224;line-height:1.5;margin-bottom:16px;">Technical workshops, redstone showcases, and automation engineering competitions.</p>
+        <a href="join.html" class="btn-outline" style="font-size:11px;padding:6px 12px;display:inline-block;"><i class="fas fa-globe"></i> VISIT PARTNER</a>
+      </div>
+
+      <div class="tilt-card" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 var(--grass);">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <img src="logo.png" style="width:44px;height:44px;object-fit:cover;border:3px solid var(--black);box-shadow:2px 2px 0 var(--black);" alt="Partner Logo">
+          <div>
+            <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:2px;">Creators Alliance</h4>
+            <span class="badge" style="background:var(--grass);color:var(--white);font-size:10px;">CREATOR HUB</span>
+          </div>
+        </div>
+        <p style="font-size:14px;color:#3a3224;line-height:1.5;margin-bottom:16px;">Supporting local Minecraft streamers, YouTubers, and video creators across Bangladesh.</p>
+        <a href="join.html" class="btn-outline" style="font-size:11px;padding:6px 12px;display:inline-block;"><i class="fab fa-youtube"></i> VIEW CREATORS</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ FOOTER MOUNT ═══ -->
 <div id="footerMount"></div>
 
@@ -414,6 +462,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   loadHomeStats();
+
+  /* ── Load dynamic partnerships from API ── */
+  async function loadHomePartnerships() {
+    const grid = document.getElementById('partnershipsGrid');
+    if (!grid) return;
+    try {
+      const items = await apiGet('/partnerships');
+      if (!Array.isArray(items) || !items.length) return;
+      grid.innerHTML = items.map(p => `
+        <div class="tilt-card" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 ${p.is_featured ? 'var(--gold)' : 'var(--teal)'};">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <img src="${escapeHtml(p.logo_url || 'logo.png')}" style="width:44px;height:44px;object-fit:cover;border:3px solid var(--black);box-shadow:2px 2px 0 var(--black);" alt="${escapeHtml(p.title)}" onerror="this.src='logo.png';">
+            <div>
+              <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:2px;">${escapeHtml(p.title)}</h4>
+              <span class="badge" style="background:var(--teal);color:var(--black);font-size:10px;">${escapeHtml(p.partner_type.toUpperCase())}</span>
+            </div>
+          </div>
+          ${p.description ? `<p style="font-size:14px;color:#3a3224;line-height:1.5;margin-bottom:16px;">${escapeHtml(p.description)}</p>` : ''}
+          ${p.website_url || p.discord_url ? `<a href="${escapeHtml(p.website_url || p.discord_url)}" target="_blank" rel="noopener" class="btn-outline" style="font-size:11px;padding:6px 12px;display:inline-block;"><i class="${p.discord_url ? 'fab fa-discord' : 'fas fa-globe'}"></i> VISIT PARTNER</a>` : ''}
+        </div>
+      `).join('');
+    } catch (e) {
+      /* Keep static fallback */
+    }
+  }
+
+  loadHomePartnerships();
 
   /* ── GSAP ScrollTrigger Animations ── */
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {

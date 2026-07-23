@@ -1,0 +1,23 @@
+                                          Table "public.news_posts"
+    Column    |           Type           | Collation | Nullable |                  Default                   
+--------------+--------------------------+-----------+----------+--------------------------------------------
+ id           | integer                  |           | not null | nextval('news_posts_id_seq'::regclass)
+ slug         | character varying(160)   |           | not null | 
+ title        | character varying(200)   |           | not null | 
+ excerpt      | character varying(400)   |           |          | 
+ body         | text                     |           | not null | 
+ category     | character varying(40)    |           | not null | 'announcement'::character varying
+ cover_icon   | character varying(50)    |           |          | 'fa-solid fa-newspaper'::character varying
+ is_published | boolean                  |           | not null | true
+ is_pinned    | boolean                  |           | not null | false
+ published_at | timestamp with time zone |           | not null | now()
+ author_id    | integer                  |           |          | 
+ created_at   | timestamp with time zone |           | not null | now()
+ updated_at   | timestamp with time zone |           | not null | now()
+Indexes:
+    "news_posts_pkey" PRIMARY KEY, btree (id)
+    "idx_news_published" btree (is_published, published_at DESC)
+    "news_posts_slug_key" UNIQUE CONSTRAINT, btree (slug)
+Foreign-key constraints:
+    "news_posts_author_id_fkey" FOREIGN KEY (author_id) REFERENCES admin_users(id)
+

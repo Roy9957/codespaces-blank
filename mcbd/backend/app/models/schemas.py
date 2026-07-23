@@ -223,3 +223,86 @@ class SubmissionOut(BaseModel):
 class SubmissionUpdate(BaseModel):
     status: Optional[str] = None
     admin_notes: Optional[str] = None
+
+
+# ═══════════════ PARTNERSHIPS ═══════════════
+class PartnershipOut(BaseModel):
+    id: int
+    title: str
+    partner_type: str
+    logo_url: Optional[str]
+    description: Optional[str]
+    website_url: Optional[str]
+    discord_url: Optional[str]
+    is_featured: bool
+    is_active: bool
+    sort_order: int
+    created_at: datetime
+
+
+class PartnershipCreate(BaseModel):
+    title: str
+    partner_type: str = "community"
+    logo_url: Optional[str] = None
+    description: Optional[str] = None
+    website_url: Optional[str] = None
+    discord_url: Optional[str] = None
+    is_featured: bool = False
+    is_active: bool = True
+    sort_order: int = 0
+
+
+class PartnershipUpdate(BaseModel):
+    title: Optional[str] = None
+    partner_type: Optional[str] = None
+    logo_url: Optional[str] = None
+    description: Optional[str] = None
+    website_url: Optional[str] = None
+    discord_url: Optional[str] = None
+    is_featured: Optional[bool] = None
+    is_active: Optional[bool] = None
+    sort_order: Optional[int] = None
+
+
+# ═══════════════ ADMIN USERS (SUPER ADMIN) ═══════════════
+class AdminUserOut(BaseModel):
+    id: int
+    username: str
+    display_name: str
+    role: str
+    is_active: bool
+    last_login_at: Optional[datetime] = None
+    created_at: datetime
+
+
+class AdminUserCreate(BaseModel):
+    username: str
+    password: str
+    display_name: str
+    role: str = "moderator"  # 'super_admin' | 'owner' | 'admin' | 'moderator'
+    is_active: bool = True
+
+
+class AdminUserUpdate(BaseModel):
+    display_name: Optional[str] = None
+    role: Optional[str] = None
+    password: Optional[str] = None
+    is_active: Optional[bool] = None
+
+
+# ═══════════════ FORM CATEGORY ADMIN ═══════════════
+class FormCategoryCreate(BaseModel):
+    key: str
+    label: str
+    description: Optional[str] = None
+    is_active: bool = True
+    sort_order: int = 0
+
+
+class FormCategoryUpdate(BaseModel):
+    key: Optional[str] = None
+    label: Optional[str] = None
+    description: Optional[str] = None
+    is_active: Optional[bool] = None
+    sort_order: Optional[int] = None
+

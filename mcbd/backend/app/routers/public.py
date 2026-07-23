@@ -5,6 +5,7 @@ from app.models.schemas import (
     FormCategoryOut,
     MemberOut,
     NewsOut,
+    PartnershipOut,
     RuleOut,
     ServerOut,
     StatOut,
@@ -93,5 +94,18 @@ async def list_form_categories():
     rows = await pool.fetch(
         """SELECT id, key, label, description FROM form_categories
            WHERE is_active = true ORDER BY sort_order"""
+    )
+    return [dict(r) for r in rows]
+
+
+@router.get("/partnerships", response_model=list[PartnershipOut])
+async def list_partnerships():
+    pool = get_pool()
+    rows = await pool.fetch(
+        """SELECT id, title, partner_type, logo_url, description, website_url, discord_url,
+                  is_featured, is_active, sort_order, created_at
+           FROM partnerships
+           WHERE is_active = true
+           ORDER BY is_featured DESC, sort_order ASC, created_at DESC"""
     )
     return [dict(r) for r in rows]

@@ -2,15 +2,24 @@ import re
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.auth import get_current_admin
+from app.auth import get_current_admin, hash_password, require_role
 from app.database import get_pool
 from app.models.schemas import (
+    AdminUserCreate,
+    AdminUserOut,
+    AdminUserUpdate,
+    FormCategoryCreate,
+    FormCategoryOut,
+    FormCategoryUpdate,
     MemberCreate,
     MemberOut,
     MemberUpdate,
     NewsCreate,
     NewsOut,
     NewsUpdate,
+    PartnershipCreate,
+    PartnershipOut,
+    PartnershipUpdate,
     RuleCreate,
     RuleOut,
     RuleUpdate,
@@ -298,3 +307,165 @@ async def delete_submission(submission_id: str):
     result = await pool.execute("DELETE FROM submissions WHERE id = $1", submission_id)
     if result == "DELETE 0":
         raise HTTPException(status_code=404, detail="Submission not found")
+
+
+# ═══════════════ PARTNERSHIPS ═══════════════
+@router.get("/partnerships", response_model=list[PartnershipOut])
+async def admin_list_partnerships():
+    pool = get_pool()
+    rows = await pool.fetch(
+        """SELECT id, title, partner_type, logo_url, description, website_url, discord_url,
+                  is_featured, is_active, sort_order, created_at
+           FROM partnerships ORDER BY is_featured DESC, sort_order ASC, created_at DESC"""
+    )
+    return [dict(r) for r in rows]
+
+
+@router.post("/partnerships", response_model=PartnershipOut, status_code=201)
+async def create_partnership(payload: PartnershipCreate):
+    pool = get_pool()
+    row = await pool.fetchrow(
+        """INSERT INTO partnerships (title, partner_type, logo_url, description, website_url,
+                                     discord_url, is_featured, is_active, sort_order)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+           RETURNING id, title, partner_type, logo_url, description, website_url, discord_url,
+                     is_featured, is_active, sort_order, created_at""",
+        payload.title, payload.partner_type, payload.logo_url, payload.description,
+        payload.website_url, payload.discord_url, payload.is_featured, payload.is_active, payload.sort_order
+    )
+    return dict(row)
+
+
+@router.patch("/partnerships/{partnership_id}", response_model=PartnershipOut)
+async def update_partnership(partnership_id: int, payload: PartnershipUpdate):
+    pool = get_pool()
+    fields = payload.model_dump(exclude_unset=True)
+    if not fields:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    set_sql, values = _set_clause(fields)
+    values.append(partnership_id)
+    row = await pool.fetchrow(
+        f"""UPDATE partnerships SET {set_sql} WHERE id = ${len(values)}
+            RETURNING id, title, partner_type, logo_url, description, website_url, discord_url,
+                      is_featured, is_active, sort_order, created_at""",
+        *values,
+    )
+    if not row:
+        raise HTTPException(status_code=404, detail="Partnership not found")
+    return dict(row)
+
+
+@router.delete("/partnerships/{partnership_id}", status_code=204)
+async def delete_partnership(partnership_id: int):
+    pool = get_pool()
+    result = await pool.execute("DELETE FROM partnerships WHERE id = $1", partnership_id)
+    if result == "DELETE 0":
+        raise HTTPException(status_code=404, detail="Partnership not found")
+
+
+# ═══════════════ FORM CATEGORIES ADMIN ═══════════════
+@router.get("/form-categories", response_model=list[FormCategoryOut])
+async def admin_list_form_categories():
+    pool = get_pool()
+    rows = await pool.fetch("SELECT id, key, label, description FROM form_categories ORDER BY sort_order ASC")
+    return [dict(r) for r in rows]
+
+
+@router.post("/form-categories", response_model=FormCategoryOut, status_code=201)
+async def create_form_category(payload: FormCategoryCreate):
+    pool = get_pool()
+    row = await pool.fetchrow(
+        """INSERT INTO form_categories (key, label, description, is_active, sort_order)
+           VALUES ($1,$2,$3,$4,$5)
+           RETURNING id, key, label, description""",
+        payload.key, payload.label, payload.description, payload.is_active, payload.sort_order
+    )
+    return dict(row)
+
+
+@router.patch("/form-categories/{cat_id}", response_model=FormCategoryOut)
+async def update_form_category(cat_id: int, payload: FormCategoryUpdate):
+    pool = get_pool()
+    fields = payload.model_dump(exclude_unset=True)
+    if not fields:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    set_sql, values = _set_clause(fields)
+    values.append(cat_id)
+    row = await pool.fetchrow(
+        f"""UPDATE form_categories SET {set_sql} WHERE id = ${len(values)}
+            RETURNING id, key, label, description""",
+        *values,
+    )
+    if not row:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return dict(row)
+
+
+@router.delete("/form-categories/{cat_id}", status_code=204)
+async def delete_form_category(cat_id: int):
+    pool = get_pool()
+    result = await pool.execute("DELETE FROM form_categories WHERE id = $1", cat_id)
+    if result == "DELETE 0":
+        raise HTTPException(status_code=404, detail="Category not found")
+
+
+# ═══════════════ SUPER ADMIN USER MANAGEMENT ═══════════════
+@router.get("/users", response_model=list[AdminUserOut], dependencies=[Depends(require_role("super_admin", "owner"))])
+async def list_admin_users():
+    pool = get_pool()
+    rows = await pool.fetch(
+        "SELECT id, username, display_name, role, is_active, last_login_at, created_at FROM admin_users ORDER BY id ASC"
+    )
+    return [dict(r) for r in rows]
+
+
+@router.post("/users", response_model=AdminUserOut, status_code=201, dependencies=[Depends(require_role("super_admin", "owner"))])
+async def create_admin_user(payload: AdminUserCreate):
+    pool = get_pool()
+    hashed = hash_password(payload.password)
+    try:
+        row = await pool.fetchrow(
+            """INSERT INTO admin_users (username, password_hash, display_name, role, is_active)
+               VALUES ($1,$2,$3,$4,$5)
+               RETURNING id, username, display_name, role, is_active, last_login_at, created_at""",
+            payload.username, hashed, payload.display_name, payload.role, payload.is_active
+        )
+        return dict(row)
+    except Exception as e:
+        if "unique" in str(e).lower():
+            raise HTTPException(status_code=400, detail="Username already exists")
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.patch("/users/{user_id}", response_model=AdminUserOut, dependencies=[Depends(require_role("super_admin", "owner"))])
+async def update_admin_user(user_id: int, payload: AdminUserUpdate):
+    pool = get_pool()
+    fields = payload.model_dump(exclude_unset=True)
+    if "password" in fields:
+        raw_pwd = fields.pop("password")
+        if raw_pwd and raw_pwd.strip():
+            fields["password_hash"] = hash_password(raw_pwd.strip())
+
+    if not fields:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    set_sql, values = _set_clause(fields)
+    values.append(user_id)
+    row = await pool.fetchrow(
+        f"""UPDATE admin_users SET {set_sql} WHERE id = ${len(values)}
+            RETURNING id, username, display_name, role, is_active, last_login_at, created_at""",
+        *values,
+    )
+    if not row:
+        raise HTTPException(status_code=404, detail="User not found")
+    return dict(row)
+
+
+@router.delete("/users/{user_id}", status_code=204, dependencies=[Depends(require_role("super_admin", "owner"))])
+async def delete_admin_user(user_id: int, current_admin: dict = Depends(get_current_admin)):
+    if int(current_admin["sub"]) == user_id:
+        raise HTTPException(status_code=400, detail="You cannot delete your own account")
+    pool = get_pool()
+    result = await pool.execute("DELETE FROM admin_users WHERE id = $1", user_id)
+    if result == "DELETE 0":
+        raise HTTPException(status_code=404, detail="User not found")
+

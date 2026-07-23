@@ -17,7 +17,7 @@
 <body>
 
 <div class="admin-topbar">
-  <div class="brand"><img src="../logo.png" alt="MCBD Logo" onerror="this.src='../logo.jpeg';"> MINECRAFT <span>BANGLADESH</span> — ADMIN</div>
+  <div class="brand"><img src="/logo.png" alt="MCBD Logo" onerror="this.src='/logo.jpeg';"> MINECRAFT <span>BANGLADESH</span> — ADMIN</div>
   <div class="admin-user">
     <span id="adminDisplayName">…</span>
     <span class="role-pill" id="adminRoleBadge">…</span>
@@ -28,11 +28,14 @@
 <div class="admin-shell">
   <div class="admin-tabs">
     <button class="admin-tab active" data-panel="panelStats">Stats</button>
+    <button class="admin-tab" data-panel="panelPartnerships">Partnerships</button>
     <button class="admin-tab" data-panel="panelServers">Servers</button>
     <button class="admin-tab" data-panel="panelNews">News</button>
     <button class="admin-tab" data-panel="panelMembers">Members</button>
     <button class="admin-tab" data-panel="panelRules">Rules</button>
+    <button class="admin-tab" data-panel="panelFormCategories">Form Categories</button>
     <button class="admin-tab" data-panel="panelSubmissions">Form Submissions</button>
+    <button class="admin-tab super-only" data-panel="panelUsers" id="tabUsers" style="display:none;background:var(--gold);color:var(--black);">👑 Admin Users</button>
   </div>
 
   <!-- ═══ STATS ═══ -->
@@ -240,6 +243,118 @@
       <table class="admin-table">
         <thead><tr><th>Category</th><th>From</th><th>Contact</th><th>Message</th><th>Status</th><th>Received</th><th>Actions</th></tr></thead>
         <tbody id="submissionsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ PARTNERSHIPS ═══ -->
+  <section class="admin-panel" id="panelPartnerships">
+    <div class="admin-panel-head">
+      <h2>Partnerships &amp; Collaborations</h2>
+      <button class="admin-btn" onclick="openPartnershipForm()">+ Add Partner</button>
+    </div>
+
+    <div class="edit-card" id="partnershipForm">
+      <h3 id="partnershipFormTitle">Add Partner</h3>
+      <input type="hidden" id="partId">
+      <div class="edit-grid">
+        <div><label>Title / Partner Name</label><input id="partTitle" placeholder="e.g. Redstone BD"></div>
+        <div><label>Partner Type</label>
+          <select id="partType">
+            <option value="community">Community</option>
+            <option value="creator">Content Creator</option>
+            <option value="sponsor">Sponsor</option>
+            <option value="server">Partner Server</option>
+            <option value="event">Event Host</option>
+          </select>
+        </div>
+        <div><label>Logo / Image URL</label><input id="partLogo" placeholder="https://... or logo.png"></div>
+        <div><label>Website URL</label><input id="partWeb" placeholder="https://..."></div>
+        <div><label>Discord URL / Tag</label><input id="partDiscord" placeholder="https://discord.gg/..."></div>
+        <div><label>Sort Order</label><input id="partSort" type="number" value="0"></div>
+        <div class="full"><label>Description</label><textarea id="partDesc" maxlength="500"></textarea></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="partFeatured"><label for="partFeatured" style="margin:0;">Featured Partner</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="partActive" checked><label for="partActive" style="margin:0;">Active (visible on site)</label></div>
+      <div class="edit-actions">
+        <button class="admin-btn" onclick="savePartnership()">Save</button>
+        <button class="admin-btn neutral" onclick="closePartnershipForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Partner Name</th><th>Type</th><th>Featured</th><th>Active</th><th>Actions</th></tr></thead>
+        <tbody id="partnershipsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ FORM CATEGORIES ADMIN ═══ -->
+  <section class="admin-panel" id="panelFormCategories">
+    <div class="admin-panel-head">
+      <h2>Form Categories (Dropdown Options)</h2>
+      <button class="admin-btn" onclick="openCatForm()">+ Add Category</button>
+    </div>
+
+    <div class="edit-card" id="catForm">
+      <h3 id="catFormTitle">Add Category</h3>
+      <input type="hidden" id="catId">
+      <div class="edit-grid">
+        <div><label>Category Key (unique string)</label><input id="catKey" placeholder="mods_apply or media_apply"></div>
+        <div><label>Display Label</label><input id="catLabel" placeholder="Apply for Moderator / Staff"></div>
+        <div><label>Sort Order</label><input id="catSort" type="number" value="0"></div>
+        <div class="full"><label>Description</label><input id="catDesc" placeholder="Short description for applicants"></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="catActive" checked><label for="catActive" style="margin:0;">Active (visible in dropdown)</label></div>
+      <div class="edit-actions">
+        <button class="admin-btn" onclick="saveCat()">Save</button>
+        <button class="admin-btn neutral" onclick="closeCatForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Key</th><th>Label</th><th>Description</th><th>Actions</th></tr></thead>
+        <tbody id="formCategoriesTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ SUPER ADMIN USER MANAGEMENT ═══ -->
+  <section class="admin-panel" id="panelUsers">
+    <div class="admin-panel-head">
+      <h2>👑 Admin Users &amp; Role Management</h2>
+      <button class="admin-btn teal" onclick="openUserForm()">+ Add Staff Account</button>
+    </div>
+
+    <div class="edit-card" id="userForm">
+      <h3 id="userFormTitle">Add Staff User</h3>
+      <input type="hidden" id="userId">
+      <div class="edit-grid">
+        <div><label>Username</label><input id="usrName" placeholder="johndoe"></div>
+        <div><label>Display Name</label><input id="usrDisplayName" placeholder="John (Mod)"></div>
+        <div><label>Role</label>
+          <select id="usrRole">
+            <option value="moderator">Moderator</option>
+            <option value="admin">Admin</option>
+            <option value="super_admin">Super Admin</option>
+            <option value="owner">Owner</option>
+          </select>
+        </div>
+        <div><label>Password (leave blank to keep unchanged on edit)</label><input type="password" id="usrPassword" placeholder="••••••••"></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="usrActive" checked><label for="usrActive" style="margin:0;">Account Active (Uncheck to Suspend Account)</label></div>
+      <div class="edit-actions">
+        <button class="admin-btn" onclick="saveUser()">Save User</button>
+        <button class="admin-btn neutral" onclick="closeUserForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>ID</th><th>Username</th><th>Display Name</th><th>Role</th><th>Status</th><th>Last Login</th><th>Actions</th></tr></thead>
+        <tbody id="usersTableBody"></tbody>
       </table>
     </div>
   </section>
