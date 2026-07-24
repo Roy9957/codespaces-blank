@@ -20,16 +20,16 @@
 <div id="navbarMount"></div>
 
 <header class="page-header">
-  <span class="section-eyebrow">📖 THE SPAWN POINT</span>
-  <h1>About & Community Rules</h1>
-  <p>Who we are, our history since 2019, and the ground rules that keep this community friendly, fair, and spam-free.</p>
+  <span class="section-eyebrow" data-cms-key="about.header_eyebrow">📜 COMMUNITY GUIDELINES</span>
+  <h1 data-cms-key="about.header_title">About &amp; Server Rules</h1>
+  <p data-cms-key="about.header_desc">Keeping Minecraft Bangladesh friendly, fair, and fun for everyone.</p>
 </header>
 
 <section class="section" id="about">
   <div style="max-width:1200px;margin:0 auto;">
-    <span class="section-eyebrow">🧱 OUR STORY</span>
-    <h2 class="section-title">Who We Are</h2>
-    <p class="section-desc">
+    <span class="section-eyebrow" data-cms-key="home.about_eyebrow">🧱 OUR STORY</span>
+    <h2 class="section-title" data-cms-key="home.about_title">Who We Are</h2>
+    <p class="section-desc" data-cms-key="home.about_desc">
       Minecraft Bangladesh started as a small Facebook group in 2019 and grew into the country's biggest hangout for players who'd rather build a castle than argue about it. Survival, creative, redstone, PvP — if it's blocky, we're into it.
     </p>
 
@@ -55,9 +55,10 @@
     </div>
 
     <div id="rulesState" class="data-state"><i class="fas fa-spinner fa-spin"></i> Loading rules…</div>
-    <div class="rules-list" id="rulesList" style="display:none;"></div>
+    <div class="rules-grid" id="rulesList" style="display:none;"></div>
   </div>
 </section>
+
 
 <div id="footerMount"></div>
 
@@ -110,7 +111,7 @@ async function loadRules() {
       return;
     }
     stateEl.style.display = 'none';
-    list.style.display = 'flex';
+    list.style.display = 'grid';
     renderRules(allRules);
   } catch (err) {
     console.error(err);

@@ -29,6 +29,8 @@ from app.models.schemas import (
     ServerCreate,
     ServerOut,
     ServerUpdate,
+    SiteSettingOut,
+    SiteSettingsBatchUpdate,
     StatOut,
     StatUpdate,
     SubmissionOut,
@@ -55,6 +57,35 @@ def _set_clause(fields: dict, start_idx: int = 1) -> tuple[str, list]:
     return ", ".join(parts), values
 
 
+# ═══════════════ SITE SETTINGS / CMS ═══════════════
+@router.get("/site-settings", response_model=list[SiteSettingOut])
+async def admin_list_site_settings():
+    pool = get_pool()
+    rows = await pool.fetch("SELECT key, page, section, value FROM site_settings ORDER BY page, key")
+    return [dict(r) for r in rows]
+
+
+@router.patch("/site-settings", response_model=list[SiteSettingOut])
+async def admin_update_site_settings(payload: SiteSettingsBatchUpdate, admin: dict = Depends(get_current_admin)):
+    pool = get_pool()
+    admin_id = int(admin["sub"])
+    async with pool.acquire() as conn:
+        async with conn.transaction():
+            for item in payload.settings:
+                page = item.page or item.key.split(".")[0] if "." in item.key else "global"
+                section = item.section or "general"
+                await conn.execute(
+                    """INSERT INTO site_settings (key, page, section, value, updated_at, updated_by)
+                       VALUES ($1, $2, $3, $4, now(), $5)
+                       ON CONFLICT (key) DO UPDATE
+                       SET value = EXCLUDED.value, page = EXCLUDED.page, section = EXCLUDED.section,
+                           updated_at = now(), updated_by = EXCLUDED.updated_by""",
+                    item.key, page, section, item.value, admin_id
+                )
+    rows = await pool.fetch("SELECT key, page, section, value FROM site_settings ORDER BY page, key")
+    return [dict(r) for r in rows]
+
+
 # ═══════════════ STATS ═══════════════
 @router.get("/stats", response_model=list[StatOut])
 async def admin_list_stats():
@@ -70,7 +101,8 @@ async def update_stat(key: str, payload: StatUpdate, admin: dict = Depends(get_c
     if not fields:
         raise HTTPException(status_code=400, detail="No fields to update")
     set_sql, values = _set_clause(fields, start_idx=1)
-    values.extend([admin["sub"], key])
+    admin_id = int(admin["sub"])
+    values.extend([admin_id, key])
     row = await pool.fetchrow(
         f"""UPDATE site_stats SET {set_sql}, updated_at = now(), updated_by = ${len(values) - 1}
             WHERE key = ${len(values)}
@@ -80,6 +112,7 @@ async def update_stat(key: str, payload: StatUpdate, admin: dict = Depends(get_c
     if not row:
         raise HTTPException(status_code=404, detail="Stat not found")
     return dict(row)
+
 
 
 # ═══════════════ SERVERS ═══════════════

@@ -20,9 +20,9 @@
 <div id="navbarMount"></div>
 
 <header class="page-header">
-  <span class="section-eyebrow">👑 THE CREW</span>
-  <h1>Community Leaders</h1>
-  <p>The people keeping the lights on and the servers running — click any profile to view their live Discord card.</p>
+  <span class="section-eyebrow" data-cms-key="members.header_eyebrow">👑 THE CREW</span>
+  <h1 data-cms-key="members.header_title">Community Leaders</h1>
+  <p data-cms-key="members.header_desc">The people keeping the lights on and the servers running — click any profile to view details.</p>
 </header>
 
 <section class="section">
@@ -62,19 +62,43 @@ function renderMembers(members) {
 
   grid.innerHTML = members.map(m => {
     const avatarMarkup = m.image_url
-      ? `<img src="${escapeHtml(m.image_url)}" style="width:52px;height:52px;object-fit:cover;border:3px solid var(--black);box-shadow:3px 3px 0 var(--black);border-radius:50%;margin-bottom:12px;display:inline-block;" alt="${escapeHtml(m.display_name)}" onerror="this.style.display='none';this.parentElement.querySelector('.member-icon-fallback').style.display='block';">
-         <div class="member-icon-fallback" style="display:none;"><i class="${escapeHtml(m.icon || GROUP_ICONS[m.role_group] || 'fa-solid fa-user')}"></i></div>`
+      ? `<img src="${escapeHtml(m.image_url)}" alt="${escapeHtml(m.display_name)}" onerror="this.style.display='none';this.parentElement.querySelector('i').style.display='block';">
+         <i class="${escapeHtml(m.icon || GROUP_ICONS[m.role_group] || 'fa-solid fa-user')}" style="display:none;"></i>`
       : `<i class="${escapeHtml(m.icon || GROUP_ICONS[m.role_group] || 'fa-solid fa-user')}"></i>`;
 
+    const dataAttr = `data-member='${JSON.stringify({
+      id:           m.id,
+      display_name: m.display_name || '',
+      role_title:   m.role_title   || '',
+      role_group:   m.role_group   || '',
+      icon:         m.icon         || '',
+      image_url:    m.image_url    || '',
+      bio:          m.bio          || '',
+      discord_tag:  m.discord_tag  || '',
+    }).replace(/'/g, '&#39;')}'`;
+
     return `
-      <div class="member-card" onclick="openDiscordWidget('${escapeHtml(m.display_name)}', '${escapeHtml(m.role_title)}', '@${escapeHtml(m.display_name.toLowerCase().replace(/\s+/g, ''))}')">
-        ${avatarMarkup}
-        <h4>${escapeHtml(m.display_name)}</h4>
-        <span class="role">${escapeHtml(m.role_title)}</span>
+      <div class="member-card" ${dataAttr} onclick="openMemberFromCard(this)" tabindex="0" role="button" aria-label="View details of ${escapeHtml(m.display_name)}">
+        <div class="member-card-avatar-wrap">
+          ${avatarMarkup}
+        </div>
+        <div>
+          <h4>${escapeHtml(m.display_name)}</h4>
+          <span class="role">${escapeHtml(m.role_title)}</span>
+        </div>
+        <button class="member-card-view-btn">VIEW DETAILS <i class="fas fa-eye"></i></button>
       </div>
     `;
   }).join('');
 }
+
+window.openMemberFromCard = function(cardEl) {
+  const raw = cardEl.getAttribute('data-member');
+  if (!raw) return;
+  const m = JSON.parse(raw.replace(/&#39;/g, "'"));
+  openMemberDetailsModal(m);
+};
+
 
 async function loadMembers() {
   const stateEl = document.getElementById('membersState');

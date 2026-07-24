@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initTabs();
   loadStats();
+  loadSiteSettings();
   loadPartnerships();
   loadJourneySteps();
   loadServers();
@@ -68,11 +69,51 @@ async function saveStatRow(btn) {
   const payload = {};
   row.querySelectorAll('[data-field]').forEach((input) => {
     const field = input.getAttribute('data-field');
-    payload[field] = field === 'value' || field === 'sort_order' ? parseInt(input.value, 10) : input.value;
+    const val = input.value;
+    payload[field] = field === 'value' || field === 'sort_order' ? (parseInt(val, 10) || 0) : val;
   });
   const result = await adminApi('PATCH', `/admin/stats/${encodeURIComponent(key)}`, payload);
-  if (result) toast(`Stat "${key}" updated.`);
+  if (result) toast(`Stat "${key}" updated successfully.`);
 }
+
+/* ═══════════════ WEBSITE CMS EDITOR ═══════════════ */
+async function loadSiteSettings() {
+  try {
+    const settings = await adminApi('GET', '/admin/site-settings');
+    if (!settings || !Array.isArray(settings)) return;
+    const map = {};
+    settings.forEach((s) => { map[s.key] = s.value; });
+
+    document.querySelectorAll('[data-cms]').forEach((input) => {
+      const key = input.getAttribute('data-cms');
+      if (map[key] !== undefined) {
+        input.value = map[key];
+      }
+    });
+  } catch (err) {
+    console.error('Failed to load site settings:', err);
+    toast('Unable to load Website Editor values.', 'error');
+  }
+}
+
+async function saveCMSForm() {
+  const items = [];
+  document.querySelectorAll('[data-cms]').forEach((input) => {
+    const key = input.getAttribute('data-cms');
+    const val = input.value;
+    const page = key.split('.')[0] || 'global';
+    const section = key.split('.')[1] || 'general';
+    items.push({ key, value: val, page, section });
+  });
+
+  if (!items.length) return;
+  const result = await adminApi('PATCH', '/admin/site-settings', { settings: items });
+  if (result) {
+    toast('Website layout texts and settings updated successfully!');
+    loadSiteSettings();
+  }
+}
+
 
 /* ═══════════════ SERVERS ═══════════════ */
 let serversCache = [];
@@ -687,25 +728,34 @@ async function loadUsers() {
   const tbody = document.getElementById('usersTableBody');
   if (!tbody) return;
   tbody.innerHTML = `<tr><td colspan="7">Loading…</td></tr>`;
-  const users = await adminApi('GET', '/admin/users');
-  if (!users) return;
-  usersCache = users;
-
-  tbody.innerHTML = users.map((u) => `
-    <tr>
-      <td><code>#${u.id}</code></td>
-      <td><strong>@${escapeHtml(u.username)}</strong></td>
-      <td>${escapeHtml(u.display_name)}</td>
-      <td><span class="badge" style="background:${u.role === 'super_admin' || u.role === 'owner' ? 'var(--gold)' : 'var(--cream)'};color:var(--black);">${escapeHtml(u.role).toUpperCase()}</span></td>
-      <td>${u.is_active ? '<span class="badge status-online">Active</span>' : '<span class="badge status-offline">Suspended</span>'}</td>
-      <td>${timeAgo(u.last_login_at)}</td>
-      <td class="row-actions">
-        <button class="admin-btn small neutral" onclick="editUser(${u.id})">Edit Role/User</button>
-        <button class="admin-btn small ${u.is_active ? 'danger' : 'teal'}" onclick="toggleUserActive(${u.id}, ${!u.is_active})">${u.is_active ? 'Suspend' : 'Unsuspend'}</button>
-        <button class="admin-btn small danger" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>
-      </td>
-    </tr>
-  `).join('');
+  try {
+    const users = await adminApi('GET', '/admin/users');
+    if (!users || users.length === 0) {
+      usersCache = [];
+      tbody.innerHTML = `<tr><td colspan="7">No admin accounts found.</td></tr>`;
+      return;
+    }
+    usersCache = users;
+    tbody.innerHTML = users.map((u) => `
+      <tr>
+        <td><code>#${u.id}</code></td>
+        <td><strong>@${escapeHtml(u.username)}</strong></td>
+        <td>${escapeHtml(u.display_name)}</td>
+        <td><span class="badge" style="background:${u.role === 'super_admin' || u.role === 'owner' ? 'var(--gold)' : 'var(--cream)'};color:var(--black);">${escapeHtml(u.role).toUpperCase()}</span></td>
+        <td>${u.is_active ? '<span class="badge status-online">Active</span>' : '<span class="badge status-offline">Suspended</span>'}</td>
+        <td>${u.last_login_at ? timeAgo(u.last_login_at) : 'Never'}</td>
+        <td class="row-actions">
+          <button class="admin-btn small neutral" onclick="editUser(${u.id})">Edit Role/User</button>
+          <button class="admin-btn small ${u.is_active ? 'danger' : 'teal'}" onclick="toggleUserActive(${u.id}, ${!u.is_active})">${u.is_active ? 'Suspend' : 'Unsuspend'}</button>
+          <button class="admin-btn small danger" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    console.error('Failed to load admin users:', err);
+    tbody.innerHTML = `<tr><td colspan="7">Unable to load admin users.</td></tr>`;
+    toast('Unable to load admin user list.', 'error');
+  }
 }
 
 function openUserForm() {

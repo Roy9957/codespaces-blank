@@ -139,9 +139,9 @@
 <div id="navbarMount"></div>
 
 <header class="page-header">
-  <span class="section-eyebrow">📰 THE NOTICE BOARD</span>
-  <h1>News &amp; Announcements</h1>
-  <p>Everything happening across the community — contests, server updates, and events, posted by our team.</p>
+  <span class="section-eyebrow" data-cms-key="news.header_eyebrow">📰 THE NOTICE BOARD</span>
+  <h1 data-cms-key="news.header_title">News &amp; Announcements</h1>
+  <p data-cms-key="news.header_desc">Everything happening across the community — contests, server updates, and events, posted by our team.</p>
 </header>
 
 <section class="section">
@@ -246,14 +246,20 @@ async function loadNews(category) {
             ${post.is_pinned ? '<span class="pin-flag"><i class="fas fa-thumbtack"></i> PINNED</span>' : ''}
           </div>
           <div class="news-card-body">
-            <div class="news-card-cat">${escapeHtml(post.category)}</div>
-            <h3>${safeTitle}</h3>
-            <p>${safeExcerpt}</p>
-            <div class="news-card-date"><i class="far fa-clock"></i> ${timeAgo(post.published_at)}</div>
+            <div>
+              <div class="news-card-cat">${escapeHtml(post.category)}</div>
+              <h3>${safeTitle}</h3>
+              <p>${safeExcerpt}</p>
+            </div>
+            <div class="news-card-footer">
+              <div class="news-card-date"><i class="far fa-clock"></i> ${timeAgo(post.published_at)}</div>
+              <span class="news-card-btn">READ <i class="fas fa-arrow-right"></i></span>
+            </div>
           </div>
         </div>
       `;
     }).join('');
+
 
     stateEl.style.display = 'none';
     grid.style.display    = 'grid';

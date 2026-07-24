@@ -111,94 +111,132 @@ window.showToast = function(msg) {
   }, 2400);
 };
 
-/* ── DISCORD LIVE PROFILE MODAL ── */
-function initDiscordModal() {
-  if (document.getElementById('dcModalOverlay')) return;
+window.siteSettingsCache = {
+  'global.discord_url': 'https://discord.gg/minecraftbd',
+  'global.facebook_url': 'https://facebook.com',
+  'global.community_name': 'Minecraft Bangladesh',
+  'global.server_ip': 'play.mcbd.gg'
+};
+
+window.getSiteSetting = function(key, fallback = '') {
+  return window.siteSettingsCache[key] !== undefined ? window.siteSettingsCache[key] : fallback;
+};
+
+window.getDiscordUrl = function() {
+  return window.getSiteSetting('global.discord_url', 'https://discord.gg/minecraftbd');
+};
+
+window.getFacebookUrl = function() {
+  return window.getSiteSetting('global.facebook_url', 'https://facebook.com');
+};
+
+/* ── CMS SITE SETTINGS LOADER ── */
+window.loadSiteCMS = async function() {
+  try {
+    const settings = await apiGet('/site-settings');
+    if (Array.isArray(settings)) {
+      settings.forEach(s => {
+        window.siteSettingsCache[s.key] = s.value;
+      });
+    }
+
+    // Apply to elements with data-cms-key
+    document.querySelectorAll('[data-cms-key]').forEach(el => {
+      const key = el.getAttribute('data-cms-key');
+      const val = window.getSiteSetting(key);
+      if (val) {
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.value = val;
+        } else {
+          el.textContent = val;
+        }
+      }
+    });
+
+    // Update all discord and facebook links across navbar/footer/buttons
+    document.querySelectorAll('a[href*="discord.gg"], .mc-btn--dc-link').forEach(a => {
+      a.href = window.getDiscordUrl();
+      a.target = '_blank';
+      a.rel = 'noopener';
+    });
+    document.querySelectorAll('a[href*="facebook.com"], .mc-btn--fb-link').forEach(a => {
+      a.href = window.getFacebookUrl();
+      a.target = '_blank';
+      a.rel = 'noopener';
+    });
+  } catch (e) {
+    console.info('CMS Settings: using defaults');
+  }
+};
+
+/* ── MEMBER DETAILS MODAL (Clean Popup — No Discord Mockup) ── */
+function initMemberModal() {
+  if (document.getElementById('memberModalOverlay')) return;
   const overlay = document.createElement('div');
-  overlay.id = 'dcModalOverlay';
-  overlay.className = 'dc-overlay';
+  overlay.id = 'memberModalOverlay';
+  overlay.className = 'news-modal-overlay';
   overlay.innerHTML = `
-    <div class="card">
-      <button class="card-close" id="dcModalClose">&times;</button>
-      <div class="nameplate-strip">
-        <div style="font-size:22px;font-weight:900;color:#fff;text-transform:uppercase;">MINECRAFT BANGLADESH</div>
+    <div class="news-modal" style="max-width:520px;">
+      <div style="background:var(--grass);padding:24px;border-bottom:4px solid var(--black);position:relative;display:flex;align-items:center;gap:18px;">
+        <button class="news-modal-close" id="memberModalClose">&times;</button>
+        <div id="memberModalAvatarWrap" style="width:72px;height:72px;border-radius:50%;border:3px solid var(--black);box-shadow:3px 3px 0 var(--black);background:var(--white);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <img id="memberModalAvatar" src="logo.png" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';">
+          <i id="memberModalIcon" class="fa-solid fa-user" style="font-size:32px;color:var(--black);display:none;"></i>
+        </div>
+        <div>
+          <h3 id="memberModalName" style="font-size:22px;font-weight:900;color:var(--white);text-transform:uppercase;margin:0 0 4px;">Member Name</h3>
+          <span id="memberModalRole" style="font-size:11px;font-weight:800;font-family:var(--font-mono);background:var(--gold);color:var(--black);border:2px solid var(--black);padding:3px 8px;display:inline-block;text-transform:uppercase;">Role Title</span>
+        </div>
       </div>
-      <div class="content-body">
-        <div class="avatar-row">
-          <div class="avatar-wrap">
-            <img src="/logo.png" alt="Avatar" class="avatar" id="dcModalAvatar" onerror="this.src='/logo.jpeg'">
-            <div class="avatar-status"></div>
-          </div>
-          <span class="dc-tag" id="dcModalTag">MINECRAFT BANGLADESH</span>
-        </div>
-        <div class="display-name" id="dcModalName">Minecraft BD</div>
-        <div class="username" id="dcModalUser">@minecraftbd</div>
-        <div style="margin-top:16px;padding:12px;background:#1a1b1e;border:2px solid #2a2b2e;">
-          <div style="font-size:10px;font-family:var(--font-mono);color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">ROLE & BIO</div>
-          <div id="dcModalRole" style="font-size:13px;color:#fff;font-weight:600;">Community Leader</div>
-        </div>
-        <div style="margin-top:16px;display:flex;gap:10px;">
-          <a href="https://discord.gg/" target="_blank" class="mc-btn mc-btn--dc" style="flex:1;padding:10px;" data-tooltip="Join Discord Server"><i class="fab fa-discord"></i> Open Discord</a>
+      <div class="news-modal-body" style="padding:24px;">
+        <div style="font-size:11px;font-weight:900;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.1em;color:var(--black);margin-bottom:8px;">BIOGRAPHY / ABOUT</div>
+        <p id="memberModalBio" style="font-size:14px;line-height:1.6;color:#3a3224;font-family:var(--font-body);margin-bottom:20px;">No bio provided.</p>
+        <div id="memberModalTagBox" style="background:var(--cream);border:2px solid var(--black);padding:12px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12px;font-weight:800;font-family:var(--font-mono);"><i class="fab fa-discord" style="color:#5865F2;"></i> Discord Tag:</span>
+          <span id="memberModalTag" style="font-size:12px;font-weight:900;font-family:var(--font-mono);color:var(--black);">@user</span>
         </div>
       </div>
     </div>
   `;
   document.body.appendChild(overlay);
 
-  document.getElementById('dcModalClose').addEventListener('click', () => overlay.classList.remove('open'));
+  document.getElementById('memberModalClose').addEventListener('click', () => overlay.classList.remove('open'));
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
 }
 
-window.openDiscordWidget = function(name = 'Minecraft BD', role = 'Official Community', tag = '@minecraftbd') {
-  initDiscordModal();
-  const overlay = document.getElementById('dcModalOverlay');
-  document.getElementById('dcModalName').textContent = name;
-  document.getElementById('dcModalRole').textContent = role;
-  document.getElementById('dcModalUser').textContent = tag;
+window.openMemberDetailsModal = function(member) {
+  initMemberModal();
+  const overlay = document.getElementById('memberModalOverlay');
+  const avatar = document.getElementById('memberModalAvatar');
+  const icon = document.getElementById('memberModalIcon');
+  const name = document.getElementById('memberModalName');
+  const role = document.getElementById('memberModalRole');
+  const bio = document.getElementById('memberModalBio');
+  const tag = document.getElementById('memberModalTag');
+
+  name.textContent = member.display_name || member.name || 'Community Member';
+  role.textContent = member.role_title || member.role || 'Member';
+  bio.textContent = member.bio || 'Active leader and valued contributor to the Minecraft Bangladesh community.';
+  tag.textContent = member.discord_tag || member.tag || `@${(member.display_name || 'user').toLowerCase().replace(/\s+/g, '')}`;
+
+  if (member.image_url) {
+    avatar.src = member.image_url;
+    avatar.style.display = 'block';
+    icon.style.display = 'none';
+  } else {
+    avatar.style.display = 'none';
+    icon.className = member.icon || 'fa-solid fa-user';
+    icon.style.display = 'block';
+  }
+
   overlay.classList.add('open');
 };
 
-/* ── AUTO-SLIDING MEMBERS CAROUSEL ── */
-window.loadHomeMembersCarousel = async function() {
-  const track = document.getElementById('homeMembersTrack');
-  if (!track) return;
-
-  const GROUP_ICONS = {
-    owner:   'fa-solid fa-crown',
-    admin:   'fa-solid fa-user-tie',
-    staff:   'fa-solid fa-user-tie',
-    mod:     'fa-solid fa-user-shield',
-    builder: 'fa-solid fa-hammer',
-    creator: 'fa-solid fa-user-astronaut',
-  };
-
-  const ICON_COLORS = {
-    owner:   'var(--gold)',
-    admin:   'var(--teal)',
-    staff:   'var(--teal)',
-    mod:     'var(--grass)',
-    builder: 'var(--grass)',
-    creator: 'var(--red)',
-  };
-
-  try {
-    let members = await apiGet('/members');
-    if (!members || !members.length) return; /* Keep static fallback */
-
-    const loopList = [...members, ...members];
-
-    track.innerHTML = loopList.map(m => `
-      <div class="carousel-member-card" onclick="openDiscordWidget('${escapeHtml(m.display_name)}', '${escapeHtml(m.role_title)}', '@${escapeHtml(m.display_name.toLowerCase().replace(/\s+/g, ''))}')">
-        <i class="${escapeHtml(m.icon || GROUP_ICONS[m.role_group] || 'fa-solid fa-user')}" style="font-size:36px;margin-bottom:12px;display:block;color:${ICON_COLORS[m.role_group] || 'var(--grass)'};"></i>
-        <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:6px;">${escapeHtml(m.display_name)}</h4>
-        <span class="role">${escapeHtml(m.role_title)}</span>
-      </div>
-    `).join('');
-  } catch (err) {
-    /* Leave static fallback HTML intact */
-    console.info('Members carousel: using static fallback cards');
-  }
+/* ── Direct Discord Button Handler (No Modal Popup) ── */
+window.openDiscordWidget = function(name, role, tag) {
+  window.open(window.getDiscordUrl(), '_blank');
 };
+
 
 /* ── GSAP SCROLL ANIMATIONS (All Pages) ── */
 function initGSAPAnimations() {
@@ -387,6 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPageLoader();
   renderNavbar();
   renderFooter();
-  initDiscordModal();
+  initMemberModal();
   initGSAPAnimations();
+  loadSiteCMS();
 });

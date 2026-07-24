@@ -270,9 +270,10 @@
 }
 
 /* ─── NEWS GRID ─── */
+/* ─── NEWS GRID (Product-Grid Alignment) ─── */
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 28px;
   max-width: 1200px;
   margin: 0 auto;
@@ -281,22 +282,39 @@
   background: var(--white);
   border: 4px solid var(--black);
   box-shadow: 7px 7px 0 var(--black);
-  display: flex; flex-direction: column;
-  transition: transform 0.15s, box-shadow 0.15s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 0px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .news-card:hover {
-  transform: translate(-3px, -3px);
+  transform: translateY(-4px);
   box-shadow: 11px 11px 0 var(--black);
 }
 .news-card-icon {
-  height: 160px; background: var(--grass);
+  height: 190px;
+  aspect-ratio: 16 / 9;
+  background: var(--grass);
   border-bottom: 4px solid var(--black);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 40px; color: var(--white); position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  color: var(--white);
+  position: relative;
   overflow: hidden;
 }
 .news-card-img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+.news-card:hover .news-card-img {
+  transform: scale(1.06);
 }
 .news-card-fallback {
   width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
@@ -306,6 +324,7 @@
 .news-card:nth-child(3n+2) .news-card-fallback { background: linear-gradient(135deg, var(--gold), #ffcf4d); color: var(--black); }
 .news-card:nth-child(3n+3) .news-card-fallback { background: linear-gradient(135deg, var(--red), #ff6b6b); color: var(--white); }
 .news-card:nth-child(3n+3) .news-card-icon { background: var(--red); color: var(--white); }
+
 /* ─── MODALS (NEWS & PARTNERSHIPS) ─── */
 .news-modal-overlay {
   position: fixed;
@@ -382,23 +401,43 @@
   padding: 28px; overflow-y: auto; flex: 1;
 }
 .news-card-body {
-  padding: 24px; display: flex; flex-direction: column; flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
 }
 .news-card-cat {
   font-size: 10px; font-weight: 900; font-family: var(--font-mono);
   text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--black); margin-bottom: 8px;
+  display: inline-block; padding: 3px 8px;
+  border: 2px solid var(--black); background: var(--cream);
+  color: var(--black); margin-bottom: 10px; align-self: flex-start;
 }
 .news-card h3 {
-  font-size: 18px; font-weight: 900; margin-bottom: 10px; line-height: 1.3;
+  font-size: 18px; font-weight: 900; margin-bottom: 10px; line-height: 1.3; text-transform: uppercase;
 }
 .news-card p {
   font-size: 14px; color: #3a3224; line-height: 1.6;
   margin-bottom: 16px; flex: 1; font-family: var(--font-body);
 }
+.news-card-footer {
+  margin-top: auto; padding-top: 14px; border-top: 2px dashed rgba(0,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
 .news-card-date {
   font-size: 11px; font-weight: 800; font-family: var(--font-mono);
   color: var(--black); display: flex; align-items: center; gap: 6px;
+}
+.news-card-btn {
+  font-size: 11px; font-weight: 900; font-family: var(--font-mono);
+  background: var(--black); color: var(--gold);
+  border: 2px solid var(--black); padding: 5px 12px;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+.news-card:hover .news-card-btn {
+  background: var(--gold); color: var(--black);
 }
 .pin-flag {
   position: absolute; top: 10px; right: 10px;
@@ -408,11 +447,11 @@
   box-shadow: 2px 2px 0 var(--black);
 }
 
-/* ─── MEMBERS / CREW GRID ─── */
+/* ─── MEMBERS / CREW PRODUCT GRID ─── */
 .members-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 26px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -420,20 +459,40 @@
   background: var(--white);
   border: 4px solid var(--black);
   box-shadow: 6px 6px 0 var(--black);
-  padding: 28px 20px; text-align: center;
+  padding: 28px 20px;
+  text-align: center;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 .member-card:hover {
-  transform: translate(-3px, -3px);
+  transform: translateY(-4px);
   box-shadow: 10px 10px 0 var(--black);
-  background: var(--grass); color: var(--white);
+  background: var(--cream);
 }
-.member-card:hover .role {
-  background: var(--gold); color: var(--black);
+.member-card-avatar-wrap {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 4px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+  background: var(--grass);
+  margin-bottom: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
-.member-card i {
-  font-size: 36px; margin-bottom: 12px; display: block;
+.member-card-avatar-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.member-card-avatar-wrap i {
+  font-size: 38px; color: var(--white); margin: 0;
 }
 .member-card h4 {
   font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 6px;
@@ -441,27 +500,52 @@
 .member-card .role {
   font-size: 11px; font-weight: 800; font-family: var(--font-mono);
   text-transform: uppercase; color: var(--black);
-  background: var(--cream); border: 2px solid var(--black);
+  background: var(--white); border: 2px solid var(--black);
   display: inline-block; padding: 4px 10px; margin-top: 6px;
+  box-shadow: 2px 2px 0 var(--black);
   transition: background 0.15s, color 0.15s;
 }
+.member-card-view-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--grass);
+  color: var(--white);
+  border: 3px solid var(--black);
+  font-weight: 900;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: 3px 3px 0 var(--black);
+  transition: background 0.15s, color 0.15s;
+}
+.member-card:hover .member-card-view-btn {
+  background: var(--gold);
+  color: var(--black);
+}
 
-/* ─── RULES LIST ─── */
-.rules-list {
-  max-width: 860px; margin: 0 auto;
-  display: flex; flex-direction: column; gap: 16px;
+/* ─── RULES PRODUCT GRID ─── */
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 .rule-item {
   background: var(--white);
   border: 4px solid var(--black);
   box-shadow: 6px 6px 0 var(--black);
   padding: 24px; display: flex; gap: 20px; align-items: flex-start;
-  transition: transform 0.15s, box-shadow 0.15s;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .rule-item:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 9px 9px 0 var(--black);
+  transform: translateY(-3px);
+  box-shadow: 10px 10px 0 var(--black);
 }
+
 .rule-num {
   font-size: 24px; font-weight: 900; font-family: var(--font-mono);
   color: var(--white); background: var(--grass);
@@ -469,6 +553,8 @@
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; box-shadow: 3px 3px 0 var(--black);
 }
+.rule-item:nth-child(3n+2) .rule-num { background: var(--gold); color: var(--black); }
+.rule-item:nth-child(3n+3) .rule-num { background: var(--red); color: var(--white); }
 .rule-item h4 {
   font-size: 16px; font-weight: 900; text-transform: uppercase; margin-bottom: 6px;
 }
@@ -810,7 +896,7 @@
   display: flex;
   gap: 20px;
   width: max-content;
-  animation: partnerTickerScroll 30s linear infinite;
+  animation: partnerTickerScroll var(--partner-ticker-speed, 40s) linear infinite;
   padding: 8px 10px;
 }
 

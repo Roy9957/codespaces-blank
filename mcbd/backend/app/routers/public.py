@@ -9,10 +9,25 @@ from app.models.schemas import (
     PartnershipOut,
     RuleOut,
     ServerOut,
+    SiteSettingOut,
     StatOut,
 )
 
 router = APIRouter(tags=["public"])
+
+
+@router.get("/site-settings", response_model=list[SiteSettingOut])
+async def list_site_settings(page: str | None = None):
+    try:
+        pool = get_pool()
+        if page:
+            rows = await pool.fetch("SELECT key, page, section, value FROM site_settings WHERE page = $1 ORDER BY key", page)
+        else:
+            rows = await pool.fetch("SELECT key, page, section, value FROM site_settings ORDER BY page, key")
+        return [dict(r) for r in rows]
+    except Exception:
+        return []
+
 
 
 @router.get("/stats", response_model=list[StatOut])

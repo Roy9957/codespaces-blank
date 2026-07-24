@@ -55,34 +55,35 @@
       </div>
       <div>
         <div class="status-badge" style="margin-bottom:8px;">
-          <span class="dot-pulse"></span> <span id="heroMemberCount">52,000+</span> MEMBERS ONLINE
+          <span class="dot-pulse"></span> <span id="heroMemberCount" data-cms-key="home.hero_badge">52,000+ MEMBERS ONLINE</span>
         </div>
-        <div style="font-size:12px;font-weight:900;font-family:var(--font-mono);color:var(--black);text-transform:uppercase;letter-spacing:0.1em;">
+        <div data-cms-key="home.hero_subbadge" style="font-size:12px;font-weight:900;font-family:var(--font-mono);color:var(--black);text-transform:uppercase;letter-spacing:0.1em;">
           VERIFIED COMMUNITY NETWORK
         </div>
       </div>
     </div>
 
     <div class="hero-outline-wrap">
-      <h1 class="hero-outline">MINECRAFT</h1>
-      <h1 class="hero-outline" style="color:var(--black);-webkit-text-stroke:none;">BANGLADESH</h1>
+      <h1 class="hero-outline" data-cms-key="home.hero_title_1">MINECRAFT</h1>
+      <h1 class="hero-outline" data-cms-key="home.hero_title_2" style="color:var(--black);-webkit-text-stroke:none;">BANGLADESH</h1>
     </div>
 
-    <div class="hero-typewriter-line" id="typewriterTarget">
+    <div class="hero-typewriter-line" id="typewriterTarget" data-cms-key="home.hero_typewriter">
       BUILD A CASTLE, NOT AN ARGUMENT.
     </div>
 
-    <p style="font-size:16px;line-height:1.6;font-family:var(--font-body);max-width:640px;color:#3a3224;margin-bottom:24px;">
+    <p data-cms-key="home.hero_description" style="font-size:16px;line-height:1.6;font-family:var(--font-body);max-width:640px;color:#3a3224;margin-bottom:24px;">
       The biggest community hangout in Bangladesh for builders, survivalists, redstoners &amp; PvP warriors. Join our official community groups, monthly contests, and weekly events.
     </p>
 
     <div class="hero-ctas">
-      <a href="https://facebook.com" target="_blank" class="mc-btn mc-btn--fb"><i class="fab fa-facebook-f"></i> Join Facebook Group</a>
-      <a href="#" class="mc-btn mc-btn--dc" onclick="event.preventDefault(); openDiscordWidget('Minecraft BD Discord', '52,000+ Members', '@minecraftbd');"><i class="fab fa-discord"></i> Join Discord Server</a>
+      <a href="https://facebook.com" target="_blank" rel="noopener" class="mc-btn mc-btn--fb mc-btn--fb-link"><i class="fab fa-facebook-f"></i> Join Facebook Group</a>
+      <a href="https://discord.gg/minecraftbd" target="_blank" rel="noopener" class="mc-btn mc-btn--dc mc-btn--dc-link"><i class="fab fa-discord"></i> Join Discord Server</a>
       <a href="members.html" class="btn-outline"><i class="fas fa-users"></i> Community Crew</a>
     </div>
   </div>
 </section>
+
 
 <!-- ═══ TICKER MARQUEE ═══ -->
 <div class="marquee-wrap">
@@ -106,8 +107,8 @@
 <section class="partnerships-ticker-section" id="partnerships">
   <div class="partnerships-ticker-header">
     <span class="section-eyebrow" style="background:var(--gold);color:var(--black);display:inline-block;">🤝 COMMUNITY SYNERGY</span>
-    <h2 style="font-size:clamp(20px,4vw,32px);font-weight:900;text-transform:uppercase;margin:10px 0 4px;color:var(--black);">Our Partners &amp; Collaborations</h2>
-    <p style="font-size:13px;color:rgba(0,0,0,0.5);font-family:var(--font-body);margin:0;">Proudly partnered with Bangladesh's top gaming creators, networks &amp; tech communities.</p>
+    <h2 data-cms-key="home.partnerships_title" style="font-size:clamp(20px,4vw,32px);font-weight:900;text-transform:uppercase;margin:10px 0 4px;color:var(--black);">Our Partners &amp; Collaborations</h2>
+    <p data-cms-key="home.partnerships_desc" style="font-size:13px;color:rgba(0,0,0,0.5);font-family:var(--font-body);margin:0;">Proudly partnered with Bangladesh's top gaming creators, networks &amp; tech communities.</p>
   </div>
   <div class="partnerships-carousel-wrap" id="partnershipsCarouselWrap">
     <div class="partnerships-carousel-track" id="partnershipsTrack">
@@ -139,9 +140,9 @@
 <!-- ═══ ABOUT / WHO WE ARE (Backend Driven Stats) ═══ -->
 <section class="section" id="about">
   <div style="max-width:1200px;margin:0 auto;">
-    <span class="section-eyebrow gsap-fade-up">📖 THE SPAWN POINT</span>
-    <h2 class="section-title gsap-fade-up">Who We Are</h2>
-    <p class="section-desc gsap-fade-up">
+    <span class="section-eyebrow gsap-fade-up" data-cms-key="home.about_eyebrow">📖 THE SPAWN POINT</span>
+    <h2 class="section-title gsap-fade-up" data-cms-key="home.about_title">Who We Are</h2>
+    <p class="section-desc gsap-fade-up" data-cms-key="home.about_desc">
       Minecraft Bangladesh started as a small Facebook group in 2019 and grew into the country's biggest hangout for players who'd rather build a castle than argue about it.
     </p>
 
@@ -401,17 +402,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   /* ── Typewriter Effect ── */
+  if (typeof window.loadSiteCMS === 'function') {
+    await window.loadSiteCMS();
+  }
   const target = document.getElementById('typewriterTarget');
   if (target && typeof Typewriter !== 'undefined') {
+    const rawLines = window.getSiteSetting('home.hero_typewriter', '') || '';
+    const typewriterStrings = rawLines.split('|').map((line) => line.trim()).filter(Boolean);
+    const defaultStrings = [
+      'BUILD A CASTLE, NOT AN ARGUMENT.',
+      '52,000+ BUILDERS • SURVIVAL • REDSTONE • CREATIVE',
+      'BANGLADESH #1 MINECRAFT COMMUNITY HUB',
+      'JOIN. BUILD. CONQUER. REPEAT.'
+    ];
+    const strings = typewriterStrings.length ? typewriterStrings : defaultStrings;
     new Typewriter(target, {
-      strings: [
-        'BUILD A CASTLE, NOT AN ARGUMENT.',
-        '52,000+ BUILDERS • SURVIVAL • REDSTONE • CREATIVE',
-        'BANGLADESH #1 MINECRAFT COMMUNITY HUB',
-        'JOIN. BUILD. CONQUER. REPEAT.'
-      ],
+      strings,
       autoStart: true,
-      loop: true,
+      loop: strings.length > 1,
       delay: 50,
       deleteSpeed: 30,
     });
@@ -453,11 +461,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   /* ── Load dynamic partnerships carousel (auto-scroll ticker) ── */
   async function loadPartnershipsCarousel() {
     const track = document.getElementById('partnershipsTrack');
-    if (!track) return;
+    const wrapper = document.getElementById('partnershipsCarouselWrap');
+    if (!track || !wrapper) return;
     try {
       const items = await apiGet('/partnerships');
       if (!Array.isArray(items) || !items.length) return;
-      
+
       /* Build cards with click event to open details popup modal */
       const cardHtml = items.map(p => {
         const safeData = JSON.stringify({
@@ -481,7 +490,17 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
         `;
       }).join('');
-      track.innerHTML = cardHtml + cardHtml;
+
+      track.innerHTML = cardHtml;
+      while (track.scrollWidth < wrapper.clientWidth) {
+        track.innerHTML += cardHtml;
+        if (track.children.length > 240) break;
+      }
+      track.innerHTML += track.innerHTML;
+
+      const distance = track.scrollWidth / 2;
+      const duration = Math.max(60, Math.round(distance * 0.12));
+      track.style.setProperty('--partner-ticker-speed', `${duration}s`);
     } catch (e) {
       /* Keep static fallback */
     }

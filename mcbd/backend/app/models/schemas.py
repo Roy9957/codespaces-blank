@@ -338,3 +338,23 @@ class FormCategoryUpdate(BaseModel):
     description: Optional[str] = None
     is_active: Optional[bool] = None
     sort_order: Optional[int] = None
+
+
+# ═══════════════ SITE SETTINGS / CMS ═══════════════
+class SiteSettingOut(BaseModel):
+    key: str
+    page: str
+    section: str
+    value: str
+
+
+class SiteSettingUpdate(BaseModel):
+    key: str
+    value: str
+    page: Optional[str] = "global"
+    section: Optional[str] = "general"
+
+
+class SiteSettingsBatchUpdate(BaseModel):
+    settings: list[SiteSettingUpdate]
+

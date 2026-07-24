@@ -177,3 +177,51 @@ INSERT INTO servers (name, server_type, ip_address, edition, status, players_onl
 ('MCBD Creative', 'creative', 'creative.mcbd.gg', 'both', 'online', 88, 200, 'Unlimited creative plots for builders. Show off your skills.', false, 2),
 ('MCBD Redstone Lab', 'redstone', 'redstone.mcbd.gg', 'java', 'online', 34, 100, 'A dedicated space for redstone engineers and technical builders.', false, 3),
 ('MCBD Minigames', 'minigame', 'play.mcbd.gg:25566', 'both', 'online', 156, 250, 'Bed Wars, SkyWars, and more community-made minigames.', false, 4);
+
+-- ─── Site-wide CMS settings (editable via admin website editor) ───
+CREATE TABLE IF NOT EXISTS site_settings (
+    key         VARCHAR(100) PRIMARY KEY,
+    page        VARCHAR(50) NOT NULL DEFAULT 'global',
+    section     VARCHAR(50) NOT NULL DEFAULT 'general',
+    value       TEXT NOT NULL,
+    updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_by  INT REFERENCES admin_users(id)
+);
+
+INSERT INTO site_settings (key, page, section, value) VALUES
+('global.discord_url', 'global', 'links', 'https://discord.gg/minecraftbd'),
+('global.facebook_url', 'global', 'links', 'https://facebook.com'),
+('global.community_name', 'global', 'branding', 'Minecraft Bangladesh'),
+('global.server_ip', 'global', 'server', 'play.mcbd.gg'),
+
+('home.hero_badge', 'home', 'hero', '52,000+ MEMBERS ONLINE'),
+('home.hero_subbadge', 'home', 'hero', 'VERIFIED COMMUNITY NETWORK'),
+('home.hero_title_1', 'home', 'hero', 'MINECRAFT'),
+('home.hero_title_2', 'home', 'hero', 'BANGLADESH'),
+('home.hero_typewriter', 'home', 'hero', 'BUILD A CASTLE, NOT AN ARGUMENT.|52,000+ BUILDERS • SURVIVAL • REDSTONE • CREATIVE|BANGLADESH #1 MINECRAFT COMMUNITY HUB|JOIN. BUILD. CONQUER. REPEAT.'),
+('home.hero_description', 'home', 'hero', 'The biggest community hangout in Bangladesh for builders, survivalists, redstoners & PvP warriors. Join our official community groups, monthly contests, and weekly events.'),
+('home.about_eyebrow', 'home', 'about', '📖 THE SPAWN POINT'),
+('home.about_title', 'home', 'about', 'Who We Are'),
+('home.about_desc', 'home', 'about', 'Minecraft Bangladesh started as a small Facebook group in 2019 and grew into the country''s biggest hangout for players who''d rather build a castle than argue about it.'),
+
+('news.header_eyebrow', 'news', 'header', '📰 THE NOTICE BOARD'),
+('news.header_title', 'news', 'header', 'News & Announcements'),
+('news.header_desc', 'news', 'header', 'Everything happening across the community — contests, server updates, and events, posted by our team.'),
+
+('members.header_eyebrow', 'members', 'header', '👑 THE CREW'),
+('members.header_title', 'members', 'header', 'Community Leaders'),
+('members.header_desc', 'members', 'header', 'The people keeping the lights on and the servers running — click any profile to view details.'),
+
+('about.header_eyebrow', 'about', 'header', '📜 COMMUNITY GUIDELINES'),
+('about.header_title', 'about', 'header', 'About & Server Rules'),
+('about.header_desc', 'about', 'header', 'Keeping Minecraft Bangladesh friendly, fair, and fun for everyone.'),
+
+('stats.header_eyebrow', 'stats', 'header', '📊 LIVE TELEMETRY'),
+('stats.header_title', 'stats', 'header', 'Community Statistics'),
+('stats.header_desc', 'stats', 'header', 'Real-time community figures, network metrics, and active member statistics.'),
+
+('join.header_eyebrow', 'join', 'header', '✉️ SEND A MESSAGE'),
+('join.header_title', 'join', 'header', 'Join Us / Contact'),
+('join.header_desc', 'join', 'header', 'Apply to join, open a support ticket, or send a report — pick a category below. Our team reviews every submission.')
+ON CONFLICT (key) DO NOTHING;
+

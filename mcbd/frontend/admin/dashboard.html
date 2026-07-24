@@ -28,6 +28,7 @@
 <div class="admin-shell">
   <div class="admin-tabs">
     <button class="admin-tab active" data-panel="panelStats">Stats</button>
+    <button class="admin-tab" data-panel="panelCMS" style="background:var(--teal);color:var(--black);"><i class="fas fa-edit"></i> Website Editor</button>
     <button class="admin-tab" data-panel="panelPartnerships">Partnerships</button>
     <button class="admin-tab" data-panel="panelJourney">Journey Steps</button>
     <button class="admin-tab" data-panel="panelServers">Servers</button>
@@ -351,6 +352,145 @@
         <tbody id="formCategoriesTableBody"></tbody>
       </table>
     </div>
+  </section>
+  <!-- ═══ WEBSITE CONTENT & TEXT EDITOR (CMS) ═══════════ -->
+  <section class="admin-panel" id="panelCMS">
+    <div class="admin-panel-head">
+      <h2>Website Content &amp; Page Text Editor</h2>
+      <button class="admin-btn teal" onclick="saveCMSForm()"><i class="fas fa-save"></i> Save All Page Texts</button>
+    </div>
+
+    <div style="background:var(--white);border:3px solid var(--black);padding:20px;margin-bottom:24px;box-shadow:4px 4px 0 var(--black);">
+      <p style="font-size:13px;font-weight:700;margin:0;">
+        <i class="fas fa-circle-info" style="color:var(--grass-dark);"></i> Edit full-page layout texts, hero banners, headers, and social links below. Changes update live across the entire website after saving.
+      </p>
+    </div>
+
+    <form id="cmsForm" onsubmit="event.preventDefault(); saveCMSForm();">
+      <!-- Section 1: Global Links & Branding -->
+      <div class="edit-card show" style="margin-bottom:24px;">
+        <h3>🌐 Global Links &amp; Community Branding</h3>
+        <div class="edit-grid">
+          <div><label>Discord Invite URL</label><input data-cms="global.discord_url" placeholder="https://discord.gg/minecraftbd"></div>
+          <div><label>Facebook Group URL</label><input data-cms="global.facebook_url" placeholder="https://facebook.com"></div>
+          <div><label>Community Name</label><input data-cms="global.community_name" placeholder="Minecraft Bangladesh"></div>
+          <div><label>Default Server IP</label><input data-cms="global.server_ip" placeholder="play.mcbd.gg"></div>
+        </div>
+      </div>
+
+      <!-- Section 2: Homepage (index.html) -->
+      <div class="edit-card show" style="margin-bottom:24px;">
+        <h3>🏠 Homepage (index.html) Hero &amp; About Section</h3>
+        <div class="edit-grid">
+          <div><label>Hero Member Badge</label><input data-cms="home.hero_badge" placeholder="52,000+ MEMBERS ONLINE"></div>
+          <div><label>Hero Sub-Badge</label><input data-cms="home.hero_subbadge" placeholder="VERIFIED COMMUNITY NETWORK"></div>
+          <div><label>Hero Title (Line 1)</label><input data-cms="home.hero_title_1" placeholder="MINECRAFT"></div>
+          <div><label>Hero Title (Line 2)</label><input data-cms="home.hero_title_2" placeholder="BANGLADESH"></div>
+        </div>
+        <div style="margin-top:14px;">
+          <label>Typewriter Rotator Lines (Separate by |)</label>
+          <input data-cms="home.hero_typewriter" placeholder="BUILD A CASTLE, NOT AN ARGUMENT.|52,000+ BUILDERS|BANGLADESH #1 MC HUB">
+        </div>
+        <div style="margin-top:14px;">
+          <label>Hero Intro Paragraph</label>
+          <textarea data-cms="home.hero_description" rows="3" style="width:100%;font-family:inherit;padding:10px;border:2px solid var(--black);"></textarea>
+        </div>
+      </div>
+
+      <div class="edit-card show" style="margin-bottom:24px;">
+        <h3>🤝 Homepage Partnerships Section</h3>
+        <div class="edit-grid">
+          <div><label>Section Heading</label><input data-cms="home.partnerships_title" placeholder="Our Partners & Collaborations"></div>
+        </div>
+        <div style="margin-top:14px;">
+          <label>Section Description</label>
+          <textarea data-cms="home.partnerships_desc" rows="2" style="width:100%;font-family:inherit;padding:10px;border:2px solid var(--black);"></textarea>
+        </div>
+      </div>
+
+      <div class="edit-card show" style="margin-bottom:24px;">
+        <h3>🏠 Homepage (index.html) Hero &amp; About Section</h3>
+        <div class="edit-grid">
+          <div><label>Hero Member Badge</label><input data-cms="home.hero_badge" placeholder="52,000+ MEMBERS ONLINE"></div>
+          <div><label>Hero Sub-Badge</label><input data-cms="home.hero_subbadge" placeholder="VERIFIED COMMUNITY NETWORK"></div>
+          <div><label>Hero Title (Line 1)</label><input data-cms="home.hero_title_1" placeholder="MINECRAFT"></div>
+          <div><label>Hero Title (Line 2)</label><input data-cms="home.hero_title_2" placeholder="BANGLADESH"></div>
+        </div>
+        <div style="margin-top:14px;">
+          <label>About Description Paragraph</label>
+          <textarea data-cms="home.about_desc" rows="3" style="width:100%;font-family:inherit;padding:10px;border:2px solid var(--black);"></textarea>
+        </div>
+      </div>
+
+      <!-- Section 3: News Page (news.html) -->
+      <div class="edit-card show" style="margin-bottom:24px;">
+        <h3>📰 News &amp; Announcements Page (news.html)</h3>
+        <div class="edit-grid">
+          <div><label>Header Eyebrow</label><input data-cms="news.header_eyebrow" placeholder="📰 THE NOTICE BOARD"></div>
+          <div><label>Page Title</label><input data-cms="news.header_title" placeholder="News & Announcements"></div>
+        </div>
+        <div style="margin-top:14px;">
+          <label>Header Description</label>
+          <textarea data-cms="news.header_desc" rows="2" style="width:100%;font-family:inherit;padding:10px;border:2px solid var(--black);"></textarea>
+        </div>
+      </div>
+
+      <!-- Section 4: Members Page (members.html) -->
+      <div class="edit-card show" style="margin-bottom:24px;">
+        <h3>👑 Members Page (members.html)</h3>
+        <div class="edit-grid">
+          <div><label>Header Eyebrow</label><input data-cms="members.header_eyebrow" placeholder="👑 THE CREW"></div>
+          <div><label>Page Title</label><input data-cms="members.header_title" placeholder="Community Leaders"></div>
+        </div>
+        <div style="margin-top:14px;">
+          <label>Header Description</label>
+          <textarea data-cms="members.header_desc" rows="2" style="width:100%;font-family:inherit;padding:10px;border:2px solid var(--black);"></textarea>
+        </div>
+      </div>
+
+      <!-- Section 5: About & Rules Page (about.html) -->
+      <div class="edit-card show" style="margin-bottom:24px;">
+        <h3>📜 About &amp; Rules Page (about.html)</h3>
+        <div class="edit-grid">
+          <div><label>Header Eyebrow</label><input data-cms="about.header_eyebrow" placeholder="📜 COMMUNITY GUIDELINES"></div>
+          <div><label>Page Title</label><input data-cms="about.header_title" placeholder="About & Server Rules"></div>
+        </div>
+        <div style="margin-top:14px;">
+          <label>Header Description</label>
+          <textarea data-cms="about.header_desc" rows="2" style="width:100%;font-family:inherit;padding:10px;border:2px solid var(--black);"></textarea>
+        </div>
+      </div>
+
+      <!-- Section 6: Stats Page (stats.html) -->
+      <div class="edit-card show" style="margin-bottom:24px;">
+        <h3>📊 Live Stats Page (stats.html)</h3>
+        <div class="edit-grid">
+          <div><label>Header Eyebrow</label><input data-cms="stats.header_eyebrow" placeholder="📊 LIVE TELEMETRY"></div>
+          <div><label>Page Title</label><input data-cms="stats.header_title" placeholder="Community Statistics"></div>
+        </div>
+        <div style="margin-top:14px;">
+          <label>Header Description</label>
+          <textarea data-cms="stats.header_desc" rows="2" style="width:100%;font-family:inherit;padding:10px;border:2px solid var(--black);"></textarea>
+        </div>
+      </div>
+
+      <!-- Section 7: Join Us Page (join.html) -->
+      <div class="edit-card show" style="margin-bottom:24px;">
+        <h3>✉️ Join Us / Contact Page (join.html)</h3>
+        <div class="edit-grid">
+          <div><label>Header Eyebrow</label><input data-cms="join.header_eyebrow" placeholder="✉️ SEND A MESSAGE"></div>
+          <div><label>Page Title</label><input data-cms="join.header_title" placeholder="Join Us / Contact"></div>
+        </div>
+        <div style="margin-top:14px;">
+          <label>Header Description</label>
+          <textarea data-cms="join.header_desc" rows="2" style="width:100%;font-family:inherit;padding:10px;border:2px solid var(--black);"></textarea>
+        </div>
+      </div>
+
+      <div style="text-align:right;margin-bottom:40px;">
+        <button type="submit" class="admin-btn teal" style="padding:14px 28px;font-size:14px;"><i class="fas fa-save"></i> Save All Page Texts</button>
+      </div>
+    </form>
   </section>
 
   <!-- ═══ SUPER ADMIN USER MANAGEMENT ═══ -->

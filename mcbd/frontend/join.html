@@ -20,9 +20,9 @@
 <div id="navbarMount"></div>
 
 <header class="page-header">
-  <span class="section-eyebrow">✉️ SEND A MESSAGE</span>
-  <h1>Join Us / Contact</h1>
-  <p>Apply to join, open a support ticket, or send a report — pick a category below. Our team reviews every submission.</p>
+  <span class="section-eyebrow" data-cms-key="join.header_eyebrow">✉️ SEND A MESSAGE</span>
+  <h1 data-cms-key="join.header_title">Join Us / Contact</h1>
+  <p data-cms-key="join.header_desc">Apply to join, open a support ticket, or send a report — pick a category below. Our team reviews every submission.</p>
 </header>
 
 <section class="section">
@@ -36,9 +36,9 @@
         <p style="font-size:14px;color:#3a3224;line-height:1.6;font-family:var(--font-body);margin-bottom:18px;">
           The fastest way to reach us! Hop into text or voice channels, get instant support, and trade with players.
         </p>
-        <button class="mc-btn mc-btn--dc" style="width:100%;" onclick="openDiscordWidget('Minecraft BD Discord', '52,000+ Members', '@minecraftbd')">
-          <i class="fab fa-discord"></i> Open Discord Hub
-        </button>
+        <a href="https://discord.gg/minecraftbd" target="_blank" rel="noopener" class="mc-btn mc-btn--dc mc-btn--dc-link" style="width:100%;display:inline-flex;align-items:center;justify-content:center;">
+          <i class="fab fa-discord"></i> Join Discord Server
+        </a>
       </div>
 
       <div style="background:var(--white);border:4px solid var(--black);box-shadow:7px 7px 0 var(--black);padding:28px;">
@@ -48,11 +48,12 @@
           Stay updated with our latest events, contests, and community news — follow us everywhere.
         </p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <a href="https://facebook.com" target="_blank" class="mc-btn mc-btn--fb" aria-label="Facebook" data-tooltip="Facebook Group"><i class="fab fa-facebook-f"></i> Facebook</a>
-          <button class="mc-btn mc-btn--dc" aria-label="Discord" data-tooltip="Discord Server" onclick="openDiscordWidget('Minecraft BD Discord', '52,000+ Members', '@minecraftbd')"><i class="fab fa-discord"></i> Discord</button>
+          <a href="https://facebook.com" target="_blank" rel="noopener" class="mc-btn mc-btn--fb mc-btn--fb-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+          <a href="https://discord.gg/minecraftbd" target="_blank" rel="noopener" class="mc-btn mc-btn--dc mc-btn--dc-link" aria-label="Discord"><i class="fab fa-discord"></i> Discord</a>
         </div>
       </div>
     </div>
+
 
     <!-- Right Column: Submission Form -->
     <div class="form-shell" style="width:100%;margin:0;">
