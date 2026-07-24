@@ -12,21 +12,49 @@ CREATE TABLE admin_users (
     password_hash VARCHAR(255) NOT NULL,   -- bcrypt hash, never plaintext
     display_name  VARCHAR(100) NOT NULL,
     role          VARCHAR(30) NOT NULL DEFAULT 'moderator', -- 'owner' | 'admin' | 'moderator'
+    is_active     BOOLEAN NOT NULL DEFAULT true,
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
     last_login_at TIMESTAMPTZ
 );
 
 -- ─── Site-wide live stats (the numbers shown on the homepage) ───
--- Single-row-per-key table so admin can update any stat independently.
 CREATE TABLE site_stats (
     key         VARCHAR(50) PRIMARY KEY,   -- e.g. 'total_members', 'discord_online'
     label       VARCHAR(100) NOT NULL,     -- e.g. 'Community Members'
     value       BIGINT NOT NULL DEFAULT 0,
     suffix      VARCHAR(10) DEFAULT '',    -- e.g. '+', 'K'
     icon        VARCHAR(50) DEFAULT 'fa-solid fa-cube',
+    image_url   VARCHAR(500),              -- optional custom stat icon/image URL
     sort_order  INT NOT NULL DEFAULT 0,
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_by  INT REFERENCES admin_users(id)
+);
+
+-- ─── Partnerships & Collaborations (Homepage Ticker + Popup) ───
+CREATE TABLE partnerships (
+    id          SERIAL PRIMARY KEY,
+    title       VARCHAR(150) NOT NULL,
+    partner_type VARCHAR(50) NOT NULL DEFAULT 'community', -- 'community'|'tech'|'creator'|'event'
+    logo_url    VARCHAR(500),
+    description TEXT,
+    website_url VARCHAR(500),
+    discord_url VARCHAR(500),
+    is_featured BOOLEAN NOT NULL DEFAULT false,
+    is_active   BOOLEAN NOT NULL DEFAULT true,
+    sort_order  INT NOT NULL DEFAULT 0,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- ─── Journey / How to Get Involved Steps ───
+CREATE TABLE journey_steps (
+    id          SERIAL PRIMARY KEY,
+    step_number INT NOT NULL DEFAULT 1,
+    title       VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL,
+    icon        VARCHAR(50) DEFAULT 'fa-solid fa-compass',
+    image_url   VARCHAR(500),
+    sort_order  INT NOT NULL DEFAULT 0,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- ─── Servers (availability / status / how to join) ───
@@ -74,6 +102,7 @@ CREATE TABLE members (
     role_title   VARCHAR(100) NOT NULL,     -- e.g. 'Community Manager'
     role_group   VARCHAR(30) NOT NULL DEFAULT 'staff', -- 'owner'|'staff'|'mod'|'builder'|'creator'
     icon         VARCHAR(50) DEFAULT 'fa-solid fa-user',
+    image_url    VARCHAR(500),              -- avatar photo URL
     bio          VARCHAR(300),
     discord_tag  VARCHAR(60),
     is_active    BOOLEAN NOT NULL DEFAULT true,
@@ -90,40 +119,52 @@ CREATE TABLE rules (
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ─── Form categories (admin-managed, drives the dropdown on the form) ───
+-- ─── Form categories ───
 CREATE TABLE form_categories (
     id          SERIAL PRIMARY KEY,
-    key         VARCHAR(40) UNIQUE NOT NULL,  -- 'join_application' | 'support_ticket' | 'report' | 'general'
+    key         VARCHAR(40) UNIQUE NOT NULL,
     label       VARCHAR(100) NOT NULL,
     description VARCHAR(300),
     is_active   BOOLEAN NOT NULL DEFAULT true,
     sort_order  INT NOT NULL DEFAULT 0
 );
 
--- ─── Form submissions (join applications, tickets, reports, contact msgs) ───
+-- ─── Form submissions ───
 CREATE TABLE submissions (
     id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     category_id  INT NOT NULL REFERENCES form_categories(id),
     full_name    VARCHAR(150) NOT NULL,
-    contact      VARCHAR(150) NOT NULL,       -- email or discord tag
+    contact      VARCHAR(150) NOT NULL,
     subject      VARCHAR(200),
     message      TEXT NOT NULL,
-    status       VARCHAR(20) NOT NULL DEFAULT 'new', -- 'new'|'in_review'|'resolved'|'rejected'
+    status       VARCHAR(20) NOT NULL DEFAULT 'new',
     admin_notes  TEXT,
     handled_by   INT REFERENCES admin_users(id),
-    ip_hash      VARCHAR(64),                 -- hashed, not raw IP — basic spam tracking
+    ip_hash      VARCHAR(64),
     created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX idx_submissions_status ON submissions(status, created_at DESC);
 CREATE INDEX idx_submissions_category ON submissions(category_id);
 
--- ─── Seed data ───
+-- ─── SEED DATA ───
 INSERT INTO site_stats (key, label, value, suffix, icon, sort_order) VALUES
 ('total_members', 'Community Members', 52000, '+', 'fa-solid fa-users', 1),
 ('discord_online', 'Online on Discord', 1800, '+', 'fa-brands fa-discord', 2),
 ('active_servers', 'Active Servers', 6, '', 'fa-solid fa-server', 3),
 ('events_hosted', 'Events Hosted', 140, '+', 'fa-solid fa-trophy', 4);
+
+INSERT INTO partnerships (title, partner_type, logo_url, description, website_url, discord_url, is_featured, sort_order) VALUES
+('Bangladesh MC Network', 'COMMUNITY PARTNER', 'logo.png', 'Collaborating on national build contests and cross-community tournaments across Bangladesh.', 'https://mcbd.gg', 'https://discord.gg/minecraftbd', true, 1),
+('BD Redstone Guild', 'TECH PARTNER', 'logo.png', 'Technical workshops, redstone showcases, and automation engineering competitions for advanced builders.', 'https://mcbd.gg', 'https://discord.gg/minecraftbd', false, 2),
+('Creators Alliance', 'CREATOR HUB', 'logo.png', 'Supporting local Minecraft streamers, YouTubers, and video creators across Bangladesh.', 'https://mcbd.gg', 'https://discord.gg/minecraftbd', false, 3),
+('BD Esports Hub', 'EVENT PARTNER', 'logo.png', 'Co-hosting esports championships, minigame leagues, and community game nights.', 'https://mcbd.gg', 'https://discord.gg/minecraftbd', false, 4);
+
+INSERT INTO journey_steps (step_number, title, description, icon, sort_order) VALUES
+(1, 'Join the Hub', 'Hop into our Facebook group or Discord server — takes 30 seconds, no application needed.', 'fa-solid fa-users', 1),
+(2, 'Say Hello', 'Introduce yourself in #new-arrivals. Tell us what you build — survival, redstone, or pure chaos.', 'fa-solid fa-comments', 2),
+(3, 'Join Channels', 'Choose your interests — #build-showcase, #redstone-tech, or #minigame-lobby.', 'fa-solid fa-layer-group', 3),
+(4, 'Start Building', 'Join events, enter contests, and become part of Bangladesh''s biggest Minecraft story.', 'fa-solid fa-hammer', 4);
 
 INSERT INTO form_categories (key, label, description, sort_order) VALUES
 ('join_application', 'Join Application', 'Apply to join the community and get whitelisted', 1),
@@ -136,6 +177,3 @@ INSERT INTO servers (name, server_type, ip_address, edition, status, players_onl
 ('MCBD Creative', 'creative', 'creative.mcbd.gg', 'both', 'online', 88, 200, 'Unlimited creative plots for builders. Show off your skills.', false, 2),
 ('MCBD Redstone Lab', 'redstone', 'redstone.mcbd.gg', 'java', 'online', 34, 100, 'A dedicated space for redstone engineers and technical builders.', false, 3),
 ('MCBD Minigames', 'minigame', 'play.mcbd.gg:25566', 'both', 'online', 156, 250, 'Bed Wars, SkyWars, and more community-made minigames.', false, 4);
-
--- Remember to insert your first admin user via the backend's create-admin script
--- (never insert a plaintext password directly into password_hash).

@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException
 from app.database import get_pool
 from app.models.schemas import (
     FormCategoryOut,
+    JourneyStepOut,
     MemberOut,
     NewsOut,
     PartnershipOut,
@@ -19,7 +20,19 @@ async def list_stats():
     try:
         pool = get_pool()
         rows = await pool.fetch(
-            "SELECT key, label, value, suffix, icon, sort_order FROM site_stats ORDER BY sort_order"
+            "SELECT key, label, value, suffix, icon, image_url, sort_order FROM site_stats ORDER BY sort_order"
+        )
+        return [dict(r) for r in rows]
+    except Exception:
+        return []
+
+
+@router.get("/journey-steps", response_model=list[JourneyStepOut])
+async def list_journey_steps():
+    try:
+        pool = get_pool()
+        rows = await pool.fetch(
+            "SELECT id, step_number, title, description, icon, image_url, sort_order FROM journey_steps ORDER BY sort_order ASC, step_number ASC"
         )
         return [dict(r) for r in rows]
     except Exception:
@@ -88,7 +101,7 @@ async def list_members():
     try:
         pool = get_pool()
         rows = await pool.fetch(
-            """SELECT id, display_name, role_title, role_group, icon, bio, discord_tag, sort_order
+            """SELECT id, display_name, role_title, role_group, icon, image_url, bio, discord_tag, sort_order
                FROM members WHERE is_active = true ORDER BY sort_order"""
         )
         return [dict(r) for r in rows]

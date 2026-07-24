@@ -334,7 +334,7 @@ function renderFooter() {
           </div>
           <div class="footer-social">
             <a href="https://facebook.com" target="_blank" class="soc-btn" aria-label="Facebook" data-tooltip="Facebook Group"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="soc-btn" aria-label="Discord" data-tooltip="Discord Server" onclick="event.preventDefault(); openDiscordWidget('Minecraft BD Discord', '52,000+ Members', '@minecraftbd');"><i class="fab fa-discord"></i></a>
+            <a href="https://discord.gg/minecraftbd" target="_blank" rel="noopener" class="soc-btn" aria-label="Discord" data-tooltip="Discord Server"><i class="fab fa-discord"></i></a>
           </div>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
@@ -346,7 +346,7 @@ function renderFooter() {
             <li><a href="members.html">Members</a></li>
             <li><a href="join.html">Contact</a></li>
           </ul>
-          <div class="status-badge" style="cursor:pointer;" onclick="openDiscordWidget('MCBD Community', '24/7 Community Active', 'mcbd.community')">
+          <div class="status-badge">
             <span class="dot-pulse"></span> COMMUNITY ACTIVE
           </div>
         </div>

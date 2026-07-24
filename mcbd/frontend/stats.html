@@ -70,13 +70,18 @@ async function loadStats() {
       stateEl.innerHTML = '<i class="fas fa-circle-info"></i> No stats published yet.';
       return;
     }
-    grid.innerHTML = stats.map(stat => `
-      <div class="live-stat-card">
-        <i class="${escapeHtml(stat.icon || 'fas fa-chart-line')}"></i>
-        <div class="num" data-final="${stat.value}" data-suffix="${escapeHtml(stat.suffix || '')}">0</div>
-        <div class="lbl">${escapeHtml(stat.label)}</div>
-      </div>
-    `).join('');
+    grid.innerHTML = stats.map(stat => {
+      const imgMarkup = stat.image_url
+        ? `<img src="${escapeHtml(stat.image_url)}" style="width:40px;height:40px;object-fit:cover;border:2px solid var(--black);margin-bottom:12px;display:inline-block;" alt="${escapeHtml(stat.label)}" onerror="this.style.display='none';">`
+        : `<i class="${escapeHtml(stat.icon || 'fas fa-chart-line')}"></i>`;
+      return `
+        <div class="live-stat-card">
+          ${imgMarkup}
+          <div class="num" data-final="${stat.value}" data-suffix="${escapeHtml(stat.suffix || '')}">0</div>
+          <div class="lbl">${escapeHtml(stat.label)}</div>
+        </div>
+      `;
+    }).join('');
     stateEl.style.display = 'none';
     grid.style.display = 'grid';
 

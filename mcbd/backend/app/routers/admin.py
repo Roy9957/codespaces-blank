@@ -11,6 +11,9 @@ from app.models.schemas import (
     FormCategoryCreate,
     FormCategoryOut,
     FormCategoryUpdate,
+    JourneyStepCreate,
+    JourneyStepOut,
+    JourneyStepUpdate,
     MemberCreate,
     MemberOut,
     MemberUpdate,
@@ -53,6 +56,13 @@ def _set_clause(fields: dict, start_idx: int = 1) -> tuple[str, list]:
 
 
 # ═══════════════ STATS ═══════════════
+@router.get("/stats", response_model=list[StatOut])
+async def admin_list_stats():
+    pool = get_pool()
+    rows = await pool.fetch("SELECT key, label, value, suffix, icon, image_url, sort_order FROM site_stats ORDER BY sort_order ASC")
+    return [dict(r) for r in rows]
+
+
 @router.patch("/stats/{key}", response_model=StatOut)
 async def update_stat(key: str, payload: StatUpdate, admin: dict = Depends(get_current_admin)):
     pool = get_pool()
@@ -64,7 +74,7 @@ async def update_stat(key: str, payload: StatUpdate, admin: dict = Depends(get_c
     row = await pool.fetchrow(
         f"""UPDATE site_stats SET {set_sql}, updated_at = now(), updated_by = ${len(values) - 1}
             WHERE key = ${len(values)}
-            RETURNING key, label, value, suffix, icon, sort_order""",
+            RETURNING key, label, value, suffix, icon, image_url, sort_order""",
         *values,
     )
     if not row:
@@ -180,11 +190,11 @@ async def delete_news(news_id: int):
 async def create_member(payload: MemberCreate):
     pool = get_pool()
     row = await pool.fetchrow(
-        """INSERT INTO members (display_name, role_title, role_group, icon, bio, discord_tag,
+        """INSERT INTO members (display_name, role_title, role_group, icon, image_url, bio, discord_tag,
                                  is_active, sort_order)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-           RETURNING id, display_name, role_title, role_group, icon, bio, discord_tag, sort_order""",
-        payload.display_name, payload.role_title, payload.role_group, payload.icon,
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+           RETURNING id, display_name, role_title, role_group, icon, image_url, bio, discord_tag, sort_order""",
+        payload.display_name, payload.role_title, payload.role_group, payload.icon, payload.image_url,
         payload.bio, payload.discord_tag, payload.is_active, payload.sort_order,
     )
     return dict(row)
@@ -200,7 +210,7 @@ async def update_member(member_id: int, payload: MemberUpdate):
     values.append(member_id)
     row = await pool.fetchrow(
         f"""UPDATE members SET {set_sql} WHERE id = ${len(values)}
-            RETURNING id, display_name, role_title, role_group, icon, bio, discord_tag, sort_order""",
+            RETURNING id, display_name, role_title, role_group, icon, image_url, bio, discord_tag, sort_order""",
         *values,
     )
     if not row:
@@ -214,6 +224,54 @@ async def delete_member(member_id: int):
     result = await pool.execute("DELETE FROM members WHERE id = $1", member_id)
     if result == "DELETE 0":
         raise HTTPException(status_code=404, detail="Member not found")
+
+
+# ═══════════════ JOURNEY STEPS ═══════════════
+@router.get("/journey-steps", response_model=list[JourneyStepOut])
+async def admin_list_journey_steps():
+    pool = get_pool()
+    rows = await pool.fetch(
+        "SELECT id, step_number, title, description, icon, image_url, sort_order FROM journey_steps ORDER BY sort_order ASC, step_number ASC"
+    )
+    return [dict(r) for r in rows]
+
+
+@router.post("/journey-steps", response_model=JourneyStepOut, status_code=201)
+async def create_journey_step(payload: JourneyStepCreate):
+    pool = get_pool()
+    row = await pool.fetchrow(
+        """INSERT INTO journey_steps (step_number, title, description, icon, image_url, sort_order)
+           VALUES ($1,$2,$3,$4,$5,$6)
+           RETURNING id, step_number, title, description, icon, image_url, sort_order""",
+        payload.step_number, payload.title, payload.description, payload.icon, payload.image_url, payload.sort_order
+    )
+    return dict(row)
+
+
+@router.patch("/journey-steps/{step_id}", response_model=JourneyStepOut)
+async def update_journey_step(step_id: int, payload: JourneyStepUpdate):
+    pool = get_pool()
+    fields = payload.model_dump(exclude_unset=True)
+    if not fields:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    set_sql, values = _set_clause(fields)
+    values.append(step_id)
+    row = await pool.fetchrow(
+        f"""UPDATE journey_steps SET {set_sql} WHERE id = ${len(values)}
+            RETURNING id, step_number, title, description, icon, image_url, sort_order""",
+        *values,
+    )
+    if not row:
+        raise HTTPException(status_code=404, detail="Journey step not found")
+    return dict(row)
+
+
+@router.delete("/journey-steps/{step_id}", status_code=204)
+async def delete_journey_step(step_id: int):
+    pool = get_pool()
+    result = await pool.execute("DELETE FROM journey_steps WHERE id = $1", step_id)
+    if result == "DELETE 0":
+        raise HTTPException(status_code=404, detail="Journey step not found")
 
 
 # ═══════════════ RULES ═══════════════

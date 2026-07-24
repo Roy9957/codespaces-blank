@@ -29,6 +29,7 @@
   <div class="admin-tabs">
     <button class="admin-tab active" data-panel="panelStats">Stats</button>
     <button class="admin-tab" data-panel="panelPartnerships">Partnerships</button>
+    <button class="admin-tab" data-panel="panelJourney">Journey Steps</button>
     <button class="admin-tab" data-panel="panelServers">Servers</button>
     <button class="admin-tab" data-panel="panelNews">News</button>
     <button class="admin-tab" data-panel="panelMembers">Members</button>
@@ -43,7 +44,7 @@
     <div class="admin-panel-head"><h2>Live Stats</h2></div>
     <div class="admin-table-wrap">
       <table class="admin-table">
-        <thead><tr><th>Key</th><th>Label</th><th>Value</th><th>Suffix</th><th>Icon</th><th>Order</th><th>Save</th></tr></thead>
+        <thead><tr><th>Key</th><th>Label</th><th>Value</th><th>Suffix</th><th>Icon</th><th>Image URL</th><th>Order</th><th>Save</th></tr></thead>
         <tbody id="statsTableBody"></tbody>
       </table>
     </div>
@@ -171,6 +172,7 @@
           </select>
         </div>
         <div><label>Icon (Font Awesome class)</label><input id="memIcon" value="fa-solid fa-user"></div>
+        <div><label>Avatar / Image URL</label><input id="memImageUrl" placeholder="https://... or avatar.png"></div>
         <div><label>Discord Tag</label><input id="memDiscord"></div>
         <div><label>Sort Order</label><input id="memSort" type="number" value="0"></div>
         <div class="full"><label>Bio</label><textarea id="memBio" maxlength="300"></textarea></div>
@@ -290,7 +292,37 @@
     </div>
   </section>
 
-  <!-- ═══ FORM CATEGORIES ADMIN ═══ -->
+  <!-- ═══ JOURNEY STEPS (How to Get Involved) ═══ -->
+  <section class="admin-panel" id="panelJourney">
+    <div class="admin-panel-head">
+      <h2>How to Get Involved (Journey Steps)</h2>
+      <button class="admin-btn" onclick="openJourneyForm()">+ Add Step</button>
+    </div>
+
+    <div class="edit-card" id="journeyForm">
+      <h3 id="journeyFormTitle">Add Step</h3>
+      <input type="hidden" id="journeyId">
+      <div class="edit-grid">
+        <div><label>Step Number</label><input id="jrnNum" type="number" value="1"></div>
+        <div><label>Title</label><input id="jrnTitle" placeholder="e.g. Join the Hub"></div>
+        <div><label>Icon Class</label><input id="jrnIcon" value="fa-solid fa-compass"></div>
+        <div><label>Image URL (Optional)</label><input id="jrnImageUrl" placeholder="https://..."></div>
+        <div><label>Sort Order</label><input id="jrnSort" type="number" value="0"></div>
+        <div class="full"><label>Description</label><textarea id="jrnDesc"></textarea></div>
+      </div>
+      <div class="edit-actions">
+        <button class="admin-btn" onclick="saveJourneyStep()">Save</button>
+        <button class="admin-btn neutral" onclick="closeJourneyForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>#</th><th>Title</th><th>Description</th><th>Icon / Image</th><th>Actions</th></tr></thead>
+        <tbody id="journeyTableBody"></tbody>
+      </table>
+    </div>
+  </section>
   <section class="admin-panel" id="panelFormCategories">
     <div class="admin-panel-head">
       <h2>Form Categories (Dropdown Options)</h2>

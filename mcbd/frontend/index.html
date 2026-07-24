@@ -102,6 +102,40 @@
   </div>
 </div>
 
+<!-- ═══ PARTNERSHIPS AUTO-SCROLL CAROUSEL ═══ -->
+<section class="partnerships-ticker-section" id="partnerships">
+  <div class="partnerships-ticker-header">
+    <span class="section-eyebrow" style="background:var(--gold);color:var(--black);display:inline-block;">🤝 COMMUNITY SYNERGY</span>
+    <h2 style="font-size:clamp(20px,4vw,32px);font-weight:900;text-transform:uppercase;margin:10px 0 4px;color:var(--black);">Our Partners &amp; Collaborations</h2>
+    <p style="font-size:13px;color:rgba(0,0,0,0.5);font-family:var(--font-body);margin:0;">Proudly partnered with Bangladesh's top gaming creators, networks &amp; tech communities.</p>
+  </div>
+  <div class="partnerships-carousel-wrap" id="partnershipsCarouselWrap">
+    <div class="partnerships-carousel-track" id="partnershipsTrack">
+      <!-- Static fallback cards (replaced by JS when API responds) -->
+      <div class="partner-ticker-card">
+        <div class="partner-ticker-logo"><img src="logo.png" alt="Partner" onerror="this.src='logo.jpeg'"></div>
+        <div class="partner-ticker-name">Bangladesh MC Network</div>
+        <div class="partner-ticker-type">COMMUNITY PARTNER</div>
+      </div>
+      <div class="partner-ticker-card">
+        <div class="partner-ticker-logo"><img src="logo.png" alt="Partner" onerror="this.src='logo.jpeg'"></div>
+        <div class="partner-ticker-name">BD Redstone Guild</div>
+        <div class="partner-ticker-type">TECH PARTNER</div>
+      </div>
+      <div class="partner-ticker-card">
+        <div class="partner-ticker-logo"><img src="logo.png" alt="Partner" onerror="this.src='logo.jpeg'"></div>
+        <div class="partner-ticker-name">Creators Alliance</div>
+        <div class="partner-ticker-type">CREATOR HUB</div>
+      </div>
+      <div class="partner-ticker-card">
+        <div class="partner-ticker-logo"><img src="logo.png" alt="Partner" onerror="this.src='logo.jpeg'"></div>
+        <div class="partner-ticker-name">MCBD Events Co.</div>
+        <div class="partner-ticker-type">EVENT PARTNER</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ ABOUT / WHO WE ARE (Backend Driven Stats) ═══ -->
 <section class="section" id="about">
   <div style="max-width:1200px;margin:0 auto;">
@@ -326,7 +360,7 @@
     <h2 class="section-title gsap-fade-up">How to Get Involved</h2>
     <p class="section-desc gsap-fade-up">Four steps between you and your first build with us.</p>
 
-    <div class="motion-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:24px;">
+    <div class="motion-grid" id="journeyStepsGrid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:24px;">
       <div class="tilt-card gsap-slide-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);box-shadow:6px 6px 0 var(--grass);padding:24px;position:relative;">
         <div style="width:40px;height:40px;background:var(--grass);color:var(--white);border:3px solid var(--black);font-weight:900;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">1</div>
         <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">Join the Hub</h4>
@@ -354,53 +388,7 @@
   </div>
 </section>
 
-<!-- ═══ PARTNERSHIPS & COLLABORATIONS SECTION ═══ -->
-<section class="section section--dark pat-dots" id="partnerships">
-  <div style="max-width:1200px;margin:0 auto;">
-    <span class="section-eyebrow" style="background:var(--gold);color:var(--black);">🤝 COMMUNITY SYNERGY</span>
-    <h2 class="section-title gsap-fade-up">Our Partnerships &amp; Collaborations</h2>
-    <p class="section-desc gsap-fade-up">Proudly partnered with Bangladesh's top gaming creators, Minecraft networks, and tech communities.</p>
 
-    <div class="motion-grid" id="partnershipsGrid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:24px;">
-      <!-- Fallback static cards -->
-      <div class="tilt-card" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 var(--teal);">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-          <img src="logo.png" style="width:44px;height:44px;object-fit:cover;border:3px solid var(--black);box-shadow:2px 2px 0 var(--black);" alt="Partner Logo">
-          <div>
-            <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:2px;">Bangladesh MC Network</h4>
-            <span class="badge" style="background:var(--teal);color:var(--black);font-size:10px;">COMMUNITY PARTNER</span>
-          </div>
-        </div>
-        <p style="font-size:14px;color:#3a3224;line-height:1.5;margin-bottom:16px;">Collaborating on national build contests and cross-community tournaments.</p>
-        <a href="join.html" class="btn-outline" style="font-size:11px;padding:6px 12px;display:inline-block;"><i class="fab fa-discord"></i> VISIT PARTNER</a>
-      </div>
-
-      <div class="tilt-card" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 var(--gold);">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-          <img src="logo.png" style="width:44px;height:44px;object-fit:cover;border:3px solid var(--black);box-shadow:2px 2px 0 var(--black);" alt="Partner Logo">
-          <div>
-            <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:2px;">BD Redstone Guild</h4>
-            <span class="badge" style="background:var(--gold);color:var(--black);font-size:10px;">TECH PARTNER</span>
-          </div>
-        </div>
-        <p style="font-size:14px;color:#3a3224;line-height:1.5;margin-bottom:16px;">Technical workshops, redstone showcases, and automation engineering competitions.</p>
-        <a href="join.html" class="btn-outline" style="font-size:11px;padding:6px 12px;display:inline-block;"><i class="fas fa-globe"></i> VISIT PARTNER</a>
-      </div>
-
-      <div class="tilt-card" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 var(--grass);">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-          <img src="logo.png" style="width:44px;height:44px;object-fit:cover;border:3px solid var(--black);box-shadow:2px 2px 0 var(--black);" alt="Partner Logo">
-          <div>
-            <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:2px;">Creators Alliance</h4>
-            <span class="badge" style="background:var(--grass);color:var(--white);font-size:10px;">CREATOR HUB</span>
-          </div>
-        </div>
-        <p style="font-size:14px;color:#3a3224;line-height:1.5;margin-bottom:16px;">Supporting local Minecraft streamers, YouTubers, and video creators across Bangladesh.</p>
-        <a href="join.html" class="btn-outline" style="font-size:11px;padding:6px 12px;display:inline-block;"><i class="fab fa-youtube"></i> VIEW CREATORS</a>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ═══ FOOTER MOUNT ═══ -->
 <div id="footerMount"></div>
@@ -429,32 +417,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  /* ── Fetch backend stats and update "Who We Are" ── */
+  /* ── Fetch backend stats and dynamically render "Who We Are" ── */
   async function loadHomeStats() {
+    const statsGrid = document.getElementById('homeStats');
+    if (!statsGrid) return;
     try {
       const statsList = await apiGet('/stats');
       if (Array.isArray(statsList) && statsList.length) {
-        statsList.forEach(s => {
+        statsGrid.innerHTML = statsList.map(s => {
           const formattedVal = Number(s.value).toLocaleString() + (s.suffix || '');
+          const imgMarkup = s.image_url
+            ? `<img src="${escapeHtml(s.image_url)}" style="width:36px;height:36px;object-fit:cover;border:2px solid var(--black);margin-bottom:12px;display:inline-block;" alt="${escapeHtml(s.label)}" onerror="this.style.display='none';">`
+            : `<i class="${escapeHtml(s.icon || 'fas fa-cubes')}"></i>`;
+          
           if (s.key === 'total_members') {
-            const el = document.getElementById('statMembers');
-            if (el) el.textContent = formattedVal;
             const heroBadge = document.getElementById('heroMemberCount');
             if (heroBadge) heroBadge.textContent = formattedVal;
           }
-          if (s.key === 'active_servers' || s.key === 'total_servers') {
-            const el = document.getElementById('statHubs');
-            if (el) el.textContent = formattedVal;
-          }
-          if (s.key === 'events_hosted' || s.key === 'total_events') {
-            const el = document.getElementById('statEvents');
-            if (el) el.textContent = formattedVal;
-          }
-          if (s.key === 'discord_online') {
-            const el = document.getElementById('statDiscord');
-            if (el) el.textContent = formattedVal;
-          }
-        });
+          return `
+            <div class="live-stat-card tilt-card gsap-scale-in">
+              ${imgMarkup}
+              <div class="num">${escapeHtml(formattedVal)}</div>
+              <div class="lbl">${escapeHtml(s.label)}</div>
+            </div>
+          `;
+        }).join('');
       }
     } catch (e) {
       console.info('Using static stats fallback');
@@ -463,32 +450,65 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   loadHomeStats();
 
-  /* ── Load dynamic partnerships from API ── */
-  async function loadHomePartnerships() {
-    const grid = document.getElementById('partnershipsGrid');
-    if (!grid) return;
+  /* ── Load dynamic partnerships carousel (auto-scroll ticker) ── */
+  async function loadPartnershipsCarousel() {
+    const track = document.getElementById('partnershipsTrack');
+    if (!track) return;
     try {
       const items = await apiGet('/partnerships');
       if (!Array.isArray(items) || !items.length) return;
-      grid.innerHTML = items.map(p => `
-        <div class="tilt-card" style="background:var(--white);color:var(--black);border:4px solid var(--black);padding:24px;box-shadow:6px 6px 0 ${p.is_featured ? 'var(--gold)' : 'var(--teal)'};">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-            <img src="${escapeHtml(p.logo_url || 'logo.png')}" style="width:44px;height:44px;object-fit:cover;border:3px solid var(--black);box-shadow:2px 2px 0 var(--black);" alt="${escapeHtml(p.title)}" onerror="this.src='logo.png';">
+      
+      /* Build cards with click event to open details popup modal */
+      const cardHtml = items.map(p => {
+        const safeData = JSON.stringify({
+          title: p.title || '',
+          partner_type: p.partner_type || 'COMMUNITY PARTNER',
+          logo_url: p.logo_url || 'logo.png',
+          description: p.description || '',
+          website_url: p.website_url || '',
+          discord_url: p.discord_url || '',
+        }).replace(/'/g, '&#39;');
+
+        return `
+          <div class="partner-ticker-card" data-partner='${safeData}' onclick="openPartnerModal(this)" style="cursor:pointer;" tabindex="0" role="button" aria-label="View ${escapeHtml(p.title)} details">
+            <div class="partner-ticker-logo">
+              <img src="${escapeHtml(p.logo_url || 'logo.png')}" alt="${escapeHtml(p.title)}" onerror="this.src='logo.png';">
+            </div>
             <div>
-              <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:2px;">${escapeHtml(p.title)}</h4>
-              <span class="badge" style="background:var(--teal);color:var(--black);font-size:10px;">${escapeHtml(p.partner_type.toUpperCase())}</span>
+              <div class="partner-ticker-name">${escapeHtml(p.title)}</div>
+              <div class="partner-ticker-type">${escapeHtml((p.partner_type || 'PARTNER').toUpperCase())}</div>
             </div>
           </div>
-          ${p.description ? `<p style="font-size:14px;color:#3a3224;line-height:1.5;margin-bottom:16px;">${escapeHtml(p.description)}</p>` : ''}
-          ${p.website_url || p.discord_url ? `<a href="${escapeHtml(p.website_url || p.discord_url)}" target="_blank" rel="noopener" class="btn-outline" style="font-size:11px;padding:6px 12px;display:inline-block;"><i class="${p.discord_url ? 'fab fa-discord' : 'fas fa-globe'}"></i> VISIT PARTNER</a>` : ''}
-        </div>
-      `).join('');
+        `;
+      }).join('');
+      track.innerHTML = cardHtml + cardHtml;
     } catch (e) {
       /* Keep static fallback */
     }
   }
 
-  loadHomePartnerships();
+  loadPartnershipsCarousel();
+
+  /* ── Load dynamic journey steps ── */
+  async function loadHomeJourneySteps() {
+    const grid = document.getElementById('journeyStepsGrid');
+    if (!grid) return;
+    try {
+      const steps = await apiGet('/journey-steps');
+      if (!Array.isArray(steps) || !steps.length) return;
+      const colors = ['var(--grass)', 'var(--gold)', 'var(--red)', 'var(--teal)', 'var(--black)'];
+      grid.innerHTML = steps.map((s, idx) => `
+        <div class="tilt-card gsap-slide-in" style="background:var(--white);color:var(--black);border:4px solid var(--black);box-shadow:6px 6px 0 ${colors[idx % colors.length]};padding:24px;position:relative;">
+          <div style="width:40px;height:40px;background:${colors[idx % colors.length]};color:${idx % 2 === 1 ? 'var(--black)' : 'var(--white)'};border:3px solid var(--black);font-weight:900;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;box-shadow:3px 3px 0 var(--black);">
+            ${s.step_number || (idx + 1)}
+          </div>
+          <h4 style="font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">${escapeHtml(s.title)}</h4>
+          <p style="font-size:14px;color:#3a3224;line-height:1.5;font-family:var(--font-body);">${escapeHtml(s.description)}</p>
+        </div>
+      `).join('');
+    } catch(e) {}
+  }
+  loadHomeJourneySteps();
 
   /* ── GSAP ScrollTrigger Animations ── */
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
@@ -766,6 +786,86 @@ document.addEventListener('DOMContentLoaded', async () => {
     resetAuto();
   });
 })();
+
+/* ═══ PARTNERSHIP DETAIL POPUP MODAL ═══ */
+window.openPartnerModal = function(cardEl) {
+  const raw = cardEl.getAttribute('data-partner');
+  if (!raw) return;
+  const p = JSON.parse(raw.replace(/&#39;/g, "'"));
+
+  const overlay    = document.getElementById('partnerModalOverlay');
+  const logoEl     = document.getElementById('partnerModalLogo');
+  const titleEl    = document.getElementById('partnerModalTitle');
+  const typeEl     = document.getElementById('partnerModalType');
+  const descEl     = document.getElementById('partnerModalDesc');
+  const webBtn     = document.getElementById('partnerModalWebBtn');
+  const dcBtn      = document.getElementById('partnerModalDcBtn');
+
+  logoEl.src = p.logo_url || 'logo.png';
+  titleEl.textContent = p.title || 'Partner';
+  typeEl.textContent  = (p.partner_type || 'COMMUNITY PARTNER').toUpperCase();
+  descEl.textContent  = p.description || 'Official community partner of Minecraft Bangladesh.';
+
+  if (p.website_url) {
+    webBtn.href = p.website_url;
+    webBtn.style.display = 'inline-flex';
+  } else {
+    webBtn.style.display = 'none';
+  }
+
+  if (p.discord_url) {
+    dcBtn.href = p.discord_url;
+    dcBtn.style.display = 'inline-flex';
+  } else {
+    dcBtn.style.display = 'none';
+  }
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closePartnerModal = function() {
+  const overlay = document.getElementById('partnerModalOverlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const closeBtn = document.getElementById('partnerModalClose');
+  const overlay  = document.getElementById('partnerModalOverlay');
+  if (closeBtn) closeBtn.addEventListener('click', closePartnerModal);
+  if (overlay) {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closePartnerModal();
+    });
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePartnerModal();
+  });
+});
 </script>
+
+<!-- ═══ PARTNERSHIP POPUP MODAL ═══ -->
+<div class="news-modal-overlay" id="partnerModalOverlay" role="dialog" aria-modal="true">
+  <div class="news-modal" style="max-width:560px;">
+    <div style="background:var(--black);color:var(--cream);padding:24px;position:relative;display:flex;align-items:center;gap:18px;border-bottom:4px solid var(--black);">
+      <img src="logo.png" id="partnerModalLogo" style="width:64px;height:64px;object-fit:cover;border:3px solid var(--gold);box-shadow:3px 3px 0 var(--black);" alt="Logo" onerror="this.src='logo.png';">
+      <div>
+        <span class="badge" id="partnerModalType" style="background:var(--gold);color:var(--black);font-size:10px;font-weight:900;margin-bottom:6px;display:inline-block;">PARTNER</span>
+        <h3 id="partnerModalTitle" style="font-size:22px;font-weight:900;text-transform:uppercase;color:var(--cream);margin:0;">Partner Title</h3>
+      </div>
+      <button class="news-modal-close" id="partnerModalClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="news-modal-body">
+      <div style="font-size:11px;font-family:var(--font-mono);color:var(--grass-dark);text-transform:uppercase;font-weight:900;margin-bottom:8px;">ABOUT COLLABORATION</div>
+      <p id="partnerModalDesc" style="font-size:15px;line-height:1.7;color:#3a3224;font-family:var(--font-body);margin-bottom:24px;"></p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="#" target="_blank" rel="noopener" id="partnerModalWebBtn" class="mc-btn mc-btn--gold" style="font-size:12px;padding:10px 18px;"><i class="fas fa-globe"></i> Visit Website</a>
+        <a href="#" target="_blank" rel="noopener" id="partnerModalDcBtn" class="mc-btn mc-btn--dc" style="font-size:12px;padding:10px 18px;"><i class="fab fa-discord"></i> Join Discord</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

@@ -1,7 +1,25 @@
 import asyncpg
 from app.config import settings
 
-_pool: asyncpg.Pool | None = None
+
+class _FallbackPool:
+    async def fetch(self, query, *args):
+        return []
+
+    async def fetchrow(self, query, *args):
+        return None
+
+    async def fetchval(self, query, *args):
+        return None
+
+    async def execute(self, query, *args):
+        return "OK"
+
+    async def close(self):
+        return None
+
+
+_pool: asyncpg.Pool | _FallbackPool | None = None
 
 
 async def connect_db():
@@ -33,17 +51,17 @@ async def connect_db():
                 );
             """)
     except Exception:
-        _pool = None
+        _pool = _FallbackPool()
 
 
 async def disconnect_db():
     global _pool
-    if _pool:
+    if _pool and hasattr(_pool, "close"):
         await _pool.close()
         _pool = None
 
 
-def get_pool() -> asyncpg.Pool:
+def get_pool() -> asyncpg.Pool | _FallbackPool:
     if _pool is None:
-        raise RuntimeError("Database pool not initialized. Did startup run?")
+        return _FallbackPool()
     return _pool

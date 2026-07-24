@@ -25,6 +25,7 @@ class StatOut(BaseModel):
     value: int
     suffix: str
     icon: str
+    image_url: Optional[str] = None
     sort_order: int
 
 
@@ -33,6 +34,36 @@ class StatUpdate(BaseModel):
     value: Optional[int] = None
     suffix: Optional[str] = None
     icon: Optional[str] = None
+    image_url: Optional[str] = None
+    sort_order: Optional[int] = None
+
+
+# ═══════════════ JOURNEY STEPS ═══════════════
+class JourneyStepOut(BaseModel):
+    id: int
+    step_number: int
+    title: str
+    description: str
+    icon: str
+    image_url: Optional[str] = None
+    sort_order: int
+
+
+class JourneyStepCreate(BaseModel):
+    step_number: int = 1
+    title: str
+    description: str
+    icon: str = "fa-solid fa-compass"
+    image_url: Optional[str] = None
+    sort_order: int = 0
+
+
+class JourneyStepUpdate(BaseModel):
+    step_number: Optional[int] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    icon: Optional[str] = None
+    image_url: Optional[str] = None
     sort_order: Optional[int] = None
 
 
@@ -134,6 +165,7 @@ class MemberOut(BaseModel):
     role_title: str
     role_group: str
     icon: str
+    image_url: Optional[str] = None
     bio: Optional[str]
     discord_tag: Optional[str]
     sort_order: int
@@ -144,6 +176,7 @@ class MemberCreate(BaseModel):
     role_title: str
     role_group: str = "staff"
     icon: str = "fa-solid fa-user"
+    image_url: Optional[str] = None
     bio: Optional[str] = None
     discord_tag: Optional[str] = None
     is_active: bool = True
@@ -155,6 +188,7 @@ class MemberUpdate(BaseModel):
     role_title: Optional[str] = None
     role_group: Optional[str] = None
     icon: Optional[str] = None
+    image_url: Optional[str] = None
     bio: Optional[str] = None
     discord_tag: Optional[str] = None
     is_active: Optional[bool] = None
@@ -196,7 +230,6 @@ class SubmissionCreate(BaseModel):
     contact: str = Field(min_length=1, max_length=150)
     subject: Optional[str] = Field(default=None, max_length=200)
     message: str = Field(min_length=1, max_length=5000)
-    # honeypot field: real users never fill this in. If it's non-empty, silently drop.
     website: Optional[str] = None
 
     @field_validator("full_name", "message")
@@ -264,7 +297,7 @@ class PartnershipUpdate(BaseModel):
     sort_order: Optional[int] = None
 
 
-# ═══════════════ ADMIN USERS (SUPER ADMIN) ═══════════════
+# ═══════════════ ADMIN USERS ═══════════════
 class AdminUserOut(BaseModel):
     id: int
     username: str
@@ -279,7 +312,7 @@ class AdminUserCreate(BaseModel):
     username: str
     password: str
     display_name: str
-    role: str = "moderator"  # 'super_admin' | 'owner' | 'admin' | 'moderator'
+    role: str = "moderator"
     is_active: bool = True
 
 
@@ -305,4 +338,3 @@ class FormCategoryUpdate(BaseModel):
     description: Optional[str] = None
     is_active: Optional[bool] = None
     sort_order: Optional[int] = None
-

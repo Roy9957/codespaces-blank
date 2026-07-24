@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   loadStats();
   loadPartnerships();
+  loadJourneySteps();
   loadServers();
   loadNews();
   loadMembers();
@@ -53,7 +54,8 @@ async function loadStats() {
       <td><input value="${escapeHtml(s.label)}" data-field="label"></td>
       <td><input type="number" value="${s.value}" data-field="value" style="width:100px;"></td>
       <td><input value="${escapeHtml(s.suffix || '')}" data-field="suffix" style="width:60px;"></td>
-      <td><input value="${escapeHtml(s.icon)}" data-field="icon" style="width:160px;"></td>
+      <td><input value="${escapeHtml(s.icon || '')}" data-field="icon" style="width:140px;"></td>
+      <td><input value="${escapeHtml(s.image_url || '')}" data-field="image_url" placeholder="https://..." style="width:140px;"></td>
       <td><input type="number" value="${s.sort_order}" data-field="sort_order" style="width:70px;"></td>
       <td><button class="admin-btn small" onclick="saveStatRow(this)">Save</button></td>
     </tr>
@@ -300,6 +302,7 @@ function openMemberForm() {
   document.getElementById('memRoleTitle').value = '';
   document.getElementById('memRoleGroup').value = 'staff';
   document.getElementById('memIcon').value = 'fa-solid fa-user';
+  if (document.getElementById('memImageUrl')) document.getElementById('memImageUrl').value = '';
   document.getElementById('memDiscord').value = '';
   document.getElementById('memSort').value = 0;
   document.getElementById('memBio').value = '';
@@ -320,6 +323,7 @@ function editMember(id) {
   document.getElementById('memRoleTitle').value = m.role_title;
   document.getElementById('memRoleGroup').value = m.role_group;
   document.getElementById('memIcon').value = m.icon || 'fa-solid fa-user';
+  if (document.getElementById('memImageUrl')) document.getElementById('memImageUrl').value = m.image_url || '';
   document.getElementById('memDiscord').value = m.discord_tag || '';
   document.getElementById('memSort').value = m.sort_order;
   document.getElementById('memBio').value = m.bio || '';
@@ -335,6 +339,7 @@ async function saveMember() {
     role_title: document.getElementById('memRoleTitle').value.trim(),
     role_group: document.getElementById('memRoleGroup').value,
     icon: document.getElementById('memIcon').value.trim() || 'fa-solid fa-user',
+    image_url: document.getElementById('memImageUrl') ? document.getElementById('memImageUrl').value.trim() || null : null,
     discord_tag: document.getElementById('memDiscord').value.trim() || null,
     sort_order: parseInt(document.getElementById('memSort').value, 10) || 0,
     bio: document.getElementById('memBio').value.trim() || null,
@@ -782,5 +787,94 @@ async function deleteUser(id) {
   await adminApi('DELETE', `/admin/users/${id}`);
   toast('User account deleted.');
   loadUsers();
+}
+
+/* ═══════════════ JOURNEY STEPS ═══════════════ */
+let journeyCache = [];
+
+async function loadJourneySteps() {
+  const tbody = document.getElementById('journeyTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = `<tr><td colspan="5">Loading…</td></tr>`;
+  const steps = await adminApi('GET', '/admin/journey-steps');
+  if (!steps) return;
+  journeyCache = steps;
+  tbody.innerHTML = steps.map((s) => `
+    <tr>
+      <td><strong>Step ${s.step_number}</strong></td>
+      <td>${escapeHtml(s.title)}</td>
+      <td>${escapeHtml(s.description)}</td>
+      <td>${s.image_url ? `<img src="${escapeHtml(s.image_url)}" style="width:28px;height:28px;object-fit:cover;">` : `<i class="${escapeHtml(s.icon || 'fa-solid fa-compass')}"></i>`}</td>
+      <td class="row-actions">
+        <button class="admin-btn small neutral" onclick="editJourneyStep(${s.id})">Edit</button>
+        <button class="admin-btn small danger" onclick="deleteJourneyStep(${s.id})">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openJourneyForm() {
+  document.getElementById('journeyFormTitle').textContent = 'Add Step';
+  document.getElementById('journeyId').value = '';
+  document.getElementById('jrnNum').value = (journeyCache.length + 1);
+  document.getElementById('jrnTitle').value = '';
+  document.getElementById('jrnIcon').value = 'fa-solid fa-compass';
+  document.getElementById('jrnImageUrl').value = '';
+  document.getElementById('jrnSort').value = journeyCache.length + 1;
+  document.getElementById('jrnDesc').value = '';
+  document.getElementById('journeyForm').classList.add('show');
+}
+
+function closeJourneyForm() {
+  document.getElementById('journeyForm').classList.remove('show');
+}
+
+function editJourneyStep(id) {
+  const s = journeyCache.find((x) => x.id === id);
+  if (!s) return;
+  document.getElementById('journeyFormTitle').textContent = `Edit: Step ${s.step_number}`;
+  document.getElementById('journeyId').value = s.id;
+  document.getElementById('jrnNum').value = s.step_number;
+  document.getElementById('jrnTitle').value = s.title;
+  document.getElementById('jrnIcon').value = s.icon || 'fa-solid fa-compass';
+  document.getElementById('jrnImageUrl').value = s.image_url || '';
+  document.getElementById('jrnSort').value = s.sort_order;
+  document.getElementById('jrnDesc').value = s.description || '';
+  document.getElementById('journeyForm').classList.add('show');
+  document.getElementById('journeyForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function saveJourneyStep() {
+  const id = document.getElementById('journeyId').value;
+  const payload = {
+    step_number: parseInt(document.getElementById('jrnNum').value, 10) || 1,
+    title: document.getElementById('jrnTitle').value.trim(),
+    description: document.getElementById('jrnDesc').value.trim(),
+    icon: document.getElementById('jrnIcon').value.trim() || 'fa-solid fa-compass',
+    image_url: document.getElementById('jrnImageUrl').value.trim() || null,
+    sort_order: parseInt(document.getElementById('jrnSort').value, 10) || 0,
+  };
+
+  if (!payload.title || !payload.description) {
+    toast('Title and Description are required.', 'error');
+    return;
+  }
+
+  const result = id
+    ? await adminApi('PATCH', `/admin/journey-steps/${id}`, payload)
+    : await adminApi('POST', '/admin/journey-steps', payload);
+  if (result) {
+    toast(`Journey step "${payload.title}" saved.`);
+    closeJourneyForm();
+    loadJourneySteps();
+  }
+}
+
+async function deleteJourneyStep(id) {
+  const s = journeyCache.find((x) => x.id === id);
+  if (!confirm(`Delete step "${s ? s.title : id}"?`)) return;
+  await adminApi('DELETE', `/admin/journey-steps/${id}`);
+  toast('Step deleted.');
+  loadJourneySteps();
 }
 
